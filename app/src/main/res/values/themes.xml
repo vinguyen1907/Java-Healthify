@@ -12,5 +12,39 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="buttonStyle">@style/PoppinsButtonStyle</item>
+        <item name="android:textViewStyle">@style/TextViewDefaultPoppinsStyle</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+        <item name="android:colorBackground">@color/primaryBackgroundColor</item>
+    </style>
+
+    <style name="TextViewDefaultPoppinsStyle">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+    </style>
+
+    <style name="PoppinsButtonStyle">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AuthenticationHeader" >
+        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">30sp</item>
+        <item name="textFillColor">@color/primaryTextColor</item>
+        <item name="android:layout_marginStart">20dp</item>
+    </style>
+
+    <style name="PrimaryEditText">
+        <item name="fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColorHint">@color/primaryHintColor</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:background">@drawable/primary_edittext_background</item>
+        <item name="android:layout_marginHorizontal">20dp</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
     </style>
 </resources>

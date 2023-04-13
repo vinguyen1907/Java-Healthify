@@ -2,4 +2,12 @@
     <string name="app_name">Java Healthify</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="onboarding_title_1">Track your daily calories</string>
+    <string name="onboarding_title_2">Control calories in your meals</string>
+    <string name="onboarding_title_3">Exercise for you</string>
+
+    <string name="onboarding_subtitle_1">Helps you track your calories intake and consumption with ease and saves your progress for long term monitoring.</string>
+    <string name="onboarding_subtitle_2">You can now control your calories intake by tracking the nutrition facts of your every meal with the help of our reliable food database.</string>
+    <string name="onboarding_subtitle_3">Provide personalized workout plans, process tracking, social integration, and a diverse workout library to help user achieve their fitness goals.</string>
 </resources>
