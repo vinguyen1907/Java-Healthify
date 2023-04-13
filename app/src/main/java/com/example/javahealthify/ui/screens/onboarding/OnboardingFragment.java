@@ -111,7 +111,6 @@ public class OnboardingFragment extends Fragment {
     };
 
     private void navigateToSignUpScreen() {
-//        NavHostFragment.findNavController(this).navigate(R.id.signUpFragment);
-        // TODO: navigate to sign up screen
+        NavHostFragment.findNavController(this).navigate(R.id.signUpFragment);
     }
 }
