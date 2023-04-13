@@ -11,4 +11,8 @@
         android:label="OnboardingFragment"
         tools:layout="@layout/fragment_onboarding"
     />
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.javahealthify.ui.screens.sign_up.SignUpFragment"
+        android:label="SignUpFragment" />
 </navigation>
