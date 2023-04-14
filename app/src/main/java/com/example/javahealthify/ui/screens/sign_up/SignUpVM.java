@@ -2,6 +2,7 @@ package com.example.javahealthify.ui.screens.sign_up;
 
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.Bindable;
@@ -9,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,29 +22,39 @@ public class SignUpVM extends ViewModel {
     private MutableLiveData<String> email = new MutableLiveData<>();
     private MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<String> confirmPassword = new MutableLiveData<>();
-    private MutableLiveData<String> emailError = new MutableLiveData<>();
-    private MutableLiveData<String> passwordError = new MutableLiveData<>();
-    private MutableLiveData<String> confirmPasswordError = new MutableLiveData<>();
+    private MutableLiveData<String> emailError = new MutableLiveData<>(null);
+    private MutableLiveData<String> passwordError = new MutableLiveData<>(null);
+    private MutableLiveData<String> confirmPasswordError = new MutableLiveData<>(null);
+    private MutableLiveData<String> toastMessage = new MutableLiveData<>(null);
 
     private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{0,8}$";
     private Pattern pattern = Pattern.compile(passwordRegex);
 
 
-//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public void signUpWithEmailAndPassword() {
-//        if (isValidEmailAndPassword()) {
-//            firebaseAuth.createUserWithEmailAndPassword(email.getValue(), password.getValue()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                @Override
-//                public void onComplete(@NonNull Task<AuthResult> task) {
-//                    if (task.isSuccessful()) {
-//                        FirebaseUser user = firebaseAuth.getCurrentUser();
-//                    } else {
-//
-//                    }
-//                }
-//            });
-//        }
+        validate();
+
+        if (emailError.getValue() == null && passwordError.getValue() == null && confirmPasswordError.getValue() == null) {
+            firebaseAuth.createUserWithEmailAndPassword(email.getValue(), password.getValue()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        toastMessage.setValue("Sign up successfully");
+
+                        // TODO: Navigate to Fill in Information Screen
+
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    toastMessage.setValue(e.getMessage());
+                }
+            });
+        }
     }
 
     public void validateEmail() {
@@ -81,14 +93,7 @@ public class SignUpVM extends ViewModel {
         validateEmail();
         validatePassword();
         validateConfirmPassword();
-    }
 
-    private Boolean isValidEmailAndPassword() {
-        return !email.getValue().isEmpty() && !password.getValue().isEmpty();
-    }
-
-    private Boolean isValidConfirmPassword() {
-        return !confirmPassword.getValue().isEmpty() && confirmPassword.getValue() == password.getValue();
     }
 
     public MutableLiveData<String> getEmail() {
@@ -137,5 +142,9 @@ public class SignUpVM extends ViewModel {
 
     public void setConfirmPasswordError(String confirmPasswordError) {
         this.confirmPasswordError.setValue(confirmPasswordError);
+    }
+
+    public MutableLiveData<String> getToastMessage() {
+        return toastMessage;
     }
 }
