@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +56,7 @@ public class SignUpFragment extends Fragment {
         binding.toSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Navigate to Sign In Screen
+                NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.signInFragment);
             }
         });
     }
