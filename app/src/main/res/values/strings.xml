@@ -10,4 +10,47 @@
     <string name="onboarding_subtitle_1">Helps you track your calories intake and consumption with ease and saves your progress for long term monitoring.</string>
     <string name="onboarding_subtitle_2">You can now control your calories intake by tracking the nutrition facts of your every meal with the help of our reliable food database.</string>
     <string name="onboarding_subtitle_3">Provide personalized workout plans, process tracking, social integration, and a diverse workout library to help user achieve their fitness goals.</string>
+
+    <!--navbar-->
+    <string name="navbar_home">Home</string>
+    <string name="navbar_menu">Menu</string>
+    <string name="navbar_workout">Workout</string>
+    <string name="navbar_community">Community</string>
+    <string name="navbar_profile">Profile</string>
+
+    <!--home-->
+    <string name="Home_Name">Ariana Grandle!</string>
+    <string name="Home_weight_Start">60</string>
+    <string name="home_weight_target">80</string>
+    <string name="Home_Daily_Calories">1000</string>
+    <string name="Home_Steps">6996</string>
+    <string name="Home_Goal_Steps">10.000</string>
+    <string name="Home_Calo">19</string>
+    <string name="Home_Time">00:00</string>
+    <string name="Home_Hello">Hello</string>
+    <string name="Home_Noti">Remember to update your weight today</string>
+    <string name="Home_Weight">kg</string>
+    <string name="Home_Cal">cal</string>
+    <string name="Home_Start">Start</string>
+    <string name="Home_Target">Target</string>
+    <string name="Home_Text_CaloDaily">Daily Calories</string>
+    <string name="Home_Steps_Text">Steps</string>
+    <string name="Home_Goal_Text">Goals:</string>
+    <string name="Home_Excercise_Text">Exercise</string>
+    <string name="Home_Hours_Text">hours</string>
+    <string name="Home_ExcerciseDetail_Title">Exercise Detail</string>
+    <string name="Home_DetailExcercise_Total">22</string>
+    <string name="home_total_excercise_text">Total exercise</string>
+    <string name="Home_TotalCalories">109</string>
+    <string name="Home_TotalCalories_Text">Total calories burned</string>
+    <string name="home_detail_legexcercise">99</string>
+    <string name="home_detail_legexcercise_text">Leg exercise</string>
+    <string name="home_detail_shoulderexcercise">10</string>
+    <string name="home_detail_shoulderexcercise_text">Shoulder exercise</string>
+    <string name="home_detail_others">10</string>
+    <string name="home_detail_others_text">Others</string>
+    <string name="home_detail_abs">80</string>
+    <string name="home_detail_abs_text">Abs exercise</string>
+    <string name="home_weight_report_text">Weight Report</string>
+    <string name="home_icon_back">TODO</string>
 </resources>
