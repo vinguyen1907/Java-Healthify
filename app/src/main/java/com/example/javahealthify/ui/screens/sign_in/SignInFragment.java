@@ -47,8 +47,7 @@ public class SignInFragment extends Fragment {
             @Override
             public void onChanged(Boolean signInSuccess) {
                 if (signInSuccess) {
-//                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.);
-                    //TODO: Navigate to home
+                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
                 }
             }
         });

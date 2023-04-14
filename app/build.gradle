@@ -53,4 +53,7 @@ dependencies {
 
     implementation platform('com.google.firebase:firebase-bom:31.4.0')
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0"
+
 }
