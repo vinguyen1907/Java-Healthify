@@ -9,13 +9,23 @@
         android:id="@+id/onboardingFragment"
         android:name="com.example.javahealthify.ui.screens.onboarding.OnboardingFragment"
         android:label="OnboardingFragment"
-        tools:layout="@layout/fragment_onboarding"
-    />
+        tools:layout="@layout/fragment_onboarding" >
+        <action
+            android:id="@+id/action_onboardingFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.javahealthify.ui.screens.sign_up.SignUpFragment"
         android:label="SignUpFragment"
-        tools:layout="@layout/fragment_sign_up"
-
-        />
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.javahealthify.ui.screens.sign_in.SignInFragment"
+        android:label="SignInFragment"
+        tools:layout="@layout/fragment_sign_in"/>
 </navigation>

@@ -26,11 +26,8 @@ public class SignUpVM extends ViewModel {
     private MutableLiveData<String> passwordError = new MutableLiveData<>(null);
     private MutableLiveData<String> confirmPasswordError = new MutableLiveData<>(null);
     private MutableLiveData<String> toastMessage = new MutableLiveData<>(null);
-
     private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{0,8}$";
     private Pattern pattern = Pattern.compile(passwordRegex);
-
-
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public void signUpWithEmailAndPassword() {
