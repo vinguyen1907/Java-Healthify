@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/onboardingFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/onboardingFragment"
@@ -15,4 +15,36 @@
         android:id="@+id/signUpFragment"
         android:name="com.example.javahealthify.ui.screens.sign_up.SignUpFragment"
         android:label="SignUpFragment" />
+    <fragment
+        android:id="@+id/excerciseDetail"
+        android:name="com.example.javahealthify.ui.screens.exercise_detail.ExcerciseDetail"
+        android:label="ExcerciseDetail" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.javahealthify.ui.screens.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_excerciseDetail"
+            app:destination="@id/excerciseDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.example.javahealthify.ui.screens.community.CommunityFragment"
+        android:label="fragment_community"
+        tools:layout="@layout/fragment_community" />
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.javahealthify.ui.screens.menu.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.javahealthify.ui.screens.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/workoutFragment"
+        android:name="com.example.javahealthify.ui.screens.workout.WorkoutFragment"
+        android:label="fragment_workout"
+        tools:layout="@layout/fragment_workout" />
 </navigation>
