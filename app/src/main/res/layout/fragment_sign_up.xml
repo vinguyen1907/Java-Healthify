@@ -21,14 +21,6 @@
             tools:context=".Activities.SignUpActivity">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{signUpVM.email}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
                 android:id="@+id/textView"
                 style="@style/AuthenticationHeader"
                 android:layout_width="wrap_content"
@@ -110,7 +102,7 @@
                 android:layout_marginTop="54dp"
                 android:background="@drawable/primary_button_background"
                 android:fontFamily="@font/poppins_medium"
-                android:onClick="@{() -> signUpVM.validate()}"
+                android:onClick="@{() -> signUpVM.signUpWithEmailAndPassword()}"
                 android:text="Sign Up"
                 android:textAllCaps="false"
                 android:textColor="@color/primaryBackgroundColor"
