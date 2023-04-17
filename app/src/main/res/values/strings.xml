@@ -53,4 +53,10 @@
     <string name="home_detail_abs_text">Abs exercise</string>
     <string name="home_weight_report_text">Weight Report</string>
     <string name="home_icon_back">TODO</string>
+    <string name="update_weight_text">Update Weight</string>
+    <string name="total_weight_text">Total Weight</string>
+    <string name="kg_binding">34Kg</string>
+    <string name="better_than_yesterday_text">Better Than Yesterday</string>
+    <string name="percent_binding">34%</string>
+    <string name="update_weight_texts">Update Weight</string>
 </resources>
