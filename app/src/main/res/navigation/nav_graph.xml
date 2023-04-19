@@ -31,7 +31,7 @@
         />
     <fragment
         android:id="@+id/excerciseDetail"
-        android:name="com.example.javahealthify.ui.screens.exercise_detail.ExcerciseDetail"
+        android:name="com.example.javahealthify.ui.screens.exercise_detail.ExcerciseDetailFragment"
         android:label="ExcerciseDetail" />
     <fragment
         android:id="@+id/homeFragment"

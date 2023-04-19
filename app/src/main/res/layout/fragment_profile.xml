@@ -68,7 +68,7 @@
                     android:id="@+id/email_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="cc.cc@gmail.com"
                     android:textSize="16sp"
