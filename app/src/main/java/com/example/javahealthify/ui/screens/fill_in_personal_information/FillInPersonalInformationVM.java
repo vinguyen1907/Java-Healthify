@@ -64,6 +64,7 @@ public class FillInPersonalInformationVM extends ViewModel {
 
         if (goalDate != null) {
             NormalUser newUser = new NormalUser(
+                    "",
                     firebaseAuth.getCurrentUser().getEmail(),
                     name.getValue(),
                     phone.getValue(),
@@ -78,18 +79,32 @@ public class FillInPersonalInformationVM extends ViewModel {
                     new ArrayList<String>(),
                     new ArrayList<String>());
 
-            firestore.collection("users").add(newUser).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            String id = firestore.collection("users").document().getId();
+            newUser.setUid(id);
+            firestore.collection("users").document(id).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentReference> task) {
+                public void onComplete(@NonNull Task<Void> task) {
                     isSuccess.setValue(true);
                     message.setValue("Sign up success!");
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    message.setValue(e.getMessage());
+
                 }
             });
+
+//            firestore.collection("users").add(newUser).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentReference> task) {
+//
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    message.setValue(e.getMessage());
+//                }
+//            });
         }
     }
 

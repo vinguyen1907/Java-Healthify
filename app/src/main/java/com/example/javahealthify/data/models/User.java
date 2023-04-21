@@ -1,11 +1,14 @@
 package com.example.javahealthify.data.models;
 
 public class User {
+    protected String uid;
     protected String email;
     protected String name;
     protected String type; // { "NORMAL_USER", "ADMIN" }
 
-    public User(String email, String name, String type) {
+    public User() {}
+    public User(String uid, String email, String name, String type) {
+        this.uid = uid;
         this.email = email;
         this.name = name;
         this.type = type;
@@ -33,5 +36,13 @@ public class User {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
