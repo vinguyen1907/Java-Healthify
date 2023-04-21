@@ -26,6 +26,7 @@ public class SignUpVM extends ViewModel {
     private MutableLiveData<String> passwordError = new MutableLiveData<>(null);
     private MutableLiveData<String> confirmPasswordError = new MutableLiveData<>(null);
     private MutableLiveData<String> toastMessage = new MutableLiveData<>(null);
+    private MutableLiveData<Boolean> isSuccessful = new MutableLiveData<>(false);
     private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{0,8}$";
     private Pattern pattern = Pattern.compile(passwordRegex);
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -42,7 +43,7 @@ public class SignUpVM extends ViewModel {
                         toastMessage.setValue("Sign up successfully");
 
                         // TODO: Navigate to Fill in Information Screen
-
+                        isSuccessful.setValue(true);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -91,6 +92,10 @@ public class SignUpVM extends ViewModel {
         validatePassword();
         validateConfirmPassword();
 
+    }
+
+    public MutableLiveData<Boolean> getIsSuccessful() {
+        return isSuccessful;
     }
 
     public MutableLiveData<String> getEmail() {

@@ -1,0 +1,185 @@
+package com.example.javahealthify.ui.screens.fill_in_personal_information;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.NormalUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.core.FirestoreClient;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+public class FillInPersonalInformationVM extends ViewModel {
+    private MutableLiveData<String> name = new MutableLiveData<>();
+    private MutableLiveData<String> birthdate = new MutableLiveData<>();
+    private MutableLiveData<String> phone = new MutableLiveData<>();
+    private MutableLiveData<String> address = new MutableLiveData<>();
+    private MutableLiveData<String> currentWeight = new MutableLiveData<>("60");
+    private MutableLiveData<String> currentHeight = new MutableLiveData<>("175");
+    private MutableLiveData<String> age = new MutableLiveData<>("18");
+    private MutableLiveData<String> gender = new MutableLiveData<>("Male");
+    private MutableLiveData<String> goalWeight = new MutableLiveData<>("75");
+    private MutableLiveData<String> goalTime = new MutableLiveData<>();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private MutableLiveData<Boolean> isSuccess = new MutableLiveData<>(false);
+
+
+    private MutableLiveData<String> message = new MutableLiveData<>(null);
+
+    public void pushUserDataToDB() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dateString = goalTime.getValue();
+        String birthdateString = birthdate.getValue();
+        Date goalDate = null;
+        Date birthdate = null;
+
+        try {
+             goalDate = formatter.parse(dateString);
+             birthdate = formatter.parse(birthdateString);
+        } catch (ParseException e) {
+            System.out.println("Failed to parse date: " + dateString);
+            e.printStackTrace();
+        }
+
+        if (goalDate != null) {
+            NormalUser newUser = new NormalUser(
+                    firebaseAuth.getCurrentUser().getEmail(),
+                    name.getValue(),
+                    phone.getValue(),
+                    birthdate,
+                    address.getValue(),
+                    gender.getValue(),
+                    Integer.valueOf(currentWeight.getValue()),
+                    Integer.valueOf(goalWeight.getValue()),
+                    new Date(),
+                    goalDate,
+                    0, // TODO: Calculate daily calories
+                    new ArrayList<String>(),
+                    new ArrayList<String>());
+
+            firestore.collection("users").add(newUser).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentReference> task) {
+                    isSuccess.setValue(true);
+                    message.setValue("Sign up success!");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    message.setValue(e.getMessage());
+                }
+            });
+        }
+    }
+
+    // Getters and Setters
+    public MutableLiveData<String> getCurrentWeight() {
+        return currentWeight;
+    }
+
+    public void setCurrentWeight(String currentWeight) {
+        this.currentWeight.setValue(currentWeight);
+        Log.i("CURRENT WEIGHT", this.currentWeight.getValue());
+    }
+
+    public MutableLiveData<String> getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.setValue(name);
+    }
+
+    public MutableLiveData<String> getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate.setValue(birthdate);
+    }
+
+    public MutableLiveData<String> getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone.setValue(phone);
+    }
+
+    public MutableLiveData<String> getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address.setValue(address);
+    }
+
+    public MutableLiveData<String> getCurrentHeight() {
+        return currentHeight;
+    }
+
+    public void setCurrentHeight(String currentHeight) {
+        this.currentHeight.setValue(currentHeight);
+    }
+
+    public MutableLiveData<String> getAge() {
+        return age;
+    }
+
+    public void setCurrentAge(String age) {
+        this.age.setValue(age);
+    }
+
+    public MutableLiveData<String> getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender.setValue(gender);
+    }
+
+    public MutableLiveData<String> getGoalTime() {
+        return goalTime;
+    }
+
+    public void setGoalTime(String goalTime) {
+        this.goalTime.setValue(goalTime);
+    }
+
+    public MutableLiveData<String> getGoalWeight() {
+        return goalWeight;
+    }
+
+    public void setGoalWeight(String goalWeight) {
+        this.goalWeight.setValue(goalWeight);
+    }
+
+    public MutableLiveData<Boolean> getIsSuccess() {
+        return isSuccess;
+    }
+
+    public MutableLiveData<String> getMessage() {
+        return message;
+    }
+}
