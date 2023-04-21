@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MainVM viewModel;
     private NavController navController;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         NavHostFragment navHostFragment =(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
         navController = navHostFragment.getNavController();
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
+            navController.navigate(R.id.homeFragment);
+        }
+
         setUpNavbar();
     }
 
