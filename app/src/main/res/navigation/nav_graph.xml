@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_fillInPersonalInformationFragment"
+            app:destination="@id/fillInPersonalInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -61,5 +64,49 @@
         android:name="com.example.javahealthify.ui.screens.workout.WorkoutFragment"
         android:label="fragment_workout"
         tools:layout="@layout/fragment_workout" />
+    <fragment
+        android:id="@+id/fillInPersonalInformationFragment"
+        android:name="com.example.javahealthify.ui.screens.fill_in_personal_information.FillInPersonalInformationFragment"
+        android:label="FillInPersonalInformationFragment"
+        tools:layout="@layout/fragment_fill_in_personal_information"
+        >
+        <action
+            android:id="@+id/action_fillInPersonalInformationFragment_to_fillInTrackingInformationFragment"
+            app:destination="@id/fillInTrackingInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fillInTrackingInformationFragment"
+        android:name="com.example.javahealthify.ui.screens.fill_in_personal_information.FillInTrackingInformationFragment"
+        android:label="FillInTrackingInformationFragment"
+        tools:layout="@layout/fragment_fill_in_tracking_information"
+        >
+        <action
+            android:id="@+id/action_fillInTrackingInformationFragment_to_currentWeightPickerBottomSheet"
+            app:destination="@id/currentWeightPickerBottomSheetFragment" />
+        <action
+            android:id="@+id/action_fillInTrackingInformationFragment_to_currentHeightPickerBottomSheetFragment"
+            app:destination="@id/currentHeightPickerBottomSheetFragment" />
+        <action
+            android:id="@+id/action_fillInTrackingInformationFragment_to_goalWeightPickerBottomSheetFragment"
+            app:destination="@id/goalWeightPickerBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/currentWeightPickerBottomSheetFragment"
+        android:name="com.example.javahealthify.ui.widgets.number_picker_bottom_sheet.CurrentWeightPickerBottomSheetFragment"
+        android:label="NumberPickerBottomSheet"
+        tools:layout="@layout/fragment_current_weight_picker_bottom_sheet"
+        />
+    <dialog
+        android:id="@+id/currentHeightPickerBottomSheetFragment"
+        android:name="com.example.javahealthify.ui.widgets.number_picker_bottom_sheet.CurrentHeightPickerBottomSheetFragment"
+        android:label="CurrentHeightPickerBottomSheetFragment"
+        tools:layout="@layout/fragment_current_height_picker_bottom_sheet"
+        />
+    <dialog
+        android:id="@+id/goalWeightPickerBottomSheetFragment"
+        android:name="com.example.javahealthify.ui.widgets.number_picker_bottom_sheet.GoalWeightPickerBottomSheetFragment"
+        android:label="GoalWeightPickerBottomSheetFragment"
+        tools:layout="@layout/fragment_goal_weight_picker_bottom_sheet"
+         />
 
 </navigation>
