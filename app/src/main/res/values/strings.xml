@@ -11,6 +11,12 @@
     <string name="onboarding_subtitle_2">You can now control your calories intake by tracking the nutrition facts of your every meal with the help of our reliable food database.</string>
     <string name="onboarding_subtitle_3">Provide personalized workout plans, process tracking, social integration, and a diverse workout library to help user achieve their fitness goals.</string>
 
+    <!--    Fill in information-->
+    <string name="fill_in_information_title_1">Complete personal information</string>
+    <string name="fill_in_information_description_1">We need some personal information to create your own profile. These information will be only use for this application.</string>
+    <string name="fill_in_information_title_2">Complete your information</string>
+    <string name="fill_in_information_description_2">We need some information below to calculate calories you need for a day and suggest suitable exercises for you.</string>
+
     <!--navbar-->
     <string name="navbar_home">Home</string>
     <string name="navbar_menu">Menu</string>
@@ -53,4 +59,10 @@
     <string name="home_detail_abs_text">Abs exercise</string>
     <string name="home_weight_report_text">Weight Report</string>
     <string name="home_icon_back">TODO</string>
+    <string name="update_weight_text">Update Weight</string>
+    <string name="total_weight_text">Total Weight</string>
+    <string name="kg_binding">34Kg</string>
+    <string name="better_than_yesterday_text">Better Than Yesterday</string>
+    <string name="percent_binding">34%</string>
+    <string name="update_weight_texts">Update Weight</string>
 </resources>

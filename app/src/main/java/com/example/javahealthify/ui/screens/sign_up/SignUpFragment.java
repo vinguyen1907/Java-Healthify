@@ -49,6 +49,15 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+        viewModel.getIsSuccessful().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isSuccessful) {
+                if (isSuccessful == true) {
+                    NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.fillInPersonalInformationFragment);
+                }
+            }
+        });
+
         return binding.getRoot();
     }
 
