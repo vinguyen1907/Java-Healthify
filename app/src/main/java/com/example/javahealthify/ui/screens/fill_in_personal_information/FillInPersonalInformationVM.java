@@ -79,9 +79,9 @@ public class FillInPersonalInformationVM extends ViewModel {
                     new ArrayList<String>(),
                     new ArrayList<String>());
 
-            String id = firestore.collection("users").document().getId();
-            newUser.setUid(id);
-            firestore.collection("users").document(id).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+            String uid = firebaseAuth.getCurrentUser().getUid();
+            newUser.setUid(uid);
+            firestore.collection("users").document(uid).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     isSuccess.setValue(true);
