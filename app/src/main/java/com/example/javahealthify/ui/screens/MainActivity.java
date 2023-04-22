@@ -1,8 +1,11 @@
 package com.example.javahealthify.ui.screens;
 
+import static android.provider.Settings.System.getString;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -13,6 +16,8 @@ import android.view.View;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.ActivityMainBinding;
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MainVM viewModel;
     private NavController navController;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private BeginSignInRequest signInRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +35,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         NavHostFragment navHostFragment =(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
         navController = navHostFragment.getNavController();
+
+        viewModel = new ViewModelProvider(this).get(MainVM.class);
+        binding.setMainVM(viewModel);
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
+            viewModel.loadUser();
+            navController.navigate(R.id.homeFragment);
+        }
+
+//        createRequest();
+
         setUpNavbar();
     }
+
+//    private void createRequest() {
+//         signInRequest = BeginSignInRequest.builder()
+//                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+//                        .setSupported(true)
+//                        // Your server's client ID, not your Android client ID.
+//                        .setServerClientId(getString(R.string.default_web_client_id))
+//                        // Only show accounts previously used to sign in.
+//                        .setFilterByAuthorizedAccounts(true)
+//                        .build())
+//                .build();
+//    }
 
     private void setNavbarItem(int itemId) {
         binding.navBar.setItemSelected(itemId, true);
