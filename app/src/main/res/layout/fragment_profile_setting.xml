@@ -58,7 +58,7 @@
         android:drawableStart="@drawable/ic_danger"
         android:drawableEnd="@drawable/ic_chevron_backward"
         android:drawableTint="?attr/colorError"
-        android:drawablePadding="24dp"
+        android:drawablePadding="28dp"
         android:gravity="start"
         android:paddingLeft="24dp"
         android:paddingTop="18dp"
@@ -67,71 +67,7 @@
         android:textColor="?attr/colorError"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/change_pass_btn" />
-<!--    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/ic_back" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Settings"
-            android:textSize="18sp" />
-
-
-    </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/change_pass_btn"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginTop="32dp"
-        android:drawableStart="@drawable/ic_edit_pencil"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="12dp"
-        android:gravity="start"
-        android:paddingLeft="24dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="8dp"
-        android:text="Change Password"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/logout_btn"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:drawableStart="@drawable/ic_information"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="12dp"
-        android:gravity="start"
-        android:paddingLeft="24dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="8dp"
-        android:text="Log Out"
-        android:textColor="?attr/colorError"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/change_pass_btn" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
