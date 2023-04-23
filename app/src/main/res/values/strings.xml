@@ -17,6 +17,10 @@
     <string name="fill_in_information_title_2">Complete your information</string>
     <string name="fill_in_information_description_2">We need some information below to calculate calories you need for a day and suggest suitable exercises for you.</string>
 
+    <!--    Forgot password-->
+    <string name="forgot_password_description">Enter your registered email, we will send you a password reset email</string>
+    <string name="sent_reset_email_description">We have sent you an password reset email. Please check your inbox!</string>
+
     <!--navbar-->
     <string name="navbar_home">Home</string>
     <string name="navbar_menu">Menu</string>

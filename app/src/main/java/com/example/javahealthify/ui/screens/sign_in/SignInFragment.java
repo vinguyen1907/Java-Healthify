@@ -62,5 +62,12 @@ public class SignInFragment extends Fragment {
                 NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.signUpFragment);
             }
         });
+
+        binding.forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.forgotPasswordFragment);
+            }
+        });
     }
 }

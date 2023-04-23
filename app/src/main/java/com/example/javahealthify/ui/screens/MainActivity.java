@@ -43,22 +43,8 @@ public class MainActivity extends AppCompatActivity {
 //            navController.navigate(R.id.homeFragment);
 //        }
 
-//        createRequest();
-
         setUpNavbar();
     }
-
-//    private void createRequest() {
-//         signInRequest = BeginSignInRequest.builder()
-//                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-//                        .setSupported(true)
-//                        // Your server's client ID, not your Android client ID.
-//                        .setServerClientId(getString(R.string.default_web_client_id))
-//                        // Only show accounts previously used to sign in.
-//                        .setFilterByAuthorizedAccounts(true)
-//                        .build())
-//                .build();
-//    }
 
     private void setNavbarItem(int itemId) {
         binding.navBar.setItemSelected(itemId, true);
