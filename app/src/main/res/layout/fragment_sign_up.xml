@@ -44,9 +44,9 @@
                     android:layout_marginStart="0dp"
                     android:drawableStart="@drawable/ic_email"
                     android:hint="Email"
-                    android:text="@={signUpVM.email}"
                     android:inputType="textEmailAddress"
                     android:paddingVertical="5dp"
+                    android:text="@={signUpVM.email}"
                     android:textColorHint="@color/primaryHintColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -66,17 +66,17 @@
                     android:layout_marginStart="0dp"
                     android:drawableStart="@drawable/ic_password"
                     android:hint="Password"
-                    android:text="@={signUpVM.password}"
                     android:inputType="textPassword"
                     android:paddingVertical="5dp"
+                    android:text="@={signUpVM.password}"
                     android:textColorHint="@color/primaryHintColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/login_confirm_password_container"
                 style="@style/CustomTextInputLayout"
-                app:helperText="@{signUpVM.confirmPasswordError}"
                 android:layout_marginTop="8dp"
+                app:helperText="@{signUpVM.confirmPasswordError}"
                 app:layout_constraintTop_toBottomOf="@+id/login_password_container"
                 app:passwordToggleDrawable="@drawable/password_toggle"
                 app:passwordToggleEnabled="true"
@@ -199,6 +199,14 @@
                     android:textColor="@color/primaryColor" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <include
+                android:id="@+id/loading_layout"
+                android:visibility="gone"
+                layout="@layout/progress_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
