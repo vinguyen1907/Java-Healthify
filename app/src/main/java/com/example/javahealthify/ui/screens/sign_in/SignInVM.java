@@ -18,11 +18,14 @@ public class SignInVM extends ViewModel {
     private MutableLiveData<String> toastMessage = new MutableLiveData<>(null);
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private MutableLiveData<Boolean> signInSuccess = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     public void signInWithEmailAndPassword() {
+        isLoading.setValue(true);
         firebaseAuth.signInWithEmailAndPassword(email.getValue(), password.getValue()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                isLoading.setValue(false);
                 if (task.isSuccessful()) {
                     toastMessage.setValue("Sign in successfully");
                     signInSuccess.setValue(true);
@@ -31,6 +34,7 @@ public class SignInVM extends ViewModel {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                isLoading.setValue(false);
                 toastMessage.setValue(e.getMessage());
             }
         });
@@ -73,5 +77,9 @@ public class SignInVM extends ViewModel {
 
     public MutableLiveData<Boolean> getSignInSuccess() {
         return signInSuccess;
+    }
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 }
