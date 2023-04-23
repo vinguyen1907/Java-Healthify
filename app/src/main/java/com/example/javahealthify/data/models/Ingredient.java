@@ -1,39 +1,37 @@
 package com.example.javahealthify.data.models;
 
 public class Ingredient {
-    private String id;
-    private String shortDescription;
-    private double calories;
-    private double carbs;
-    private double lipid;
-    private double protein;
+    private IngredientInfo ingredientInfo;
+    private int weight;
+    private int calories;
 
-    public Ingredient(String id, String shortDescription, double calories, double carbs, double lipid, double protein) {
-        this.id = id;
-        this.shortDescription = shortDescription;
-        this.calories = calories;
-        this.carbs = carbs;
-        this.lipid = lipid;
-        this.protein = protein;
+    public Ingredient(IngredientInfo ingredientInfo, int weight) {
+        this.ingredientInfo = ingredientInfo;
+        this.weight = weight;
+        this.calories = ingredientInfo.getCalories()*weight;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
+    public IngredientInfo getIngredientInfo() {
+        return ingredientInfo;
     }
 
-    public double getCalories() {
+    public void setIngredientInfo(IngredientInfo ingredientInfo) {
+        this.ingredientInfo = ingredientInfo;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public int getCalories() {
         return calories;
     }
 
-    public double getCarbs() {
-        return carbs;
-    }
-
-    public double getLipid() {
-        return lipid;
-    }
-
-    public double getProtein() {
-        return protein;
+    public void setCalories(int calories) {
+        this.calories = calories;
     }
 }
