@@ -58,7 +58,11 @@
         android:id="@+id/profileFragment"
         android:name="com.example.javahealthify.ui.screens.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_profilePersonalInfoFragment"
+            app:destination="@id/profilePersonalInfoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/workoutFragment"
         android:name="com.example.javahealthify.ui.screens.workout.WorkoutFragment"
@@ -108,5 +112,10 @@
         android:label="GoalWeightPickerBottomSheetFragment"
         tools:layout="@layout/fragment_goal_weight_picker_bottom_sheet"
          />
+    <fragment
+        android:id="@+id/profilePersonalInfoFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment"
+        android:label="fragment_profile_personal_info"
+        tools:layout="@layout/fragment_profile_personal_info" />
 
 </navigation>
