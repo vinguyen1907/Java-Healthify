@@ -1,6 +1,7 @@
 package com.example.javahealthify.ui.screens;
 
-import static android.provider.Settings.System.getString;
+import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,11 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
-
-import android.os.Bundle;
-import android.view.View;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.ActivityMainBinding;
@@ -39,12 +36,12 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
 
-        if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
-        } else {
-            viewModel.loadUser();
-            navController.navigate(R.id.homeFragment);
-        }
+//        if (firebaseAuth.getCurrentUser() == null) {
+//            navController.navigate(R.id.signUpFragment);
+//        } else {
+//            viewModel.loadUser();
+//            navController.navigate(R.id.homeFragment);
+//        }
 
         setUpNavbar();
     }
