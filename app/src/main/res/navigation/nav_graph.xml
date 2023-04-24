@@ -171,6 +171,9 @@
         <action
             android:id="@+id/action_profileSettingFragment_to_profileChangePassFragment2"
             app:destination="@id/profileChangePassFragment2" />
+        <action
+            android:id="@+id/action_profileSettingFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileCaloriesHistoryFragment"

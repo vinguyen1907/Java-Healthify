@@ -40,7 +40,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/Profile_Edit"
+            android:text="Personal Infomation"
             android:textSize="18sp" />
 
 
