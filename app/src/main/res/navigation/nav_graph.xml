@@ -65,7 +65,30 @@
         android:id="@+id/profileFragment"
         android:name="com.example.javahealthify.ui.screens.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileChangeGoalsFragment"
+            app:destination="@id/profileChangeGoalsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileChangeNotiTimeFragment"
+            app:destination="@id/profileChangeNotiTimeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileChangeNotiTimeFragment2"
+            app:destination="@id/profileChangeNotiTimeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profilePersonalInfoFragment"
+            app:destination="@id/profilePersonalInfoFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileCaloriesHistoryFragment"
+            app:destination="@id/profileCaloriesHistoryFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profileSettingFragment"
+            app:destination="@id/profileSettingFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/workoutFragment"
         android:name="com.example.javahealthify.ui.screens.workout.WorkoutFragment"
@@ -115,5 +138,44 @@
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password"
         />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_edit.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/profileChangeGoalsFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_change_goals.ProfileChangeGoalsFragment"
+        android:label="fragment_profile_change_goals"
+        tools:layout="@layout/fragment_profile_change_goals" />
+    <fragment
+        android:id="@+id/profileChangeNotiTimeFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_change_noti_time.ProfileChangeNotiTimeFragment"
+        android:label="fragment_profile_change_noti_time"
+        tools:layout="@layout/fragment_profile_change_noti_time" />
+    <fragment
+        android:id="@+id/profilePersonalInfoFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment"
+        android:label="fragment_profile_personal_info"
+        tools:layout="@layout/fragment_profile_personal_info" />
+    <fragment
+        android:id="@+id/profileChangePassFragment2"
+        android:name="com.example.javahealthify.ui.screens.profile_change_pass.ProfileChangePassFragment"
+        android:label="fragment_profile_change_pass"
+        tools:layout="@layout/fragment_profile_change_pass" />
+    <fragment
+        android:id="@+id/profileSettingFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_setting.ProfileSettingFragment"
+        android:label="fragment_profile_setting"
+        tools:layout="@layout/fragment_profile_setting" >
+        <action
+            android:id="@+id/action_profileSettingFragment_to_profileChangePassFragment2"
+            app:destination="@id/profileChangePassFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileCaloriesHistoryFragment"
+        android:name="com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment"
+        android:label="fragment_profile_calories_history"
+        tools:layout="@layout/fragment_profile_calories_history" />
 
 </navigation>
