@@ -134,8 +134,8 @@
             android:paddingLeft="24dp"
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
-            android:textSize="18sp"
             android:text="Personal Information"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/personal_info_goals_title" />
 
@@ -184,7 +184,7 @@
             app:layout_constraintTop_toBottomOf="@+id/activities_settings_title" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/add_workout_hours_btn"
+            android:id="@+id/change_noti_time_btn"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:drawableStart="@drawable/ic_time"
@@ -195,7 +195,7 @@
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
             android:textSize="18sp"
-            android:text="Add Workout Hours"
+            android:text="Change Notification Time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calories_history_btn" />
 
@@ -213,7 +213,7 @@
             android:textSize="18sp"
             android:text="Settings"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_workout_hours_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/change_noti_time_btn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -18,6 +18,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+
+
     private User user;
 
     public void loadUser() {
@@ -34,5 +37,9 @@ public class MainVM extends ViewModel {
 
                     }
                 });
+    }
+    public User getUser() {
+
+        return user;
     }
 }
