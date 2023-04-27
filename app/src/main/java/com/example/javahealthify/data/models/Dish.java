@@ -13,8 +13,7 @@ public class Dish {
     this.dishName = dishName;
     this.ingredientData = ingredientData;
     this.totalCalories = totalCalories;
-        this.Session = Session;
-
+    this.Session = Session;
     }
 
     public String getId() {
