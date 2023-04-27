@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.lifecycle.MutableLiveData;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,11 +21,20 @@ import java.util.ArrayList;
 
 public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleViewAdapter.MealViewHolder> {
     Context context;
-    MutableLiveData<ArrayList<Dish>> dishes = new MutableLiveData<ArrayList<Dish>>();
+
+    public void setDishes(ArrayList<Dish> dishes) {
+        this.dishes = dishes;
+        notifyDataSetChanged();
+    }
+
+    ArrayList<Dish> dishes = new ArrayList<Dish>();
+
+    private MealOptionsClickListener mealOptionsClickListener;
+    private AddIngredientClickListener addIngredientClickListener;
 
     public DishRecycleViewAdapter(Context context, ArrayList<Dish> dishArrayList) {
         this.context = context;
-        this.dishes.setValue( dishArrayList);
+        this.dishes = dishArrayList;
     }
 
     @NonNull
@@ -38,16 +47,31 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        holder.tvDishName.setText(dishes.getValue().get(position).getDishName());
-        holder.tvMealCalories.setText(String.valueOf(dishes.getValue().get(position).getTotalCalories()));
+        holder.tvDishName.setText(dishes.get(position).getDishName());
+        holder.tvMealCalories.setText(String.valueOf(dishes.get(position).getTotalCalories()));
 
-        Log.d("KHOASIEUDZ", "onBindViewHolder: " + String.valueOf(dishes.getValue().get(position).getIngredientData().size()));
-        IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.getValue().get(position).getIngredientData());
+        IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredientData());
         holder.rvIngredients.setLayoutManager(new LinearLayoutManager(context));
         holder.rvIngredients.setAdapter(ingredientRowRecyclerViewAdapter);
+        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mealOptionsClickListener != null) {
+                    mealOptionsClickListener.onMealOptionClick(position);
+                }
+            }
+        });
+        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (addIngredientClickListener != null) {
+                    addIngredientClickListener.onAddIngredientClick(position);
+                }
+            }
+        });
 
         Drawable startDrawable;
-        switch (dishes.getValue().get(position).getSession()) {
+        switch (dishes.get(position).getSession()) {
 
             case "Breakfast":
                 startDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_breakfast);
@@ -68,19 +92,30 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
 
     @Override
     public int getItemCount() {
-        return dishes.getValue().size();
+        return dishes == null? 0 : dishes.size();
     }
 
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         TextView tvDishName, tvMealCalories;
         RecyclerView rvIngredients;
+        AppCompatButton btnMealOption, btnAddIngredient;
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             tvDishName = itemView.findViewById(R.id.menu_dish_name);
             tvMealCalories = itemView.findViewById(R.id.meal_calories);
             rvIngredients = itemView.findViewById(R.id.meal_ingredients_list);
+            btnMealOption = itemView.findViewById(R.id.meal_options);
+            btnAddIngredient = itemView.findViewById(R.id.add_ingredient);
         }
+    }
+
+    public interface MealOptionsClickListener {
+        void onMealOptionClick(int position);
+    }
+
+    public interface AddIngredientClickListener {
+        void onAddIngredientClick(int position);
     }
 
 }

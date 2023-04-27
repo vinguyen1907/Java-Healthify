@@ -8,7 +8,7 @@ public class Ingredient {
     public Ingredient(IngredientInfo ingredientInfo, int weight) {
         this.ingredientInfo = ingredientInfo;
         this.weight = weight;
-        this.calories = ingredientInfo.getCalories()*weight;
+        this.calories = ingredientInfo.getCalories()*(weight/100);
     }
 
     public IngredientInfo getIngredientInfo() {

@@ -70,4 +70,22 @@
     <string name="percent_binding">34%</string>
     <string name="update_weight_texts">Update Weight</string>
     <string name="menu_today">Today</string>
+
+    <!--    menu-->
+    <string name="dish_name_hint_text">Name of your dish</string>
+
+    <string name="meal_type">Session</string>
+    <string-array name="meal_types">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Brunch</item>
+        <item>Snack</item>
+
+    </string-array>
+    <string name="ingredients">Ingredients</string>
+    <string name="total_calories">Total calories</string>
+    <string name="ingredient_search_hint">Search for any ingredient</string>
+    <string name="can_t_find_your_ingredient">Can\'t find your ingredient?</string>
+    <string name="add_your_own">Add your own</string>
 </resources>

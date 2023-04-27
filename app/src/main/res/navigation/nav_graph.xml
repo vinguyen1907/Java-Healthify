@@ -60,7 +60,11 @@
         android:id="@+id/menuFragment"
         android:name="com.example.javahealthify.ui.screens.menu.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_addMealFragment"
+            app:destination="@id/addMealFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.javahealthify.ui.screens.profile.ProfileFragment"
@@ -115,5 +119,24 @@
         android:label="ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password"
         />
+    <fragment
+        android:id="@+id/addMealFragment"
+        android:name="com.example.javahealthify.ui.screens.add_meal.AddMealFragment"
+        android:label="AddMealFragment" >
+        <action
+            android:id="@+id/action_addMealFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_addMealFragment_to_findIngredientFragment"
+            app:destination="@id/findIngredientFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findIngredientFragment"
+        android:name="com.example.javahealthify.ui.screens.find_ingredient.FindIngredientFragment"
+        android:label="FindIngredientFragment" >
+        <action
+            android:id="@+id/action_findIngredientFragment_to_addMealFragment"
+            app:destination="@id/addMealFragment" />
+    </fragment>
 
 </navigation>
