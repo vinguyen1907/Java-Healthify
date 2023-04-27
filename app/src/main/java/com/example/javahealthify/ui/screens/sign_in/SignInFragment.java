@@ -34,6 +34,12 @@ public class SignInFragment extends Fragment {
 
         setOnClick();
 
+        setObservables();
+
+        return binding.getRoot();
+    }
+
+    private void setObservables() {
         viewModel.getToastMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -52,7 +58,16 @@ public class SignInFragment extends Fragment {
             }
         });
 
-        return binding.getRoot();
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                if (isLoading) {
+                    binding.loadingLayout.setVisibility(View.VISIBLE);
+                } else {
+                    binding.loadingLayout.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void setOnClick() {

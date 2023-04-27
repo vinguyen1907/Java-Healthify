@@ -57,6 +57,17 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                if (isLoading) {
+                    binding.loadingLayout.getRoot().setVisibility(View.VISIBLE);
+                } else {
+                    binding.loadingLayout.getRoot().setVisibility(View.GONE);
+                }
+            }
+        });
+
         return binding.getRoot();
     }
 

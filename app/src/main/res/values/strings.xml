@@ -88,4 +88,23 @@
     <string name="ingredient_search_hint">Search for any ingredient</string>
     <string name="can_t_find_your_ingredient">Can\'t find your ingredient?</string>
     <string name="add_your_own">Add your own</string>
+
+    <string name="Profile_Name">Ariana Grande</string>
+    <string name="Profile_Email">AriGrande@gmail.com</string>
+    <string name="Profile_Edit">Edit Profile</string>
+    <string name="Profile_BirthDay">30/02/2002</string>
+    <string name="Profile_PhoneNumber">0908123456</string>
+    <string name="Profile_Address">UIT Linh Trung</string>
+    <string name="community_text">Community</string>
+    <string name="Community_name">Ariana Grande</string>
+    <string name="community_calories">31th March, 2023</string>
+    <string name="community_calo">690</string>
+    <string name="community_calotext">kcal</string>
+    <string name="community_achievementtext">My achievement today</string>
+    <string name="community_step">6.996</string>
+    <string name="community_steptext">steps</string>
+    <string name="community_kcalexcercise">6.996</string>
+    <string name="community_kcalexcecisetext">kcal for excercises</string>
+    <string name="community_kcalfood">1200</string>
+    <string name="community_kcalfoodtext">kcal from foods</string>
 </resources>
