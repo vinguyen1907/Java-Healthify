@@ -107,4 +107,14 @@
     <string name="community_kcalexcecisetext">kcal for excercises</string>
     <string name="community_kcalfood">1200</string>
     <string name="community_kcalfoodtext">kcal from foods</string>
+    <string name="achievementdetail_detailstext">Details</string>
+    <string name="community_achieventmentdetail_foodtext">Foods</string>
+    <string name="community_achievmentdetails_textfood">Chicken Breast</string>
+    <string name="community_details_kalo">246</string>
+    <string name="community_detail_kcal">kcal</string>
+    <string name="community_detail_excercisetext">Excercises</string>
+    <string name="community_ahievemnt_Detail_excercise">Crunches</string>
+    <string name="community_achievementdetail_kcal_excerise">20</string>
+    <string name="community_achievement_detail_rep">50</string>
+    <string name="reps">reps</string>
 </resources>
