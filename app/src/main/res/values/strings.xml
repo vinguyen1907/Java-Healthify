@@ -18,6 +18,7 @@
     <string name="fill_in_information_description_2">We need some information below to calculate calories you need for a day and suggest suitable exercises for you.</string>
 
     <!--    Forgot password-->
+    <string name="forgot_password_text">Forgot password</string>
     <string name="forgot_password_description">Enter your registered email, we will send you a password reset email</string>
     <string name="sent_reset_email_description">We have sent you an password reset email. Please check your inbox!</string>
 
@@ -77,4 +78,9 @@
     <string name="Profile_BirthDay">30/02/2002</string>
     <string name="Profile_PhoneNumber">0908123456</string>
     <string name="Profile_Address">UIT Linh Trung</string>
+
+    <!--    workout-->
+    <string name="tab_title_beginner">Beginner</string>
+    <string name="tab_title_intermediate">Intermediate</string>
+    <string name="tab_title_advance">Advance</string>
 </resources>

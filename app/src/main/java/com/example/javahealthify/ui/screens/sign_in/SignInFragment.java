@@ -81,7 +81,7 @@ public class SignInFragment extends Fragment {
         binding.forgotPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.forgotPasswordFragment);
+                NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.action_signInFragment_to_forgotPasswordFragment);
             }
         });
     }
