@@ -49,15 +49,13 @@ public class ProfileFragment extends Fragment {
 
         user = mainVM.getUser();
 
-
-
-//        profileVM.getUserLiveData().observe(this, new Observer<User>() {
-//            @Override
-//            public void onChanged(User user) {
-//                binding.profileNameTv.setText(user.getName());
-//                binding.profileEmailTv.setText(user.getEmail());
-//            }
-//        });
+        profileVM.getUserLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                binding.profileNameTv.setText(user.getName());
+                binding.profileEmailTv.setText(user.getEmail());
+            }
+        });
 
 
     }
@@ -71,6 +69,7 @@ public class ProfileFragment extends Fragment {
 
         binding.profileNameTv.setText(user.getName());
         binding.profileEmailTv.setText(user.getEmail());
+
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

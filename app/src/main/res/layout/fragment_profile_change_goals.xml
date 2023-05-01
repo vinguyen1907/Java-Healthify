@@ -50,7 +50,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="Your goal in the future (weight)"
+        android:text="Weight Goal"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
@@ -59,9 +60,8 @@
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
         android:background="@drawable/primary_edittext_background"
-        android:drawableEnd="@drawable/ic_option"
         android:inputType="number"
-        android:text="100"
+        android:hint="Future weight"
         app:layout_constraintTop_toBottomOf="@+id/weight_tv"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="20dp" />
@@ -72,7 +72,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Your goal in the future (step)"
+        android:text="Steps Goal"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weight_edt" />
 
@@ -81,9 +82,8 @@
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
         android:background="@drawable/primary_edittext_background"
-        android:drawableEnd="@drawable/ic_option"
         android:inputType="number"
-        android:text="100"
+        android:hint="Future steps"
         app:layout_constraintTop_toBottomOf="@+id/step_tv"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="16dp" />
@@ -95,6 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Time to achieve this goal"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/step_edt" />
 
@@ -103,9 +104,9 @@
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
         android:background="@drawable/primary_edittext_background"
-        android:drawableEnd="@drawable/ic_option"
+        android:drawableEnd="@drawable/ic_calendar"
         android:inputType="date"
-        android:text="1/1/2024"
+        android:hint="Future date"
         app:layout_constraintTop_toBottomOf="@+id/time_goal_tv"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="16dp" />
