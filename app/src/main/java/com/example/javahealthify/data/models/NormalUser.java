@@ -124,6 +124,4 @@ public class NormalUser extends User {
         this.followers = followers;
     }
 //    private  List<DailyActivity> dailyActivities;
-
-
 }
