@@ -15,6 +15,7 @@ import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private BeginSignInRequest signInRequest;
+    static private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         NavHostFragment navHostFragment =(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
@@ -104,5 +107,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static FirebaseFirestore getDb() {
+        return db;
     }
 }
