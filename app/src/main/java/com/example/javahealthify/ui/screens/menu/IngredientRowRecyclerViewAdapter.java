@@ -16,8 +16,13 @@ import java.util.ArrayList;
 
 public class IngredientRowRecyclerViewAdapter extends RecyclerView.Adapter<IngredientRowRecyclerViewAdapter.IngredientRowViewHolder> {
     Context context;
-    ArrayList<Ingredient> ingredientArrayList;
-    //! MUST USE LIVEDATA FOR INGREDIENT LIST OF EACH MEAL
+
+    public void setIngredientArrayList(ArrayList<Ingredient> ingredientArrayList) {
+        this.ingredientArrayList = ingredientArrayList;
+        notifyDataSetChanged();
+    }
+
+    ArrayList<Ingredient> ingredientArrayList = new ArrayList<>();
     public IngredientRowRecyclerViewAdapter(Context context, ArrayList<Ingredient> ingredientArrayList) {
         this.context = context;
         this.ingredientArrayList = ingredientArrayList;
@@ -41,7 +46,7 @@ public class IngredientRowRecyclerViewAdapter extends RecyclerView.Adapter<Ingre
 
     @Override
     public int getItemCount() {
-        return ingredientArrayList.size();
+        return ingredientArrayList == null? 0 : ingredientArrayList.size();
     }
     public static class IngredientRowViewHolder extends RecyclerView.ViewHolder {
         TextView tvIngredientName, tvIngredientCalories, tvIngredientWeight;

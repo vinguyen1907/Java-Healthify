@@ -34,16 +34,18 @@ public class SignUpVM extends ViewModel {
     private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{0,8}$";
     private Pattern pattern = Pattern.compile(passwordRegex);
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     public void signUpWithEmailAndPassword() {
         validate();
 
         if (emailError.getValue() == null && passwordError.getValue() == null && confirmPasswordError.getValue() == null) {
+            isLoading.setValue(true);
             firebaseAuth.createUserWithEmailAndPassword(email.getValue(), password.getValue()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        isLoading.setValue(false);
                         toastMessage.setValue("Sign up successfully");
                         isSuccessful.setValue(true);
                     }
@@ -51,6 +53,7 @@ public class SignUpVM extends ViewModel {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    isLoading.setValue(false);
                     toastMessage.setValue(e.getMessage());
                 }
             });
@@ -150,5 +153,9 @@ public class SignUpVM extends ViewModel {
 
     public MutableLiveData<String> getToastMessage() {
         return toastMessage;
+    }
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 }

@@ -1,210 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constrain"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.screens.profile.ProfileFragment">
+    xmlns:bind="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/poppins_bold"
-        android:text="Profile"
-        android:textColor="@color/primaryColor"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.javahealthify.ui.screens.profile.ProfileVM" />
+    </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:background="@color/secondaryColor"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="@color/primaryBackgroundColor"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        android:layout_height="match_parent"
+        bind:context=".ui.screens.profile.ProfileFragment">
 
-        <LinearLayout
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Profile"
+            android:textColor="@color/primaryColor"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:background="@color/secondaryColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            app:cardBackgroundColor="@color/primaryBackgroundColor"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="136dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/default_avatar"
-                app:civ_border_width="2dp" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="148dp"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/profile_name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="Nguyễn Văn A"
-                    android:textSize="26sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/profile_image"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/default_avatar"
+                    app:civ_border_width="2dp" />
 
-                <TextView
-                    android:id="@+id/email_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:text="cc.cc@gmail.com"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="148dp"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/edit_profile_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/primary_button_background"
-                    android:drawableEnd="@drawable/ic_chevron_backward"
-                    android:drawablePadding="8dp"
-                    android:paddingLeft="12dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="4dp"
-                    android:text="Edit Profile"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/email_tv" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/profile_name_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/Profile_Name"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Thông tin và mục tiêu cá nhân -->
+                    <TextView
+                        android:id="@+id/profile_email_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/Profile_Email"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_name_tv" />
 
-        <!-- Hoạt động và cài đặt -->
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/edit_profile_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/primary_button_background"
+                        android:drawableEnd="@drawable/ic_chevron_backward"
+                        android:drawablePadding="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="Edit Profile"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profile_email_tv" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+            <!-- Thông tin và mục tiêu cá nhân -->
 
-    <TextView
-        android:id="@+id/personal_info_goals_title"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="24dp"
-        android:background="@color/secondaryColor"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:text="Personal Information and Goals"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+            <!-- Hoạt động và cài đặt -->
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/personal_info_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/ic_information"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="24dp"
-        android:gravity="start"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:text="Personal Information"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/personal_info_goals_title" />
+        </androidx.cardview.widget.CardView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/change_goals_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/ic_edit_pencil"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="24dp"
-        android:gravity="start"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:text="Change Goals"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@+id/personal_info_btn"
-        tools:layout_editor_absoluteX="21dp" />
+        <TextView
+            android:id="@+id/personal_info_goals_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/secondaryColor"
+            android:foregroundGravity="center"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:text="Personal Information and Goals"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-    <TextView
-        android:id="@+id/activities_settings_title"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@color/secondaryColor"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:text="Activities and Settings"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/change_goals_btn" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/personal_info_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_information"
+            android:drawableEnd="@drawable/ic_chevron_backward"
+            android:drawablePadding="20dp"
+            android:gravity="start"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="8dp"
+            android:text="Personal Information"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/personal_info_goals_title" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/calories_history_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/ic_history"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="24dp"
-        android:gravity="start"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:text="Calories History"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activities_settings_title" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/change_goals_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_edit_pencil"
+            android:drawableEnd="@drawable/ic_chevron_backward"
+            android:drawablePadding="20dp"
+            android:gravity="start"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="8dp"
+            android:textSize="18sp"
+            android:text="Change Goals"
+            app:layout_constraintTop_toBottomOf="@+id/personal_info_btn"
+            bind:layout_editor_absoluteX="21dp" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/add_workout_hours_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/ic_time"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="24dp"
-        android:gravity="start"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:text="Add Workout Hours"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calories_history_btn" />
+        <TextView
+            android:id="@+id/activities_settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/secondaryColor"
+            android:gravity="center_vertical"
+            android:paddingLeft="24dp"
+            android:text="Activities and Settings"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/change_goals_btn" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/settings_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:drawableStart="@drawable/ic_gear"
-        android:drawableEnd="@drawable/ic_chevron_backward"
-        android:drawablePadding="24dp"
-        android:gravity="start"
-        android:paddingLeft="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:text="Settings"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_workout_hours_btn" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/calories_history_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_history"
+            android:drawableEnd="@drawable/ic_chevron_backward"
+            android:drawablePadding="20dp"
+            android:gravity="start"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="8dp"
+            android:textSize="18sp"
+            android:text="Calories History"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/activities_settings_title" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/change_noti_time_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_time"
+            android:drawableEnd="@drawable/ic_chevron_backward"
+            android:drawablePadding="20dp"
+            android:gravity="start"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="8dp"
+            android:textSize="18sp"
+            android:text="Change Notification Time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calories_history_btn" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/settings_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:drawableStart="@drawable/ic_gear"
+            android:drawableEnd="@drawable/ic_chevron_backward"
+            android:drawablePadding="20dp"
+            android:gravity="start"
+            android:paddingLeft="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="8dp"
+            android:textSize="18sp"
+            android:text="Settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/change_noti_time_btn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
 
 

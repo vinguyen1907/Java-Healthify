@@ -1,16 +1,15 @@
 package com.example.javahealthify.ui.screens.sign_up;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentSignUpBinding;
@@ -54,6 +53,17 @@ public class SignUpFragment extends Fragment {
             public void onChanged(Boolean isSuccessful) {
                 if (isSuccessful == true) {
                     NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.fillInPersonalInformationFragment);
+                }
+            }
+        });
+
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoading) {
+                if (isLoading) {
+                    binding.loadingLayout.getRoot().setVisibility(View.VISIBLE);
+                } else {
+                    binding.loadingLayout.getRoot().setVisibility(View.GONE);
                 }
             }
         });
