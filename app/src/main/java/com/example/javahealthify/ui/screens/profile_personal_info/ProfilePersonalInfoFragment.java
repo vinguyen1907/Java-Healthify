@@ -27,9 +27,7 @@ import java.text.SimpleDateFormat;
 public class ProfilePersonalInfoFragment extends Fragment {
     private ProfilePersonalInfoVM profilePersonalInfoVM;
     private @NonNull FragmentProfilePersonalInfoBinding binding;
-
     private User user;
-
     public ProfilePersonalInfoFragment() {
         // Required empty public constructor
     }
@@ -51,14 +49,13 @@ public class ProfilePersonalInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentProfilePersonalInfoBinding.inflate(inflater,container,false);
 
-
         binding.personalprofileNameTv.setText(((NormalUser) user).getName());
         binding.personalprofileEmailTv.setText(((NormalUser) user).getEmail());
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String dateStr = formatter.format(((NormalUser) user).getDateOfBirth());
         binding.personalprofileBirthdayTv.setText(dateStr);
-        binding.personalprofileEmailTv.setText(((NormalUser) user).getEmail());
-        binding.personalprofileEmailTv.setText(((NormalUser) user).getAddress());
+        binding.personalprofilePhoneTv.setText(((NormalUser) user).getPhone());
+        binding.personalprofileAddressTv.setText(((NormalUser) user).getAddress());
 
 
         binding.linearLayout.setOnClickListener(new View.OnClickListener() {

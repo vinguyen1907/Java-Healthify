@@ -26,16 +26,16 @@
             android:fontFamily="@font/poppins_bold"
             android:text="Profile"
             android:textColor="@color/primaryColor"
-            android:textSize="48sp"
-            android:textStyle="bold"
+            android:textSize="38sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:background="@color/secondaryColor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/secondaryColor"
             app:cardBackgroundColor="@color/primaryBackgroundColor"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp"
@@ -48,10 +48,10 @@
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_marginStart="16dp"
                     android:id="@+id/profile_image"
                     android:layout_width="140dp"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
                     android:src="@drawable/default_avatar"
                     app:civ_border_width="2dp" />
 
