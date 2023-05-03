@@ -20,8 +20,6 @@ public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-
-
     private User user;
 
     public void loadUser() {

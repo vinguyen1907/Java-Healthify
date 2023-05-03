@@ -25,14 +25,7 @@ import com.example.javahealthify.ui.screens.MainVM;
 public class ProfileFragment extends Fragment {
 
     private ProfileVM profileVM;
-    private TextView nameTextView;
-    private TextView emailTextView;
-
-    private AppCompatButton personalInfoBtn;
-    private AppCompatButton changeGoalsBtn;
-    private NavController navController;
     private FragmentProfileBinding binding;
-    private NavHostFragment navHostFragment;
 
     private User user;
 
@@ -48,8 +41,6 @@ public class ProfileFragment extends Fragment {
         MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
         user = mainVM.getUser();
-
-
 
 //        profileVM.getUserLiveData().observe(this, new Observer<User>() {
 //            @Override
@@ -71,6 +62,7 @@ public class ProfileFragment extends Fragment {
 
         binding.profileNameTv.setText(user.getName());
         binding.profileEmailTv.setText(user.getEmail());
+
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
