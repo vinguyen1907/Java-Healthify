@@ -42,13 +42,12 @@ public class ProfileFragment extends Fragment {
 
         user = mainVM.getUser();
 
-//        profileVM.getUserLiveData().observe(this, new Observer<User>() {
-//            @Override
-//            public void onChanged(User user) {
-//                binding.profileNameTv.setText(user.getName());
-//                binding.profileEmailTv.setText(user.getEmail());
-//            }
-//        });
+        profileVM.getUserLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                mainVM.loadUser();
+            }
+        });
 
 
     }
@@ -60,8 +59,8 @@ public class ProfileFragment extends Fragment {
         binding.setViewModel(profileVM);
         binding.setLifecycleOwner(this);
 
-        binding.profileNameTv.setText(user.getName());
         binding.profileEmailTv.setText(user.getEmail());
+        binding.profileNameTv.setText(user.getName());
 
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override

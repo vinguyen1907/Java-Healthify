@@ -35,6 +35,9 @@ public class ProfileCaloriesHistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileCaloriesHistoryBinding.inflate(inflater,container,false);
+
+
+
         binding.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

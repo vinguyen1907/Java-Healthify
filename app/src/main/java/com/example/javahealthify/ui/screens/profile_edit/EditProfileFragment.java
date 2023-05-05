@@ -28,9 +28,11 @@ import com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersona
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -44,13 +46,10 @@ import java.util.regex.Pattern;
 
 public class EditProfileFragment extends Fragment {
 
-    private EditProfileVM editProfileVM;
-
     private MainVM viewModel;
 
 
     Boolean isValidName = true;
-    Boolean isValidEmail = true;
     Boolean isValidDay = true;
     Boolean isValidPhone = true;
     Boolean isValidAddress = true;
@@ -59,6 +58,8 @@ public class EditProfileFragment extends Fragment {
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
 
     private User user;
 
@@ -66,7 +67,7 @@ public class EditProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        editProfileVM = new ViewModelProvider(this).get(EditProfileVM.class);
+        EditProfileVM editProfileVM = new ViewModelProvider(this).get(EditProfileVM.class);
 
         MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
@@ -79,7 +80,7 @@ public class EditProfileFragment extends Fragment {
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
 
         binding.editnameEdt.setText(((NormalUser) user).getName());
-        binding.editemailEdt.setText(((NormalUser) user).getEmail());
+//        binding.editemailEdt.setText(((NormalUser) user).getEmail());
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String dateStr = formatter.format(((NormalUser) user).getDateOfBirth());
         binding.editdateEdt.setText(dateStr);
@@ -115,37 +116,37 @@ public class EditProfileFragment extends Fragment {
             }
 
         });
-        binding.editemailEdt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String newEmail = binding.editemailEdt.getText().toString();
-                if (!newEmail.equals(user.getEmail())) {
-                    if (binding.editemailEdt.getText().toString().isEmpty()) {
-                        binding.tickIcon2.setVisibility(View.GONE);
-                        isValidEmail = false;
-                    } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.editemailEdt.getText().toString()).matches()) {
-                        binding.tickIcon2.setVisibility(View.GONE);
-                        isValidEmail = false;
-                    } else {
-                        binding.tickIcon2.setVisibility(View.VISIBLE);
-                        isValidEmail = true;
-                    }
-                } else {
-                    binding.tickIcon2.setVisibility(View.GONE);
-                    isValidEmail = true;
-                }
-
-            }
-        });
+//        binding.editemailEdt.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//                String newEmail = binding.editemailEdt.getText().toString();
+//                if (!newEmail.equals(user.getEmail())) {
+//                    if (binding.editemailEdt.getText().toString().isEmpty()) {
+//                        binding.tickIcon2.setVisibility(View.GONE);
+//                        isValidEmail = false;
+//                    } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.editemailEdt.getText().toString()).matches()) {
+//                        binding.tickIcon2.setVisibility(View.GONE);
+//                        isValidEmail = false;
+//                    } else {
+//                        binding.tickIcon2.setVisibility(View.VISIBLE);
+//                        isValidEmail = true;
+//                    }
+//                } else {
+//                    binding.tickIcon2.setVisibility(View.GONE);
+//                    isValidEmail = true;
+//                }
+//
+//            }
+//        });
         binding.editdateEdt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -236,7 +237,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if ((binding.tickIcon1.getVisibility() == View.GONE
-                        && binding.tickIcon2.getVisibility() == View.GONE
+//                        && binding.tickIcon2.getVisibility() == View.GONE
                         && binding.tickIcon3.getVisibility() == View.GONE
                         && binding.tickIcon4.getVisibility() == View.GONE
                         && binding.tickIcon5.getVisibility() == View.GONE)) {
@@ -244,7 +245,7 @@ public class EditProfileFragment extends Fragment {
                     return;
                 }
 
-                if (isValidName && isValidEmail && isValidDay && isValidPhone && isValidAddress) {
+                if (isValidName && isValidDay && isValidPhone && isValidAddress) {
                     String dateString = binding.editdateEdt.getText().toString().trim();
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                     Date date;
@@ -255,7 +256,7 @@ public class EditProfileFragment extends Fragment {
                     }
                     updateUserData(user.getUid(),
                             binding.editnameEdt.getText().toString().trim(),
-                            binding.editemailEdt.getText().toString().trim(),
+//                            binding.editemailEdt.getText().toString().trim(),
                             date,
                             binding.editphoneEdt.getText().toString().trim(),
                             binding.editaddressEdt.getText().toString().trim());
@@ -277,10 +278,10 @@ public class EditProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void updateUserData(String userId, String name, String email, Date dateOfBirth, String phone, String address) {
+    public void updateUserData(String userId, String name, Date dateOfBirth, String phone, String address) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
-        data.put("email", email);
+//        data.put("email", email);
         data.put("dateOfBirth", new Timestamp(dateOfBirth));
         data.put("phone", phone);
         data.put("address", address);
@@ -291,23 +292,58 @@ public class EditProfileFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "User data updated successfully", Toast.LENGTH_SHORT).show();
                         binding.tickIcon1.setVisibility(View.GONE);
-                        binding.tickIcon2.setVisibility(View.GONE);
+//                        binding.tickIcon2.setVisibility(View.GONE);
                         binding.tickIcon3.setVisibility(View.GONE);
                         binding.tickIcon4.setVisibility(View.GONE);
-                        binding.tickIcon5.setVisibility(View.GONE);
+                        binding.tickIcon5.setVisibility(View.GONE);                         
+
+//                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//                        FirebaseUser user = mAuth.getCurrentUser();
 
 
+//                        UserInfo userInfo = (UserInfo) user.getProviderData();
+//
+//                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                        AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), userInfo.getEmail()); // Replace password with the user's current password
+//                        user.reauthenticate(credential)
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        // User is re-authenticated, can now update email
+//                                        user.updateEmail(binding.editemailEdt.getText().toString())
+//                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                    @Override
+//                                                    public void onSuccess(Void aVoid) {
+//                                                        // Email update successful
+//                                                    }
+//                                                })
+//                                                .addOnFailureListener(new OnFailureListener() {
+//                                                    @Override
+//                                                    public void onFailure(@NonNull Exception e) {
+//                                                        // Handle email update failure
+//                                                    }
+//                                                });
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        // Handle re-authentication failure
+//                                    }
+//                                });
 
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e("TAG", "Error updating user data", e);
                         Toast.makeText(getContext(), "Failed to update user data", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
 
 }
