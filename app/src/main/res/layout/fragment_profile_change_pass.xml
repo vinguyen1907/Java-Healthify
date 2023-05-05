@@ -8,7 +8,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/sign_up_btn2"
+        android:id="@+id/update_pass_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -23,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/confirm_newpass_edt" />
 
     <TextView
         android:id="@+id/textView13"
@@ -33,10 +33,10 @@
         android:layout_marginTop="24dp"
         android:text="Confirm New Password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_password_edt5" />
+        app:layout_constraintTop_toBottomOf="@+id/newpass_edt" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/sign_in_password_edt5"
+        android:id="@+id/newpass_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="8dp"
         android:inputType="textPassword"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/textInputEditText"
+        android:id="@+id/confirm_newpass_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="8dp"
         android:inputType="textPassword"
@@ -101,10 +101,10 @@
         android:layout_marginTop="24dp"
         android:text="New Password"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_in_password_edt" />
+        app:layout_constraintTop_toBottomOf="@+id/current_password_edt" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/sign_in_password_edt"
+        android:id="@+id/current_password_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="8dp"
         android:inputType="textPassword"

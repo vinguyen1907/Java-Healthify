@@ -14,6 +14,7 @@ import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentProfileSettingBinding;
 import com.example.javahealthify.ui.screens.profile.ProfileFragment;
 import com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ProfileSettingFragment extends Fragment {
@@ -48,6 +49,8 @@ public class ProfileSettingFragment extends Fragment {
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
                 NavHostFragment.findNavController(ProfileSettingFragment.this).navigate(R.id.action_profileSettingFragment_to_signInFragment);
             }
         });
