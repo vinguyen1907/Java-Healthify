@@ -140,7 +140,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semi_bold"
-                    android:text="1234"
                     android:textColor="@color/primaryColor"
                     android:textSize="36sp"
                     app:layout_constraintBottom_toBottomOf="parent"

@@ -19,17 +19,18 @@ import java.util.ArrayList;
 public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerView.Adapter<IngredientRowRecyclerViewAdapterForAddAndDelete.IngredientRowForAddAndDeleteViewHolder> {
 
     Context context;
+    ArrayList<Ingredient> ingredients = new ArrayList<>();
 
+    private RemoveIngredientClickListener removeIngredientClickListener;
     public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
     }
 
-    ArrayList<Ingredient> ingredients = new ArrayList<>();
-
-    public IngredientRowRecyclerViewAdapterForAddAndDelete(Context context, ArrayList<Ingredient> ingredients) {
+    public IngredientRowRecyclerViewAdapterForAddAndDelete(Context context, ArrayList<Ingredient> ingredients, RemoveIngredientClickListener removeIngredientClickListener) {
         this.context = context;
         this.ingredients = ingredients;
+        this.removeIngredientClickListener = removeIngredientClickListener;
     }
 
     @NonNull
@@ -42,9 +43,17 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
 
     @Override
     public void onBindViewHolder(@NonNull IngredientRowForAddAndDeleteViewHolder holder, int position) {
-        holder.tvIngredientName.setText(ingredients.get(position).getIngredientInfo().getShortDescription());
+        holder.tvIngredientName.setText(ingredients.get(position).getName());
         holder.tvIngredientCalories.setText(String.valueOf(ingredients.get(position).getCalories()));
         holder.etIngredientWeight.setText(String.valueOf(ingredients.get(position).getWeight()));
+        holder.btnRemoveIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(removeIngredientClickListener != null) {
+                    removeIngredientClickListener.onRemoveIngredientClick(position);
+                }
+            }
+        });
     }
 
     @Override

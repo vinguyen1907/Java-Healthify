@@ -1,7 +1,6 @@
 package com.example.javahealthify.ui.screens.find_ingredient;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +11,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentFindIngredientBinding;
 import com.example.javahealthify.ui.screens.add_meal.AddMealVM;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
@@ -61,7 +59,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigateBack();
+                GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
             }
         });
         return binding.getRoot();
@@ -74,16 +72,22 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
 
     @Override
     public void onViewIngredientInfoClick(int position) {
-        navigateBack();
+
     }
 
     @Override
     public void onIngredientInfoNameClick(int position) {
-        // add to ingredient list
+//        // add to ingredient list
         IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
-        Log.d("INGREDIENT INFO", "onIngredientInfoNameClick: " + selectedIngredientInfo.getShortDescription());
-        Ingredient tempIngredient = new Ingredient(selectedIngredientInfo, 100);
-        Log.d("NEW INGREDIENT", "onIngredientInfoNameClick: " + tempIngredient.getIngredientInfo().getShortDescription());
+//        Log.d("INGREDIENT INFO", "onIngredientInfoNameClick: " + selectedIngredientInfo.getShortDescription());
+        Ingredient tempIngredient = new Ingredient();
+        tempIngredient.setWeight(100);
+        tempIngredient.setName(selectedIngredientInfo.getShortDescription() );
+        tempIngredient.setProtein(selectedIngredientInfo.getProtein()* tempIngredient.getWeight()/100);
+        tempIngredient.setLipid(selectedIngredientInfo.getLipid()* tempIngredient.getWeight()/100);
+        tempIngredient.setCarb(selectedIngredientInfo.getCarbs()* tempIngredient.getWeight()/100);
+        tempIngredient.setCalories(selectedIngredientInfo.getCalories()* tempIngredient.getWeight()/100);
+//        Log.d("NEW INGREDIENT", "onIngredientInfoNameClick: " + tempIngredient.getName());
         ArrayList<Ingredient> tempList = addMealVM.getIngredients().getValue();
         if (tempList != null) {
             tempList.add(tempIngredient);
@@ -94,12 +98,8 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         MutableLiveData<ArrayList<Ingredient>> newList = new MutableLiveData<ArrayList<Ingredient>>();
         newList.setValue(tempList);
         addMealVM.setIngredients(newList);
-        Log.d("NEW INGREDIENT LIST", "onIngredientInfoNameClick: " + addMealVM.getIngredients().getValue().size());
-        navigateBack();
+//        Log.d("NEW INGREDIENT LIST", "onIngredientInfoNameClick: " + addMealVM.getIngredients().getValue().size());
+        GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
     }
 
-    private void navigateBack() {
-
-        NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addMealFragment);
-    }
 }

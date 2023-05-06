@@ -27,7 +27,6 @@ public class FindIngredientVM extends ViewModel {
     public void search(String query) {
         query = query.toUpperCase();
         CollectionReference ingredientInfoRef = MainActivity.getDb().collection("ingredient-data");
-        Log.d("SEARCH", "search: " + ingredientInfoRef);
         Query searchQuery = ingredientInfoRef.whereGreaterThanOrEqualTo("Short_Description", query).whereLessThanOrEqualTo("Short_Description", query + "\uf8ff").limit(10);
         searchQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

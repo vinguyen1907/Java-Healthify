@@ -2,7 +2,6 @@ package com.example.javahealthify.ui.screens.add_meal;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +29,8 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     MenuVM menuVM;
     AddMealVM addMealVM;
     FragmentAddMealBinding binding;
-    MutableLiveData<Dish> dish = new MutableLiveData<>();
-    MutableLiveData<Integer> totalCalories = new MutableLiveData<>(0);
+    Dish dish = new Dish();
+    double totalCalories = 0;
     IngredientRowRecyclerViewAdapterForAddAndDelete recyclerViewAdapterForAddAndDelete;
 
 
@@ -53,23 +52,23 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(requireContext(), R.array.meal_types, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        recyclerViewAdapterForAddAndDelete = new IngredientRowRecyclerViewAdapterForAddAndDelete(this.getContext(), addMealVM.getIngredients().getValue());
+        recyclerViewAdapterForAddAndDelete = new IngredientRowRecyclerViewAdapterForAddAndDelete(this.getContext(), addMealVM.getIngredients().getValue(), this);
 
         binding.ingredientsListRecyclerview.setAdapter(recyclerViewAdapterForAddAndDelete);
         binding.ingredientsListRecyclerview.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.mealTypeSpinner.setAdapter(adapter);
 
-        totalCalories.observe(getViewLifecycleOwner(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                binding.dishTotalCalories.setText(String.valueOf(totalCalories.getValue()));
-            }
-        });
 
         addMealVM.getIngredients().observe(getViewLifecycleOwner(), new Observer<ArrayList<Ingredient>>() {
             @Override
             public void onChanged(ArrayList<Ingredient> ingredients) {
                 recyclerViewAdapterForAddAndDelete.setIngredients(ingredients);
+
+                totalCalories = 0;
+                for( Ingredient ingredient: ingredients) {
+                    totalCalories += ingredient.getCalories();
+                }
+                binding.dishTotalCalories.setText(String.valueOf(totalCalories));
             }
         });
         setOnClick();
@@ -79,33 +78,41 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("RESUME", "onResume: I am resumed");
         binding.ingredientsListRecyclerview.setAdapter(recyclerViewAdapterForAddAndDelete);
-        //recyclerViewAdapterForAddAndDelete.setIngredients(addMealVM.ingredients.getValue());
     }
 
     public void setOnClick() {
         binding.addMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (totalCalories.getValue() == null) {
+                if (totalCalories == 0) {
                     return;
                 }
-                if (addMealVM.ingredients == null || addMealVM.ingredients.getValue() == null) {
+                if (addMealVM.ingredients == null || addMealVM.ingredients.getValue() == null || addMealVM.ingredients.getValue().isEmpty()) {
                     Toast.makeText(getContext(), "Please add some ingredients!", Toast.LENGTH_LONG).show();
                     return;
                 }
-
-                Dish tempDish = new Dish("DD", binding.addMealDishName.getText().toString(), addMealVM.ingredients.getValue(), totalCalories.getValue(), binding.mealTypeSpinner.getSelectedItem().toString());
-                dish.setValue(tempDish);
-                ArrayList<Dish> tempDishes = menuVM.getDishes().getValue();
-                if(tempDishes == null) {
-                    tempDishes = new ArrayList<>();
+                // add data to the dish
+                double totalProtein = 0;
+                double totalLipid = 0;
+                double totalCarb = 0;
+                for (Ingredient ingredient: addMealVM.getIngredients().getValue()
+                     ) {
+                    totalProtein += ingredient.getProtein();
+                    totalLipid += ingredient.getLipid();
+                    totalCarb += ingredient.getCarb();
                 }
-                tempDishes.add(tempDish);
-                menuVM.getDishes().setValue(tempDishes);
-                menuVM.setTodayCalories(String.valueOf(totalCalories.getValue()));
-                Log.d("CALORIES", "onClick: " + menuVM.getTodayCalories().getValue());
+                dish.setName(binding.addMealDishName.getText().toString());
+                dish.setSession(binding.mealTypeSpinner.getSelectedItem().toString());
+                dish.setCalories(totalCalories);
+                dish.setProtein(totalProtein);
+                dish.setLipid(totalLipid);
+                dish.setCarb(totalCarb);
+                dish.setIngredients(addMealVM.getIngredients().getValue());
+                //add dish to database
+                addMealVM.setIngredients(new MutableLiveData<>());
+                menuVM.getFirestoreDishes().addDish(dish);
+
                 NavHostFragment.findNavController(AddMealFragment.this).navigate(R.id.action_addMealFragment_to_menuFragment);
             }
         });
@@ -121,10 +128,11 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
 
     @Override
     public void onRemoveIngredientClick(int position) {
-
-        if (addMealVM.ingredients.getValue() == null) {
-            return;
+        if (position >= 0 && position < addMealVM.getIngredients().getValue().size()) {
+            ArrayList<Ingredient> updatedIngredients = new ArrayList<>(addMealVM.getIngredients().getValue());
+            updatedIngredients.remove(position);
+            addMealVM.getIngredients().setValue(updatedIngredients);
         }
-        addMealVM.getIngredients().getValue().remove(position);
     }
+
 }

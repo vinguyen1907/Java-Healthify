@@ -2,7 +2,6 @@ package com.example.javahealthify.ui.screens.menu;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +46,10 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        holder.tvDishName.setText(dishes.get(position).getDishName());
-        holder.tvMealCalories.setText(String.valueOf(dishes.get(position).getTotalCalories()));
+        holder.tvDishName.setText(dishes.get(position).getName());
+        holder.tvMealCalories.setText(String.valueOf(dishes.get(position).getCalories()));
 
-        IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredientData());
+        IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredients());
         holder.rvIngredients.setLayoutManager(new LinearLayoutManager(context));
         holder.rvIngredients.setAdapter(ingredientRowRecyclerViewAdapter);
         holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
