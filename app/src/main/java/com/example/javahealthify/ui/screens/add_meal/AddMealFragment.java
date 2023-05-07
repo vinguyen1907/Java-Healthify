@@ -2,6 +2,7 @@ package com.example.javahealthify.ui.screens.add_meal;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,11 @@ import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.databinding.FragmentAddMealBinding;
 import com.example.javahealthify.ui.screens.menu.IngredientRowRecyclerViewAdapterForAddAndDelete;
 import com.example.javahealthify.ui.screens.menu.MenuVM;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
-public class AddMealFragment extends Fragment implements IngredientRowRecyclerViewAdapterForAddAndDelete.RemoveIngredientClickListener {
+public class AddMealFragment extends Fragment implements IngredientRowRecyclerViewAdapterForAddAndDelete.RemoveIngredientClickListener, IngredientRowRecyclerViewAdapterForAddAndDelete.OnWeightChangedListener {
     MenuVM menuVM;
     AddMealVM addMealVM;
     FragmentAddMealBinding binding;
@@ -52,7 +54,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(requireContext(), R.array.meal_types, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        recyclerViewAdapterForAddAndDelete = new IngredientRowRecyclerViewAdapterForAddAndDelete(this.getContext(), addMealVM.getIngredients().getValue(), this);
+        recyclerViewAdapterForAddAndDelete = new IngredientRowRecyclerViewAdapterForAddAndDelete(this.getContext(), addMealVM.getIngredients().getValue(), this, this);
 
         binding.ingredientsListRecyclerview.setAdapter(recyclerViewAdapterForAddAndDelete);
         binding.ingredientsListRecyclerview.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -68,7 +70,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
                 for( Ingredient ingredient: ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
-                binding.dishTotalCalories.setText(String.valueOf(totalCalories));
+                binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
             }
         });
         setOnClick();
@@ -135,4 +137,24 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         }
     }
 
+    @Override
+    public void onWeightChanged(int position, double newValue) {
+        if (position >= 0 && position < addMealVM.getIngredients().getValue().size()) {
+            Log.d("THe code is working", "onWeightChanged: ");
+            // Get the updated ingredient and set the new weight
+            Ingredient updatedIngredient = addMealVM.getIngredients().getValue().get(position);
+            updatedIngredient.updateWeight(newValue);
+            totalCalories = updatedIngredient.getCalories();
+
+            // Update the ingredient in the list
+            ArrayList<Ingredient> updatedIngredients = new ArrayList<>(addMealVM.getIngredients().getValue());
+            updatedIngredients.set(position, updatedIngredient);
+            MutableLiveData<ArrayList<Ingredient>> newIngredients = new MutableLiveData<>();
+            newIngredients.setValue(updatedIngredients);
+            addMealVM.setIngredients(newIngredients);
+
+            // Update the displayed total calories
+            binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
+        }
+    }
 }

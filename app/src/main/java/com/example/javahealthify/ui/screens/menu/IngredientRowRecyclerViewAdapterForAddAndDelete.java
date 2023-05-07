@@ -1,6 +1,7 @@
 package com.example.javahealthify.ui.screens.menu;
 
 import android.content.Context;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
@@ -22,15 +24,22 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
     ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     private RemoveIngredientClickListener removeIngredientClickListener;
+
+    private OnWeightChangedListener onWeightChangedListener;
+
+    public void setOnWeightChangedListener(OnWeightChangedListener listener) {
+        this.onWeightChangedListener = listener;
+    }
     public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
         notifyDataSetChanged();
     }
 
-    public IngredientRowRecyclerViewAdapterForAddAndDelete(Context context, ArrayList<Ingredient> ingredients, RemoveIngredientClickListener removeIngredientClickListener) {
+    public IngredientRowRecyclerViewAdapterForAddAndDelete(Context context, ArrayList<Ingredient> ingredients, RemoveIngredientClickListener removeIngredientClickListener, OnWeightChangedListener onWeightChangedListener) {
         this.context = context;
         this.ingredients = ingredients;
         this.removeIngredientClickListener = removeIngredientClickListener;
+        this.onWeightChangedListener = onWeightChangedListener;
     }
 
     @NonNull
@@ -44,14 +53,29 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
     @Override
     public void onBindViewHolder(@NonNull IngredientRowForAddAndDeleteViewHolder holder, int position) {
         holder.tvIngredientName.setText(ingredients.get(position).getName());
-        holder.tvIngredientCalories.setText(String.valueOf(ingredients.get(position).getCalories()));
-        holder.etIngredientWeight.setText(String.valueOf(ingredients.get(position).getWeight()));
+        holder.tvIngredientCalories.setText(GlobalMethods.format(ingredients.get(position).getCalories()));
+        holder.etIngredientWeight.setText(GlobalMethods.format(ingredients.get(position).getWeight()));
         holder.btnRemoveIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(removeIngredientClickListener != null) {
                     removeIngredientClickListener.onRemoveIngredientClick(position);
+
                 }
+            }
+        });
+        holder.etIngredientWeight.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                double newWeight = Double.parseDouble(v.getText().toString());
+                ingredients.get(position).updateWeight(newWeight);
+                notifyItemChanged(position);
+
+                if (onWeightChangedListener != null) {
+                    onWeightChangedListener.onWeightChanged(position, newWeight);
+                }
+
+                return true;
             }
         });
     }
@@ -77,5 +101,9 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
 
     public interface RemoveIngredientClickListener {
         void onRemoveIngredientClick(int position);
+    }
+
+    public interface OnWeightChangedListener {
+        void onWeightChanged(int position, double newValue);
     }
 }

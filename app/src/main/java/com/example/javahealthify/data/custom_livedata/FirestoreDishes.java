@@ -95,7 +95,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                             continue;
                         }
                         List<Ingredient> ingredients = new ArrayList<>();
-                        int dishTotalCalories = 0;
+                        double dishTotalCalories = 0;
                         double dishTotalCarb = 0;
                         double dishTotalLipid = 0;
                         double dishTotalProtein = 0;
@@ -146,6 +146,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     }
 
     public void deleteDish(Dish dishToDelete) {
+        Log.d("DELETE DISH NAME", "deleteDish: " + dishToDelete.getIngredients());
         if (dailyActivityRef != null) {
             dailyActivityRef.update("dishes", FieldValue.arrayRemove(GlobalMethods.toKeyValuePairs(dishToDelete)))
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "deleteDish: Dish deleted successfully"))

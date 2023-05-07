@@ -5,6 +5,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,10 @@ public class GlobalMethods {
                                 return "";
                             }
                         }));
+    }
+
+    public static String format(double value) {
+        return String.format(Locale.US, "%." + 2 + "f", value);
     }
 
 }

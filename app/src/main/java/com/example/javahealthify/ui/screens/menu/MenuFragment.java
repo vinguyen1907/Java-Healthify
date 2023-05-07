@@ -1,6 +1,7 @@
 package com.example.javahealthify.ui.screens.menu;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.example.javahealthify.databinding.FragmentMenuBinding;
 
 import java.util.ArrayList;
 
-public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener {
+public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener, DishRecycleViewAdapter.MealOptionDialogListener {
 
     MenuVM menuVM;
     private FragmentMenuBinding binding;
@@ -34,7 +35,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         binding.setLifecycleOwner(this);
 
         RecyclerView recyclerView = binding.meals;
-        DishRecycleViewAdapter adapter = new DishRecycleViewAdapter(this.getContext(), new ArrayList<>());
+        DishRecycleViewAdapter adapter = new DishRecycleViewAdapter(this.getContext(), new ArrayList<>(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
         adapter.setDishes(menuVM.getFirestoreDishes().getValue());
@@ -51,8 +52,12 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         return binding.getRoot();
     }
 
+    public void onAddMealClick() {
+        NavHostFragment.findNavController(MenuFragment.this).navigate(R.id.action_menuFragment_to_addMealFragment);
+    }
+
     @Override
-    public void onMealOptionClick(int position) {
+    public void onEditMealClick(int position) {
 
     }
 
@@ -61,7 +66,19 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     }
 
-    public void onAddMealClick() {
-        NavHostFragment.findNavController(MenuFragment.this).navigate(R.id.action_menuFragment_to_addMealFragment);
+    @Override
+    public void onDeleteMealClick(int position) {
+        Log.d("DELETION CALLED", "onDeleteMealClick: at " + position);
+        menuVM.getFirestoreDishes().deleteDish(menuVM.getFirestoreDishes().getValue().get(position));
+    }
+
+    @Override
+    public void onCancelClick(int position) {
+
+    }
+
+    @Override
+    public void onMealOptionClick(int position) {
+
     }
 }

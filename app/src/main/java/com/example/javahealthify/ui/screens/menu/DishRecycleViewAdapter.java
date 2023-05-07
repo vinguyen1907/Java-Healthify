@@ -1,10 +1,13 @@
 package com.example.javahealthify.ui.screens.menu;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,12 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.custom_livedata.FirestoreDishes;
 import com.example.javahealthify.data.models.Dish;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
 public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleViewAdapter.MealViewHolder> {
     Context context;
+
+    private MealOptionDialogListener mealOptionDialogListener;
+
+    public void setMealOptionDialogListener(MealOptionDialogListener listener) {
+        this.mealOptionDialogListener = listener;
+    }
 
     public void setDishes(ArrayList<Dish> dishes) {
         this.dishes = dishes;
@@ -31,9 +42,10 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
     private MealOptionsClickListener mealOptionsClickListener;
     private AddIngredientClickListener addIngredientClickListener;
 
-    public DishRecycleViewAdapter(Context context, ArrayList<Dish> dishArrayList) {
+    public DishRecycleViewAdapter(Context context, ArrayList<Dish> dishArrayList, MealOptionDialogListener mealOptionDialogListener) {
         this.context = context;
         this.dishes = dishArrayList;
+        this.mealOptionDialogListener = mealOptionDialogListener;
     }
 
     @NonNull
@@ -47,11 +59,17 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         holder.tvDishName.setText(dishes.get(position).getName());
-        holder.tvMealCalories.setText(String.valueOf(dishes.get(position).getCalories()));
+        holder.tvMealCalories.setText(GlobalMethods.format(dishes.get(position).getCalories()));
 
         IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredients());
         holder.rvIngredients.setLayoutManager(new LinearLayoutManager(context));
         holder.rvIngredients.setAdapter(ingredientRowRecyclerViewAdapter);
+        holder.btnMealOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(context, position);
+            }
+        });
         holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +86,7 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
                 }
             }
         });
+
 
         Drawable startDrawable;
         switch (dishes.get(position).getSession()) {
@@ -89,9 +108,61 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
 
     }
 
+    private void showDialog(Context context, int position) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.meal_options_popup_layout);
+        dialog.show();
+
+        Button editMeal = (Button) dialog.findViewById(R.id.dialog_edit_meal_button);
+        Button addIngredient = (Button) dialog.findViewById(R.id.dialog_add_ingredient_button);
+        Button deleteMeal = (Button) dialog.findViewById(R.id.dialog_delete_meal_button);
+        Button btnCancel = (Button) dialog.findViewById(R.id.dialog_cancel_button);
+
+        editMeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mealOptionDialogListener != null) {
+                    mealOptionDialogListener.onEditMealClick(position);
+                }
+                dialog.dismiss();
+            }
+        });
+
+        addIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mealOptionDialogListener != null) {
+                    mealOptionDialogListener.onAddIngredientClick(position);
+                }
+                dialog.dismiss();
+            }
+        });
+
+        deleteMeal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mealOptionDialogListener != null) {
+                    mealOptionDialogListener.onDeleteMealClick(position);
+                }
+                dialog.dismiss();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mealOptionDialogListener != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
+
     @Override
     public int getItemCount() {
-        return dishes == null? 0 : dishes.size();
+        return dishes == null ? 0 : dishes.size();
     }
 
     public static class MealViewHolder extends RecyclerView.ViewHolder {
@@ -117,4 +188,12 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
         void onAddIngredientClick(int position);
     }
 
+    public interface MealOptionDialogListener {
+        void onEditMealClick(int position);
+
+        void onAddIngredientClick(int position);
+
+        void onDeleteMealClick(int position);
+        void onCancelClick(int position);
+    }
 }

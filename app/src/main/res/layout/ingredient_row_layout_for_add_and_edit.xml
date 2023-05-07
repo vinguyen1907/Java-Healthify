@@ -43,6 +43,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="abb"
+            android:inputType="number"
             android:textSize="14sp"
             android:fontFamily="@font/poppins_medium"
             android:background="@null"

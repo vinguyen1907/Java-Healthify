@@ -7,7 +7,9 @@ public class Ingredient {
     private double protein = 0;
     private double carb = 0;
     private double lipid = 0;
-    public  Ingredient(){}
+
+    public Ingredient() {
+    }
 
     public String getName() {
         return name;
@@ -23,6 +25,17 @@ public class Ingredient {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void updateWeight(double weight) {
+        double oldWeight = this.weight;
+        this.weight = weight;
+        double weightRatio = weight / oldWeight;
+
+        this.calories = this.calories * weightRatio;
+        this.protein = this.protein * weightRatio;
+        this.carb = this.carb * weightRatio;
+        this.lipid = this.lipid * weightRatio;
     }
 
     public double getCalories() {
