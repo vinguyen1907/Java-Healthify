@@ -67,7 +67,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
                 recyclerViewAdapterForAddAndDelete.setIngredients(ingredients);
 
                 totalCalories = 0;
-                for( Ingredient ingredient: ingredients) {
+                for (Ingredient ingredient : ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
                 binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
@@ -77,13 +77,13 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         return binding.getRoot();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        binding.ingredientsListRecyclerview.setAdapter(recyclerViewAdapterForAddAndDelete);
-    }
-
-    public void setOnClick() {
+    private void setOnClick() {
+        binding.addMealToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalMethods.backToPreviousFragment(AddMealFragment.this);
+            }
+        });
         binding.addMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +121,9 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         binding.addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(AddMealFragment.this).navigate(R.id.action_addMealFragment_to_findIngredientFragment);
+                Bundle bundle = new Bundle();
+                bundle.putString("operation", "add");
+                NavHostFragment.findNavController(AddMealFragment.this).navigate(R.id.action_addMealFragment_to_findIngredientFragment, bundle);
             }
 
         });
@@ -144,11 +146,14 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
             // Get the updated ingredient and set the new weight
             Ingredient updatedIngredient = addMealVM.getIngredients().getValue().get(position);
             updatedIngredient.updateWeight(newValue);
-            totalCalories = updatedIngredient.getCalories();
+            totalCalories = 0;
 
             // Update the ingredient in the list
             ArrayList<Ingredient> updatedIngredients = new ArrayList<>(addMealVM.getIngredients().getValue());
             updatedIngredients.set(position, updatedIngredient);
+            for (Ingredient ingredient: updatedIngredients) {
+                totalCalories += ingredient.getCalories();
+            }
             MutableLiveData<ArrayList<Ingredient>> newIngredients = new MutableLiveData<>();
             newIngredients.setValue(updatedIngredients);
             addMealVM.setIngredients(newIngredients);

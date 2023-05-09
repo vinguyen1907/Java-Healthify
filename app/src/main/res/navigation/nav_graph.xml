@@ -64,6 +64,9 @@
         <action
             android:id="@+id/action_menuFragment_to_addMealFragment"
             app:destination="@id/addMealFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_editMealFragment"
+            app:destination="@id/editMealFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -202,6 +205,20 @@
         <action
             android:id="@+id/action_findIngredientFragment_to_addMealFragment"
             app:destination="@id/addMealFragment" />
+        <action
+            android:id="@+id/action_findIngredientFragment_to_editMealFragment"
+            app:destination="@id/editMealFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editMealFragment"
+        android:name="com.example.javahealthify.ui.screens.edit_meal.EditMealFragment"
+        android:label="EditMealFragment" >
+        <action
+            android:id="@+id/action_editMealFragment_to_findIngredientFragment"
+            app:destination="@id/findIngredientFragment" />
+        <action
+            android:id="@+id/action_editMealFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
 
 </navigation>

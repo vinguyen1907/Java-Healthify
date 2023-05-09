@@ -154,16 +154,15 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
         }
     }
 
-    public void updateDish(Dish oldDish, Dish updatedDish) {
+    public void updateDishes(List<Dish> newDishes) {
         if (dailyActivityRef != null) {
-            dailyActivityRef.update("dishes", FieldValue.arrayRemove(GlobalMethods.toKeyValuePairs(oldDish)))
-                    .addOnSuccessListener(aVoid -> {
-                        dailyActivityRef.update("dishes", FieldValue.arrayUnion(GlobalMethods.toKeyValuePairs(updatedDish)))
-                                .addOnSuccessListener(aVoid2 -> Log.d("FIRESTOREDISHES", "updateDish: Dish updated successfully"))
-                                .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDish: Error updating dish", e));
-                    })
-                    .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDish: Error removing old dish", e));
+            List<Map<String, Object>> newDishesKeyValuePairs = new ArrayList<>();
+            for (Dish dish : newDishes) {
+                newDishesKeyValuePairs.add(GlobalMethods.toKeyValuePairs(dish));
+            }
+            dailyActivityRef.update("dishes", newDishesKeyValuePairs)
+                    .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
+                    .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
         }
     }
-
 }

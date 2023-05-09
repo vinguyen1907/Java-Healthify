@@ -67,12 +67,16 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
         holder.etIngredientWeight.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                double newWeight = Double.parseDouble(v.getText().toString());
-                ingredients.get(position).updateWeight(newWeight);
-                notifyItemChanged(position);
+                try {
+                    double newWeight = Double.parseDouble(v.getText().toString());
+                    ingredients.get(position).updateWeight(newWeight);
+                    notifyItemChanged(position);
 
-                if (onWeightChangedListener != null) {
-                    onWeightChangedListener.onWeightChanged(position, newWeight);
+                    if (onWeightChangedListener != null) {
+                        onWeightChangedListener.onWeightChanged(position, newWeight);
+                    }
+                } catch (NumberFormatException e) {
+                    holder.etIngredientWeight.setText(GlobalMethods.format(0));
                 }
 
                 return true;

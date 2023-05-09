@@ -58,7 +58,9 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     @Override
     public void onEditMealClick(int position) {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt("position", position);
+        NavHostFragment.findNavController(MenuFragment.this).navigate(R.id.action_menuFragment_to_editMealFragment, bundle);
     }
 
     @Override
