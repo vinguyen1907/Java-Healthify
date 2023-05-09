@@ -1,11 +1,11 @@
 package com.example.javahealthify.data.models;
 
 
-import androidx.annotation.Keep;
-
 import java.util.Date;
 import java.util.List;
 public class NormalUser extends User {
+
+
 
     private String phone;
     private Date dateOfBirth;
@@ -19,9 +19,19 @@ public class NormalUser extends User {
     private List<String> following;
     private List<String> followers;
 
+    private DailyActivity dailyActivity;
+
+    public DailyActivity getDailyActivity() {
+        return dailyActivity;
+    }
+
+    public void setDailyActivity(DailyActivity dailyActivity) {
+        this.dailyActivity = dailyActivity;
+    }
+
     public NormalUser() {}
 
-    public NormalUser(String uid, String email, String name, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers) {
+    public NormalUser(String uid, String email, String name, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity) {
         super(uid, email, name, "NORMAL_USER");
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -34,6 +44,7 @@ public class NormalUser extends User {
         this.dailyCalories = dailyCalories;
         this.following = following;
         this.followers = followers;
+        this.dailyActivity = dailyActivity;
     }
 
     public String getPhone() {

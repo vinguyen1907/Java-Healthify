@@ -9,23 +9,24 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentFindIngredientBinding;
 import com.example.javahealthify.ui.screens.add_meal.AddMealVM;
+import com.example.javahealthify.ui.screens.edit_meal.EditMealVM;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
 public class FindIngredientFragment extends Fragment implements IngredientNameRecyclerViewAdapter.ViewIngredientInfoClickListener, IngredientNameRecyclerViewAdapter.IngredientInfoNameClickListener {
     private FindIngredientVM findIngredientVM;
+    private String operation;
     private AddMealVM addMealVM;
+    private EditMealVM editMealVM;
     private FragmentFindIngredientBinding binding;
 
     public FindIngredientFragment() {
@@ -37,9 +38,12 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         ViewModelProvider provider = new ViewModelProvider(requireActivity());
         findIngredientVM = provider.get(FindIngredientVM.class);
         addMealVM = provider.get(AddMealVM.class);
+        editMealVM = provider.get(EditMealVM.class);
         binding = FragmentFindIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(findIngredientVM);
         binding.setLifecycleOwner(this);
+        operation = requireArguments().getString("operation");
+
 
         IngredientNameRecyclerViewAdapter adapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.ingredientInfoArrayList.getValue(), this, this);
         binding.ingredientSearchResults.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -61,7 +65,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigateBack();
+                GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
             }
         });
         return binding.getRoot();
@@ -74,32 +78,49 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
 
     @Override
     public void onViewIngredientInfoClick(int position) {
-        navigateBack();
+
     }
 
-    @Override
-    public void onIngredientInfoNameClick(int position) {
-        // add to ingredient list
-        IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
-        Log.d("INGREDIENT INFO", "onIngredientInfoNameClick: " + selectedIngredientInfo.getShortDescription());
-        Ingredient tempIngredient = new Ingredient(selectedIngredientInfo, 100);
-        Log.d("NEW INGREDIENT", "onIngredientInfoNameClick: " + tempIngredient.getIngredientInfo().getShortDescription());
-        ArrayList<Ingredient> tempList = addMealVM.getIngredients().getValue();
+    private void addToIngredients(Ingredient tempIngredient) {
+        Log.d("New ingredient name", "addToIngredients: " + tempIngredient.getName());
+        ArrayList<Ingredient> tempList;
+        if (operation.equals("add")) {
+            tempList = addMealVM.getIngredients().getValue();
+        } else {
+            tempList = editMealVM.getIngredients().getValue();
+        }
         if (tempList != null) {
             tempList.add(tempIngredient);
         } else {
             tempList = new ArrayList<>();
             tempList.add(tempIngredient);
         }
-        MutableLiveData<ArrayList<Ingredient>> newList = new MutableLiveData<ArrayList<Ingredient>>();
-        newList.setValue(tempList);
-        addMealVM.setIngredients(newList);
-        Log.d("NEW INGREDIENT LIST", "onIngredientInfoNameClick: " + addMealVM.getIngredients().getValue().size());
-        navigateBack();
+        if (operation.equals("add")) {
+            addMealVM.getIngredients().postValue(tempList);
+        } else {
+            editMealVM.getIngredients().postValue(tempList);
+        }
     }
 
-    private void navigateBack() {
-
-        NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addMealFragment);
+    private Ingredient createTempIngredient(IngredientInfo selectedIngredientInfo) {
+        Ingredient tempIngredient = new Ingredient();
+        tempIngredient.setWeight(100);
+        tempIngredient.setName(selectedIngredientInfo.getShortDescription());
+        tempIngredient.setProtein(selectedIngredientInfo.getProtein() * tempIngredient.getWeight() / 100);
+        tempIngredient.setLipid(selectedIngredientInfo.getLipid() * tempIngredient.getWeight() / 100);
+        tempIngredient.setCarb(selectedIngredientInfo.getCarbs() * tempIngredient.getWeight() / 100);
+        tempIngredient.setCalories(selectedIngredientInfo.getCalories() * tempIngredient.getWeight() / 100);
+        return tempIngredient;
     }
+
+    @Override
+    public void onIngredientInfoNameClick(int position) {
+        IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+        Ingredient tempIngredient = createTempIngredient(selectedIngredientInfo);
+        addToIngredients(tempIngredient);
+        findIngredientVM.ingredientInfoArrayList.setValue(new ArrayList<>());
+        GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
+    }
+
+
 }

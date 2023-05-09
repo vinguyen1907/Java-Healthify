@@ -3,31 +3,21 @@ package com.example.javahealthify.ui.screens.fill_in_personal_information;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.DailyActivity;
 import com.example.javahealthify.data.models.NormalUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.core.FirestoreClient;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class FillInPersonalInformationVM extends ViewModel {
     private MutableLiveData<String> name = new MutableLiveData<>();
@@ -77,7 +67,8 @@ public class FillInPersonalInformationVM extends ViewModel {
                     goalDate,
                     0, // TODO: Calculate daily calories
                     new ArrayList<String>(),
-                    new ArrayList<String>());
+                    new ArrayList<String>(),
+                    new DailyActivity());
 
             String uid = firebaseAuth.getCurrentUser().getUid();
             newUser.setUid(uid);
