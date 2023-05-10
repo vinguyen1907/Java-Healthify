@@ -42,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
         } else {
-            viewModel.loadUser();
-            navController.navigate(R.id.homeFragment);
+            viewModel.loadUser(navController);
+            // TODO: Navigate to Splash Screen when loading
+//            navController.navigate(R.id.homeFragment);
         }
 
         setUpNavbar();

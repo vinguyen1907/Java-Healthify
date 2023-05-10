@@ -42,14 +42,12 @@ public class ProfileFragment extends Fragment {
 
         user = mainVM.getUser();
 
-        profileVM.getUserLiveData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                mainVM.loadUser();
-            }
-        });
-
-
+//        profileVM.getUserLiveData().observe(this, new Observer<User>() {
+//            @Override
+//            public void onChanged(User user) {
+//                mainVM.loadUser();
+//            }
+//        });
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
