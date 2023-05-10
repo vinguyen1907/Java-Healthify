@@ -21,4 +21,6 @@
     <!--    Tab layout-->
     <color name="tabBackgroundColor">#162D51</color>
     <color name="tabSelectedColor">#2C4B7C</color>
+
+    <color name="workoutCategoryImageBackgroundColor">#99D9D9D9</color>
 </resources>

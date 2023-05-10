@@ -83,4 +83,7 @@
     <string name="tab_title_beginner">Beginner</string>
     <string name="tab_title_intermediate">Intermediate</string>
     <string name="tab_title_advance">Advance</string>
+    <string name="workout_categories_app_bar_title">Workout categories</string>
+    <string name="add_btn_txt">Add exercises</string>
+    <string name="start_exercise_text">Start exercises</string>
 </resources>
