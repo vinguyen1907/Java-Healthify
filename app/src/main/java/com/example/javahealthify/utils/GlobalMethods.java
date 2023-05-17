@@ -5,6 +5,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.data.models.Exercise;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class GlobalMethods {
@@ -28,5 +30,15 @@ public class GlobalMethods {
             totalCalories += exercise.getCaloriesPerUnit();
         }
         return totalCalories;
+    }
+
+    public static String convertDateToSlashSplittingFormat(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(date);
+    }
+
+    public static String convertDateToHyphenSplittingFormat(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return dateFormat.format(date);
     }
 }
