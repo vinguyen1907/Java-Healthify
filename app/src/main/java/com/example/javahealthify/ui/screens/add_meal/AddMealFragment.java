@@ -70,7 +70,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
                 for (Ingredient ingredient : ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
-                binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
+                binding.dishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
             }
         });
         setOnClick();
@@ -159,7 +159,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
             addMealVM.setIngredients(newIngredients);
 
             // Update the displayed total calories
-            binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
+            binding.dishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
         }
     }
 }

@@ -71,6 +71,8 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         return binding.getRoot();
     }
 
+
+
     private void showResult(String searchQuery) {
         findIngredientVM.search(searchQuery);
 
@@ -78,7 +80,8 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
 
     @Override
     public void onViewIngredientInfoClick(int position) {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
     }
 
     private void addToIngredients(Ingredient tempIngredient) {

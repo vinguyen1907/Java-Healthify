@@ -37,7 +37,6 @@ public class FindIngredientVM extends ViewModel {
                     Log.d("SUCCESS", "Task is successful");
                     ArrayList<IngredientInfo> tempList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("DOCUMENT", "Processing document: " + document.getId());
                         Integer calories = document.get("Calories", int.class);
                         Double carbs = document.get("Carbs", double.class);
                         Double lipid = document.get("Lipid", double.class);

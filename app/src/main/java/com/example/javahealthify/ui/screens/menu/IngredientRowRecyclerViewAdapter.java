@@ -41,8 +41,8 @@ public class IngredientRowRecyclerViewAdapter extends RecyclerView.Adapter<Ingre
     @Override
     public void onBindViewHolder(@NonNull IngredientRowRecyclerViewAdapter.IngredientRowViewHolder holder, int position) {
         holder.tvIngredientName.setText(ingredientArrayList.get(position).getName());
-        holder.tvIngredientCalories.setText(GlobalMethods.format(ingredientArrayList.get(position).getCalories()));
-        holder.tvIngredientWeight.setText(GlobalMethods.format(ingredientArrayList.get(position).getWeight()));
+        holder.tvIngredientCalories.setText(GlobalMethods.formatDoubleToString(ingredientArrayList.get(position).getCalories()));
+        holder.tvIngredientWeight.setText(GlobalMethods.formatDoubleToString(ingredientArrayList.get(position).getWeight()));
 
     }
 
