@@ -17,4 +17,10 @@
     <color name="primaryHintColor">#99E5E5E5</color>
     <color name="indicatorActiveColor">@color/primaryColor</color>
     <color name="indicatorInactiveColor">#8059C9A5</color>
+
+    <!--    Tab layout-->
+    <color name="tabBackgroundColor">#162D51</color>
+    <color name="tabSelectedColor">#2C4B7C</color>
+
+    <color name="workoutCategoryImageBackgroundColor">#99D9D9D9</color>
 </resources>

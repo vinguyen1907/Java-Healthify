@@ -1,15 +1,25 @@
 package com.example.javahealthify.data.models;
 
-import com.google.type.DateTime;
+import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Workout {
+    private String id;
     private int calories;
-    private List<Exercise> exercises;
-    private DateTime date;
+    private Date date;
+    private MutableLiveData<List<Exercise>> exercises;
 
     public Workout() {
+         this.id = "";
+         this.calories = 0;
+         this.date = null;
+         this.exercises.setValue(new ArrayList<>());
+    }
+    public String getId() {
+        return id;
     }
 
     public int getCalories() {
@@ -20,19 +30,15 @@ public class Workout {
         this.calories = calories;
     }
 
-    public List<Exercise> getExercises() {
+    public Date getDate() {
+        return date;
+    }
+
+    public MutableLiveData<List<Exercise>> getExercises() {
         return exercises;
     }
 
     public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
-    }
-
-    public DateTime getDate() {
-        return date;
-    }
-
-    public void setDate(DateTime date) {
-        this.date = date;
+        this.exercises.setValue(exercises);
     }
 }

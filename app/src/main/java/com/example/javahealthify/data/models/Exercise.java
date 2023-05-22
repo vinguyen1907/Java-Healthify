@@ -1,14 +1,51 @@
 package com.example.javahealthify.data.models;
 
-public class Exercise {
+import java.io.Serializable;
+
+public class Exercise implements Serializable {
+    private String id;
     private String name;
     private String imageUrl;
-    private String muscleGroup;
     private String startingPosition;
     private String execution;
-    private String unit;
+    private String unit; // rep/second
     private int count;
-    private int caloriesPerUnit;
+    private double caloriesPerUnit;
+    private String categoryId;
+
+    public Exercise() {}
+
+    public Exercise(String id, String name, String imageUrl, String startingPosition, String execution, String unit, int count, int caloriesPerUnit, String categoryId) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.startingPosition = startingPosition;
+        this.execution = execution;
+        this.unit = unit;
+        this.count = count;
+        this.caloriesPerUnit = caloriesPerUnit;
+        this.categoryId = categoryId;
+    }
+
+    public Exercise(Exercise exercise) {
+        this.id = exercise.id;
+        this.name = exercise.name;
+        this.imageUrl = exercise.imageUrl;
+        this.startingPosition = exercise.startingPosition;
+        this.execution = exercise.execution;
+        this.unit = exercise.unit;
+        this.count = exercise.count;
+        this.caloriesPerUnit = exercise.caloriesPerUnit;
+        this.categoryId = exercise.categoryId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -24,14 +61,6 @@ public class Exercise {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getMuscleGroup() {
-        return muscleGroup;
-    }
-
-    public void setMuscleGroup(String muscleGroup) {
-        this.muscleGroup = muscleGroup;
     }
 
     public String getStartingPosition() {
@@ -62,17 +91,27 @@ public class Exercise {
         return count;
     }
 
+    public int getCountNumber() {
+        return count;
+    }
+
     public void setCount(int count) {
         this.count = count;
     }
 
-    public int getCaloriesPerUnit() {
+    public double getCaloriesPerUnit() {
         return caloriesPerUnit;
     }
 
-    public void setCaloriesPerUnit(int caloriesPerUnit) {
+    public void setCaloriesPerUnit(double caloriesPerUnit) {
         this.caloriesPerUnit = caloriesPerUnit;
     }
 
-    public Exercise() {}
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
 }

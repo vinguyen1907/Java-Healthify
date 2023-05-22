@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/ic_back" />
+                android:src="@drawable/ic_chevron_backward" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -51,8 +51,6 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Personal Infomation"
                 android:textSize="18sp" />
-
-
         </LinearLayout>
 
         <ImageView
@@ -168,4 +166,3 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
-
