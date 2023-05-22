@@ -15,8 +15,7 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/primary_button_background"
         android:fontFamily="@font/poppins_medium"
-        android:onClick="@{() -> signUpVM.signUpWithEmailAndPassword()}"
-        android:text="Sign Up"
+        android:text="Update"
         android:textAllCaps="false"
         android:textColor="@color/primaryBackgroundColor"
         android:textSize="20sp"
@@ -24,14 +23,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weight_edt1" />
+        app:layout_constraintTop_toBottomOf="@+id/meal_edt" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -67,12 +66,14 @@
         android:id="@+id/weight_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
-        android:drawableEnd="@drawable/ic_calendar"
+        android:drawableEnd="@drawable/ic_option"
         android:background="@drawable/primary_edittext_background"
         android:inputType="time"
+        android:timePickerMode="spinner"
         app:layout_constraintTop_toBottomOf="@+id/weight_tv"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="20dp" />
+
 
     <TextView
         android:id="@+id/weight_tv1"
@@ -85,10 +86,10 @@
         app:layout_constraintTop_toBottomOf="@+id/weight_edt" />
 
     <EditText
-        android:id="@+id/weight_edt1"
+        android:id="@+id/meal_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
-        android:drawableEnd="@drawable/ic_calendar"
+        android:drawableEnd="@drawable/ic_option"
         android:background="@drawable/primary_edittext_background"
         android:inputType="time"
         app:layout_constraintTop_toBottomOf="@+id/weight_tv1"

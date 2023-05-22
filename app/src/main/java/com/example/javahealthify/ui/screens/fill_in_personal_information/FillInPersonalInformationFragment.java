@@ -2,21 +2,17 @@ package com.example.javahealthify.ui.screens.fill_in_personal_information;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentFillInPersonalInformationBinding;
-import com.example.javahealthify.ui.screens.sign_up.SignUpVM;
 
 import java.util.Calendar;
 
@@ -32,12 +28,11 @@ public class FillInPersonalInformationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentFillInPersonalInformationBinding.inflate(inflater, container, false);
-        viewModel =  new ViewModelProvider(requireActivity()).get(FillInPersonalInformationVM.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(FillInPersonalInformationVM.class);
         binding.setPersonalInformationVM(viewModel);
         binding.setLifecycleOwner(this);
 
         setOnClick();
-
 
 
         return binding.getRoot();

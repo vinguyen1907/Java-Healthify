@@ -72,6 +72,24 @@
     <string name="update_weight_texts">Update Weight</string>
     <string name="menu_today">Today</string>
 
+    <!--    menu-->
+    <string name="dish_name_hint_text">Name of your dish</string>
+
+    <string name="meal_type">Session</string>
+    <string-array name="meal_types">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Brunch</item>
+        <item>Snack</item>
+
+    </string-array>
+    <string name="ingredients">Ingredients</string>
+    <string name="total_calories">Total calories</string>
+    <string name="ingredient_search_hint">Search for any ingredient</string>
+    <string name="can_t_find_your_ingredient">Can\'t find your ingredient?</string>
+    <string name="add_your_own">Add your own</string>
+
     <string name="Profile_Name">Ariana Grande</string>
     <string name="Profile_Email">AriGrande@gmail.com</string>
     <string name="Profile_Edit">Edit Profile</string>
@@ -86,4 +104,26 @@
     <string name="workout_categories_app_bar_title">Workout categories</string>
     <string name="add_btn_txt">Add exercises</string>
     <string name="start_exercise_text">Start exercises</string>
+    <string name="community_text">Community</string>
+    <string name="Community_name">Ariana Grande</string>
+    <string name="community_calories">31th March, 2023</string>
+    <string name="community_calo">690</string>
+    <string name="community_calotext">kcal</string>
+    <string name="community_achievementtext">My achievement today</string>
+    <string name="community_step">6.996</string>
+    <string name="community_steptext">steps</string>
+    <string name="community_kcalexcercise">6.996</string>
+    <string name="community_kcalexcecisetext">kcal for excercises</string>
+    <string name="community_kcalfood">1200</string>
+    <string name="community_kcalfoodtext">kcal from foods</string>
+    <string name="achievementdetail_detailstext">Details</string>
+    <string name="community_achieventmentdetail_foodtext">Foods</string>
+    <string name="community_achievmentdetails_textfood">Chicken Breast</string>
+    <string name="community_details_kalo">246</string>
+    <string name="community_detail_kcal">kcal</string>
+    <string name="community_detail_excercisetext">Excercises</string>
+    <string name="community_ahievemnt_Detail_excercise">Crunches</string>
+    <string name="community_achievementdetail_kcal_excerise">20</string>
+    <string name="community_achievement_detail_rep">50</string>
+    <string name="reps">reps</string>
 </resources>

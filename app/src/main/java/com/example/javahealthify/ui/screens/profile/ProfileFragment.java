@@ -8,6 +8,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
+import androidx.navigation.NavHostController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +19,15 @@ import android.widget.TextView;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.User;
+import com.example.javahealthify.databinding.FragmentProfileBinding;
+import com.example.javahealthify.ui.screens.MainVM;
 
 public class ProfileFragment extends Fragment {
 
     private ProfileVM profileVM;
-    private TextView nameTextView;
-    private TextView emailTextView;
+    private FragmentProfileBinding binding;
 
-    private AppCompatButton personalInfoBtn;
-    private AppCompatButton changeGoalsBtn;
-    private NavController navController;
+    private User user;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -35,11 +37,15 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profileVM = new ViewModelProvider(this).get(ProfileVM.class);
+
+        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
+
+        user = mainVM.getUser();
+
         profileVM.getUserLiveData().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                nameTextView.setText(user.getName());
-                emailTextView.setText(user.getEmail());
+                mainVM.loadUser();
             }
         });
 
@@ -48,11 +54,52 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        nameTextView = view.findViewById(R.id.profile_name_tv);
-        emailTextView = view.findViewById(R.id.profile_email_tv);
+        binding = FragmentProfileBinding.inflate(inflater,container,false);
+        binding.setViewModel(profileVM);
+        binding.setLifecycleOwner(this);
 
-        return view;
+        binding.profileEmailTv.setText(user.getEmail());
+        binding.profileNameTv.setText(user.getName());
+
+        binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_profilePersonalInfoFragment);
+            }
+        });
+
+        binding.editProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_editProfileFragment);
+            }
+        });
+
+        binding.changeGoalsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_profileChangeGoalsFragment);
+            }
+        });
+        binding.caloriesHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_profileCaloriesHistoryFragment);
+            }
+        });
+        binding.changeNotiTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_profileChangeNotiTimeFragment2);
+            }
+        });
+        binding.settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(ProfileFragment.this).navigate(R.id.action_profileFragment_to_profileSettingFragment);
+            }
+        });
+        return binding.getRoot();
     }
 }

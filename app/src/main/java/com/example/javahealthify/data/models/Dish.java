@@ -1,59 +1,73 @@
 package com.example.javahealthify.data.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Dish {
-    private String id;
-    private String dishName;
-    private ArrayList<Ingredient> ingredientData;
-    private int totalCalories;
-    private String Session;
-    public Dish(String id, String dishName, ArrayList<Ingredient> ingredientData, int totalCalories, String Session) {
-    this.id = id;
-    this.dishName = dishName;
-    this.ingredientData = ingredientData;
-    this.totalCalories = totalCalories;
-        this.Session = Session;
 
+    private String name;
+    private double protein = 0;
+    private double carb = 0;
+    private  double lipid = 0;
+    private double calories = 0;
+    private String session;
+    private List<Ingredient> ingredients = new ArrayList<>();
+    public Dish() {
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDishName() {
-        return dishName;
+    public double getProtein() {
+        return protein;
     }
 
-    public void setDishName(String dishName) {
-        this.dishName = dishName;
+    public void setProtein(double protein) {
+        this.protein = protein;
     }
 
-    public ArrayList<Ingredient> getIngredientData() {
-        return ingredientData;
+    public double getCarb() {
+        return carb;
     }
 
-    public void setIngredientData(ArrayList<Ingredient> ingredientData) {
-        this.ingredientData = ingredientData;
+    public void setCarb(double carb) {
+        this.carb = carb;
     }
 
-    public int getTotalCalories() {
-        return totalCalories;
+    public double getLipid() {
+        return lipid;
     }
 
-    public void setTotalCalories(int totalCalories) {
-        this.totalCalories = totalCalories;
+    public void setLipid(double lipid) {
+        this.lipid = lipid;
+    }
+
+    public double getCalories() {
+        return calories;
+    }
+
+    public void setCalories(double calories) {
+        this.calories = calories;
     }
 
     public String getSession() {
-        return Session;
+        return session;
     }
 
     public void setSession(String session) {
-        Session = session;
+        this.session = session;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }

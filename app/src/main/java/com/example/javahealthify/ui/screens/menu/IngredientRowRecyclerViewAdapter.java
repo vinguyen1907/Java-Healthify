@@ -11,16 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IngredientRowRecyclerViewAdapter extends RecyclerView.Adapter<IngredientRowRecyclerViewAdapter.IngredientRowViewHolder> {
     Context context;
-    ArrayList<Ingredient> ingredientArrayList;
-    //! MUST USE LIVEDATA FOR INGREDIENT LIST OF EACH MEAL
-    public IngredientRowRecyclerViewAdapter(Context context, ArrayList<Ingredient> ingredientArrayList) {
-        this.context = context;
+
+    public void setIngredientArrayList(ArrayList<Ingredient> ingredientArrayList) {
         this.ingredientArrayList = ingredientArrayList;
+        notifyDataSetChanged();
+    }
+
+    List<Ingredient> ingredientArrayList = new ArrayList<>();
+    public IngredientRowRecyclerViewAdapter(Context context, List<Ingredient> ingredientList) {
+        this.context = context;
+        this.ingredientArrayList = ingredientList;
     }
 
     @NonNull
@@ -33,15 +40,15 @@ public class IngredientRowRecyclerViewAdapter extends RecyclerView.Adapter<Ingre
 
     @Override
     public void onBindViewHolder(@NonNull IngredientRowRecyclerViewAdapter.IngredientRowViewHolder holder, int position) {
-        holder.tvIngredientName.setText(ingredientArrayList.get(position).getIngredientInfo().getShortDescription());
-        holder.tvIngredientCalories.setText(String.valueOf(ingredientArrayList.get(position).getCalories()));
-        holder.tvIngredientWeight.setText(String.valueOf(ingredientArrayList.get(position).getWeight()));
+        holder.tvIngredientName.setText(ingredientArrayList.get(position).getName());
+        holder.tvIngredientCalories.setText(GlobalMethods.format(ingredientArrayList.get(position).getCalories()));
+        holder.tvIngredientWeight.setText(GlobalMethods.format(ingredientArrayList.get(position).getWeight()));
 
     }
 
     @Override
     public int getItemCount() {
-        return ingredientArrayList.size();
+        return ingredientArrayList == null? 0 : ingredientArrayList.size();
     }
     public static class IngredientRowViewHolder extends RecyclerView.ViewHolder {
         TextView tvIngredientName, tvIngredientCalories, tvIngredientWeight;
