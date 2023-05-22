@@ -6,14 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.Dish;
 import com.example.javahealthify.databinding.FragmentMenuBinding;
+import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
 
@@ -21,6 +25,11 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     MenuVM menuVM;
     private FragmentMenuBinding binding;
+
+    DishRecycleViewAdapter adapter;
+
+    private Double totalCalories = 0.0;
+
 
     public MenuFragment() {
         // Required empty public constructor
@@ -34,14 +43,15 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         binding.setViewModel(menuVM);
         binding.setLifecycleOwner(this);
 
-        RecyclerView recyclerView = binding.meals;
-        DishRecycleViewAdapter adapter = new DishRecycleViewAdapter(this.getContext(), new ArrayList<>(), this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
-        adapter.setDishes(menuVM.getFirestoreDishes().getValue());
+        // Remove the observer before setting up a new one
+        menuVM.getFirestoreDishes().removeObservers(this);
 
+        adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), this);
+        binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.meals.setAdapter(adapter);
+        Log.d("OBSERVING DISHES", "onCreateView: " + menuVM.getFirestoreDishes().getValue());
         // Update the RecyclerView adapter with new data
-        menuVM.getFirestoreDishes().observe(getViewLifecycleOwner(), adapter::setDishes);
+
         binding.addMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +60,25 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        menuVM.getFirestoreDishes().observe(getViewLifecycleOwner(), new Observer<ArrayList<Dish>>() {
+            @Override
+            public void onChanged(ArrayList<Dish> dishArrayList) {
+                adapter.setDishes(dishArrayList);
+                totalCalories = 0.0;
+                for (Dish dish: dishArrayList
+                     ) {
+                    totalCalories += dish.getCalories();
+                    binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
+                }
+
+
+            }
+        });
     }
 
     public void onAddMealClick() {

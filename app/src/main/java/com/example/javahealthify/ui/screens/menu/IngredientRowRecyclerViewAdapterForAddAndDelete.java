@@ -53,8 +53,8 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
     @Override
     public void onBindViewHolder(@NonNull IngredientRowForAddAndDeleteViewHolder holder, int position) {
         holder.tvIngredientName.setText(ingredients.get(position).getName());
-        holder.tvIngredientCalories.setText(GlobalMethods.format(ingredients.get(position).getCalories()));
-        holder.etIngredientWeight.setText(GlobalMethods.format(ingredients.get(position).getWeight()));
+        holder.tvIngredientCalories.setText(GlobalMethods.formatDoubleToString(ingredients.get(position).getCalories()));
+        holder.etIngredientWeight.setText(GlobalMethods.formatDoubleToString(ingredients.get(position).getWeight()));
         holder.btnRemoveIngredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +76,7 @@ public class IngredientRowRecyclerViewAdapterForAddAndDelete extends RecyclerVie
                         onWeightChangedListener.onWeightChanged(position, newWeight);
                     }
                 } catch (NumberFormatException e) {
-                    holder.etIngredientWeight.setText(GlobalMethods.format(0));
+                    holder.etIngredientWeight.setText(GlobalMethods.formatDoubleToString(0));
                 }
 
                 return true;

@@ -78,7 +78,7 @@ public class EditMealFragment extends Fragment implements IngredientRowRecyclerV
                 for (Ingredient ingredient : ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
-                binding.editDishTotalCalories.setText(GlobalMethods.format(totalCalories));
+                binding.editDishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
             }
         });
         setOnClick();
@@ -168,7 +168,7 @@ public class EditMealFragment extends Fragment implements IngredientRowRecyclerV
             editMealVM.setIngredients(newIngredients);
 
             // Update the displayed total calories
-            binding.editDishTotalCalories.setText(GlobalMethods.format(totalCalories));
+            binding.editDishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
         }
     }
 }
