@@ -69,23 +69,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
                 showDialog(context, position);
             }
         });
-        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mealOptionsClickListener != null) {
-                    mealOptionsClickListener.onMealOptionClick(position);
-                }
-            }
-        });
-        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addIngredientClickListener != null) {
-                    addIngredientClickListener.onAddIngredientClick(position);
-                }
-            }
-        });
-
 
         Drawable startDrawable;
         switch (dishes.get(position).getSession()) {
@@ -164,7 +147,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
             tvMealCalories = itemView.findViewById(R.id.meal_calories);
             rvIngredients = itemView.findViewById(R.id.meal_ingredients_list);
             btnMealOption = itemView.findViewById(R.id.meal_options);
-            btnAddIngredient = itemView.findViewById(R.id.add_ingredient);
         }
     }
 

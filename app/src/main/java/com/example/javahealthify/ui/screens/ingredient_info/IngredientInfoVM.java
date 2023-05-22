@@ -14,11 +14,8 @@ public class IngredientInfoVM extends ViewModel {
         this.ingredientInfo = ingredientInfo;
     }
 
-    IngredientInfo ingredientInfo;
+    IngredientInfo ingredientInfo = new IngredientInfo();
 
-    public IngredientInfoVM(IngredientInfo ingredientInfo) {
-        this.ingredientInfo = ingredientInfo;
-    }
 
 
 

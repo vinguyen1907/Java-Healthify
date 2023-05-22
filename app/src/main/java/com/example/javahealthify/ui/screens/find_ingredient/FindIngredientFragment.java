@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentFindIngredientBinding;
@@ -82,6 +84,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     public void onViewIngredientInfoClick(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("position",position);
+        NavHostFragment.findNavController(this).navigate(R.id.action_findIngredientFragment_to_ingredientInfoFragment, bundle);
     }
 
     private void addToIngredients(Ingredient tempIngredient) {
