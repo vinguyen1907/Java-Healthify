@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_chevron_backward" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="32dp"
         android:drawableStart="@drawable/ic_edit_pencil"
-        android:drawableEnd="@drawable/ic_chevron_backward"
+        android:drawableEnd="@drawable/ic_chevron_forward"
         android:drawablePadding="24dp"
         android:gravity="start"
         android:paddingLeft="24dp"
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:drawableStart="@drawable/ic_danger"
-        android:drawableEnd="@drawable/ic_chevron_backward"
+        android:drawableEnd="@drawable/ic_chevron_forward"
         android:drawableTint="?attr/colorError"
         android:drawablePadding="28dp"
         android:gravity="start"

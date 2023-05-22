@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentForgotPasswordBinding;
+import com.example.javahealthify.utils.GlobalMethods;
+import com.google.android.material.appbar.AppBarLayout;
 
 public class ForgotPasswordFragment extends Fragment {
     private FragmentForgotPasswordBinding binding;
@@ -41,6 +44,13 @@ public class ForgotPasswordFragment extends Fragment {
                 if (isSent == true) {
                     displayDialog();
                 }
+            }
+        });
+
+        binding.toolBarLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GlobalMethods.backToPreviousFragment(ForgotPasswordFragment.this);
             }
         });
 

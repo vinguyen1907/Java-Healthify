@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <queries>
+        <package android:name="com.android.systemui" />
+        <!-- Add any other packages that have the POST_NOTIFICATIONS permission -->
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +21,12 @@
         android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.JavaHealthify"
         tools:targetApi="31">
+
+        <receiver
+            android:name=".ui.screens.NotificationReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".ui.screens.MainActivity"
             android:exported="true">
