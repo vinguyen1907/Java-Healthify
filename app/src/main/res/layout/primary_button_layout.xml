@@ -7,6 +7,9 @@
         <variable
             name="title"
             type="String" />
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/primary_button_background"
             android:text="@{title}"
+            android:onClick="@{onClick}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

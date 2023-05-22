@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesAdapter;
 import com.example.javahealthify.data.adapters.WorkoutPageAdapter;
+import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -54,8 +56,10 @@ public class WorkoutFragment extends Fragment {
 
         navController = NavHostFragment.findNavController(WorkoutFragment.this);
 
+//        viewModel.loadSelectedExercises();
         setUpExerciseList();
         setOnClick();
+
 
 //        adapter = new WorkoutPageAdapter(this);
 //        binding.viewPager.setAdapter(adapter);
@@ -69,6 +73,15 @@ public class WorkoutFragment extends Fragment {
         adapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedExercises().getValue(), navController);
         binding.selectedExercisesLst.setAdapter(adapter);
         binding.selectedExercisesLst.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        viewModel.getSelectedExercises().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                if (!exercises.isEmpty()) {
+                    adapter.setData(exercises);
+                }
+            }
+        });
     }
 
     private void setOnClick() {

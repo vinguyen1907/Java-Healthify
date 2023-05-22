@@ -66,7 +66,7 @@
                     android:fontFamily="@font/poppins_semi_bold"
                     android:text="Selected"
                     android:textSize="14sp"
-                    android:visibility="@{workoutVM.selectedTotalCalories > 0 ? android.view.View.VISIBLE : android.view.View.GONE}" />
+                    android:visibility="@{categoryExerciseVM.getSelectedTempList().size() > 0 ? android.view.View.VISIBLE : android.view.View.GONE}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/selected_exercise_lst"
@@ -143,8 +143,10 @@
             </LinearLayout>
 
             <include
+                android:id="@+id/add_to_selected_list_btn"
                 layout="@layout/primary_button_layout"
-                title="@{@string/add_btn_txt}" />
+                title="@{@string/add_btn_txt}"
+                />
         </LinearLayout>
 
 

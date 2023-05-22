@@ -90,4 +90,10 @@
         <item name="fontFamily">@font/poppins_medium</item>
         <item name="android:layout_marginHorizontal">@dimen/default_horizontal_margin</item>
     </style>
+
+    <style name="InputHeader">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:layout_marginHorizontal">@dimen/default_horizontal_margin</item>
+    </style>
 </resources>

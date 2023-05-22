@@ -146,6 +146,9 @@
            <action
                android:id="@+id/action_workoutCategoryExercisesFragment_to_workoutExerciseDetailsFragment"
                app:destination="@id/workoutExerciseDetailsFragment" />
+           <action
+               android:id="@+id/action_workoutCategoryExercisesFragment_to_workoutEditInformationFragment"
+               app:destination="@id/workoutEditInformationFragment" />
        </fragment>
     <fragment
         android:id="@+id/workoutExerciseDetailsFragment"
@@ -153,6 +156,15 @@
         android:label="WorkoutExerciseDetailsFragment"
         tools:layout="@layout/fragment_workout_exercise_details"
         >
+        <argument
+            android:name="exercise"
+            app:argType="com.example.javahealthify.data.models.Exercise" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutEditInformationFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_edit_information.WorkoutEditInformationFragment"
+        android:label="fragment_workout_edit_information"
+        tools:layout="@layout/fragment_workout_edit_information" >
         <argument
             android:name="exercise"
             app:argType="com.example.javahealthify.data.models.Exercise" />

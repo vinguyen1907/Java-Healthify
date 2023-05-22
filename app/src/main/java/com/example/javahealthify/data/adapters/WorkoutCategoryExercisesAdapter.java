@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections;
-import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesVM;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.List;
@@ -26,9 +24,9 @@ public class WorkoutCategoryExercisesAdapter extends RecyclerView.Adapter<Workou
     private Context context;
     private List<Exercise> exercises;
     private NavController navController;
-    private AddSelectedExercise addSelectedExercise;
+    private MoveTempListToSelectedExerciseList addSelectedExercise;
 
-    public WorkoutCategoryExercisesAdapter(Context context, List<Exercise> exercises, NavController navController, AddSelectedExercise addSelectedExercise) {
+    public WorkoutCategoryExercisesAdapter(Context context, List<Exercise> exercises, NavController navController, MoveTempListToSelectedExerciseList addSelectedExercise) {
         this.context = context;
         this.exercises = exercises;
         this.navController = navController;
@@ -81,7 +79,10 @@ public class WorkoutCategoryExercisesAdapter extends RecyclerView.Adapter<Workou
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addSelectedExercise.onAddSelectedExercise(exercise);
+                // Navigate to fragment edit information screen
+                com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections.ActionWorkoutCategoryExercisesFragmentToWorkoutEditInformationFragment action =
+                        WorkoutCategoryExercisesFragmentDirections.actionWorkoutCategoryExercisesFragmentToWorkoutEditInformationFragment(exercise);
+                navController.navigate(action);
             }
         });
     }

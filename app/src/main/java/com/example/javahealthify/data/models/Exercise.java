@@ -10,7 +10,7 @@ public class Exercise implements Serializable {
     private String execution;
     private String unit; // rep/second
     private int count;
-    private int caloriesPerUnit;
+    private double caloriesPerUnit;
     private String categoryId;
 
     public Exercise() {}
@@ -25,6 +25,18 @@ public class Exercise implements Serializable {
         this.count = count;
         this.caloriesPerUnit = caloriesPerUnit;
         this.categoryId = categoryId;
+    }
+
+    public Exercise(Exercise exercise) {
+        this.id = exercise.id;
+        this.name = exercise.name;
+        this.imageUrl = exercise.imageUrl;
+        this.startingPosition = exercise.startingPosition;
+        this.execution = exercise.execution;
+        this.unit = exercise.unit;
+        this.count = exercise.count;
+        this.caloriesPerUnit = exercise.caloriesPerUnit;
+        this.categoryId = exercise.categoryId;
     }
 
     public String getId() {
@@ -75,8 +87,8 @@ public class Exercise implements Serializable {
         this.unit = unit;
     }
 
-    public String getCount() {
-        return String.valueOf(count);
+    public int getCount() {
+        return count;
     }
 
     public int getCountNumber() {
@@ -87,11 +99,11 @@ public class Exercise implements Serializable {
         this.count = count;
     }
 
-    public int getCaloriesPerUnit() {
+    public double getCaloriesPerUnit() {
         return caloriesPerUnit;
     }
 
-    public void setCaloriesPerUnit(int caloriesPerUnit) {
+    public void setCaloriesPerUnit(double caloriesPerUnit) {
         this.caloriesPerUnit = caloriesPerUnit;
     }
 

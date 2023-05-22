@@ -79,4 +79,8 @@ public class WorkoutCategorySelectedExercisesAdapter extends RecyclerView.Adapte
     public int getItemCount() {
         return selectedExercises.size();
     }
+
+    public void setData(List<Exercise> exercises) {
+        selectedExercises = exercises;
+    }
 }

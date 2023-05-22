@@ -14,20 +14,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.javahealthify.R;
-import com.example.javahealthify.data.adapters.AddSelectedExercise;
+import com.example.javahealthify.data.adapters.MoveTempListToSelectedExerciseList;
 import com.example.javahealthify.data.adapters.WorkoutCategoryExercisesAdapter;
 import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesAdapter;
 import com.example.javahealthify.data.models.Exercise;
-import com.example.javahealthify.databinding.FragmentWorkoutCategoriesBinding;
 import com.example.javahealthify.databinding.FragmentWorkoutCategoryExercisesBinding;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.List;
 
-public class WorkoutCategoryExercisesFragment extends Fragment implements AddSelectedExercise {
+public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTempListToSelectedExerciseList {
     private FragmentWorkoutCategoryExercisesBinding binding;
     private WorkoutCategoryExercisesVM viewModel;
     private WorkoutVM workoutVM;
@@ -38,7 +37,7 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements AddSel
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(WorkoutCategoryExercisesFragment.this).get(WorkoutCategoryExercisesVM.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(WorkoutCategoryExercisesVM.class);
         workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
         String categoryId = getArguments().getString("categoryId");
         viewModel.setCategoryId(categoryId);
@@ -56,6 +55,39 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements AddSel
 
         navController = NavHostFragment.findNavController(WorkoutCategoryExercisesFragment.this);
 
+        setUpCategoryExercisesRecyclerView();
+        setUpSelectedExercisesRecyclerView();
+
+        setUpToastObserver();
+
+        setOnClick();
+
+        workoutVM.getSelectedTotalCalories().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer total) {
+                binding.totalCaloriesTv.setText(String.valueOf(total) + " cal");
+            }
+        });
+
+        return binding.getRoot();
+    }
+
+    private void setUpSelectedExercisesRecyclerView() {
+        selectedExercisesAdapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedTempList().getValue(), navController);
+        binding.selectedExerciseLst.setAdapter(selectedExercisesAdapter);
+        LinearLayoutManager selectedExercisesLayoutManager = new LinearLayoutManager(requireContext()) {};
+        binding.selectedExerciseLst.setLayoutManager(selectedExercisesLayoutManager);
+
+        viewModel.getSelectedTempList().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
+            @Override
+            public void onChanged(List<Exercise> exercises) {
+                selectedExercisesAdapter.setData(exercises);
+                selectedExercisesAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setUpCategoryExercisesRecyclerView() {
         viewModel.getExercises().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
             @Override
             public void onChanged(List<Exercise> exercises) {
@@ -66,34 +98,18 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements AddSel
                 }
             }
         });
+    }
 
-        workoutVM.getSelectedTotalCalories().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+    private void setUpToastObserver() {
+        workoutVM.getAddSelectedExercisesToDbMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
-            public void onChanged(Integer total) {
-                binding.totalCaloriesTv.setText(String.valueOf(total) + " cal");
+            public void onChanged(String message) {
+                if (message != null) {
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                    workoutVM.setAddSelectedExercisesToDbMessage(null);
+                }
             }
         });
-
-        selectedExercisesAdapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), workoutVM.getSelectedExercises().getValue(), navController);
-        binding.selectedExerciseLst.setAdapter(selectedExercisesAdapter);
-        LinearLayoutManager selectedExercisesLayoutManager = new LinearLayoutManager(requireContext()) {
-//            @Override
-//            public boolean canScrollVertically() {
-//                return false;
-//            }
-        };
-        binding.selectedExerciseLst.setLayoutManager(selectedExercisesLayoutManager);
-
-        workoutVM.getSelectedExercises().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(List<Exercise> exercises) {
-                selectedExercisesAdapter.notifyDataSetChanged();
-            }
-        });
-
-        setOnClick();
-
-        return binding.getRoot();
     }
 
     private void setOnClick() {
@@ -103,10 +119,18 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements AddSel
                 GlobalMethods.backToPreviousFragment(WorkoutCategoryExercisesFragment.this);
             }
         });
+
+        binding.addToSelectedListBtn.setOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                workoutVM.moveTempListToSelectedList(viewModel.getSelectedTempList().getValue());
+                viewModel.clearTempList();
+            }
+        });
     }
 
     @Override
-    public void onAddSelectedExercise(Exercise exercise) {
-        workoutVM.onAddSelectedExercise(exercise);
+    public void addExerciseToTempList(Exercise exercise) {
+        viewModel.addExerciseToTempList(exercise);
     }
 }
