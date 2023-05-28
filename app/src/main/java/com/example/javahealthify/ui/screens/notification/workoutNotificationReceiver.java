@@ -1,23 +1,21 @@
-package com.example.javahealthify.ui.screens;
+package com.example.javahealthify.ui.screens.notification;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
 import com.example.javahealthify.R;
 
-public class NotificationReceiver extends BroadcastReceiver {
+public class workoutNotificationReceiver extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "my_channel";
-    private static final String CHANNEL_NAME = "My Channel";
-    private static final String CHANNEL_DESC = "This is my notification channel";
+    private static final String CHANNEL_NAME = "Workout Channel";
+    private static final String CHANNEL_DESC = "This is the workout notification channel";
     private static final int NOTIFICATION_ID = 1;
 
     @Override
@@ -25,8 +23,8 @@ public class NotificationReceiver extends BroadcastReceiver {
         createNotificationChannel(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_calendar)
-                .setContentTitle("TEST OK")
-                .setContentText("TEST NOTIFICATION OK")
+                .setContentTitle("Remember to workout everyday!")
+                .setContentText("Pain is just weakness coming out of the body")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

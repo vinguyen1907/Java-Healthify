@@ -8,7 +8,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/sign_up_btn5"
+        android:id="@+id/updateNotiBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <EditText
-        android:id="@+id/weight_edt"
+        android:id="@+id/workout_edt"
         style="@style/PrimaryEditText"
         android:layout_marginTop="5dp"
         android:drawableEnd="@drawable/ic_option"
@@ -83,7 +83,7 @@
         android:layout_marginTop="48dp"
         android:text="Meal Time"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weight_edt" />
+        app:layout_constraintTop_toBottomOf="@+id/workout_edt" />
 
     <EditText
         android:id="@+id/meal_edt"
