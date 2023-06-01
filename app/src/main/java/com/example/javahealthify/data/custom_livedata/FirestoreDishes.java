@@ -130,21 +130,27 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     }
 
     public void addDish(Dish newDish) {
-        AtomicReference<Double> initialCalories = new AtomicReference<>((double) 0);
         if (dailyActivityRef != null) {
-            dailyActivityRef.get().addOnCompleteListener(
-                    task -> {
-                        initialCalories.set((Double) task.getResult().get("foodCalories"));
+            dailyActivityRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Object foodCaloriesObj = task.getResult().get("foodCalories");
+                    double initialCalories = 0;
+                    if (foodCaloriesObj instanceof Long) {
+                        initialCalories = ((Long) foodCaloriesObj).doubleValue();
+                    } else if (foodCaloriesObj instanceof Double) {
+                        initialCalories = (Double) foodCaloriesObj;
                     }
-            );
+                    dailyActivityRef.update("calories", initialCalories + newDish.getCalories());
+                } else {
+                    Log.d("ERROR", "addDish: " + task.getException());
+                }
+            });
+
             dailyActivityRef.update("dishes", FieldValue.arrayUnion(GlobalMethods.toKeyValuePairs(newDish)))
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "addDish: Dish added successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "addDish: Error adding dish", e));
-
-            dailyActivityRef.update("calories", initialCalories.get() + newDish.getCalories());
         }
     }
-
     public void deleteDish(Dish dishToDelete) {
         AtomicReference<Double> initialCalories = new AtomicReference<>((double) 0);
 

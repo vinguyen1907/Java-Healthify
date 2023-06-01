@@ -66,7 +66,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
             public void onChanged(ArrayList<Ingredient> ingredients) {
                 recyclerViewAdapterForAddAndDelete.setIngredients(ingredients);
 
-                totalCalories = 0;
+                totalCalories = 0.0;
                 for (Ingredient ingredient : ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
