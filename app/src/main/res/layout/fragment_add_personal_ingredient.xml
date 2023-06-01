@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
     <data>
-<!--        <variable-->
-<!--            name="viewModel"-->
-<!--            type="" />-->
+        <variable
+            name="viewModel"
+            type="com.example.javahealthify.ui.screens.add_personal_ingredient.AddPersonalIngredientVM" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,13 +43,45 @@
             style="@style/fill_in_information_section"/>
 
        <TextView
-           android:id="@+id/create_ingredient_name"
+           android:layout_marginTop="27dp"
+           android:id="@+id/tv_new_ingredient_name"
            app:layout_constraintTop_toBottomOf="@id/create_ingredient_prompt"
            app:layout_constraintStart_toStartOf="parent"
            android:layout_height="wrap_content"
            android:layout_width="match_parent"
            android:text="Ingredient name"
            style="@style/fill_in_information_section"/>
+        <EditText
+            android:id="@+id/et_new_ingredient_name"
+            style="@style/PrimaryEditText"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/primary_edittext_background"
+            android:hint="Ingredient Name"
+            android:text="@={viewModel.ingredientName}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_new_ingredient_name"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <TextView
+            android:layout_marginTop="27dp"
+            android:id="@+id/tv_new_ingredient_serving_size"
+            app:layout_constraintTop_toBottomOf="@id/et_new_ingredient_name"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Ingredient name"
+            style="@style/fill_in_information_section"/>
+        <EditText
+            android:id="@+id/et_new_ingredient_serving_size"
+            style="@style/PrimaryEditText"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/primary_edittext_background"
+            android:hint="Ingredient Name"
+            android:text="@={viewModel.ingredientName}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_new_ingredient_serving_size"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="20dp" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
