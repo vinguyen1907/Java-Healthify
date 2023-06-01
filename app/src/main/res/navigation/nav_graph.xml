@@ -220,6 +220,9 @@
         <action
             android:id="@+id/action_findIngredientFragment_to_ingredientInfoFragment"
             app:destination="@id/ingredientInfoFragment" />
+        <action
+            android:id="@+id/action_findIngredientFragment_to_addPersonalIngredientFragment"
+            app:destination="@id/addPersonalIngredientFragment" />
     </fragment>
     <fragment
         android:id="@+id/editMealFragment"
@@ -281,5 +284,9 @@
             android:name="exercise"
             app:argType="com.example.javahealthify.data.models.Exercise" />
     </fragment>
+    <fragment
+        android:id="@+id/addPersonalIngredientFragment"
+        android:name="com.example.javahealthify.ui.screens.add_personal_ingredient.AddPersonalIngredientFragment"
+        android:label="AddPersonalIngredientFragment" />
 
 </navigation>

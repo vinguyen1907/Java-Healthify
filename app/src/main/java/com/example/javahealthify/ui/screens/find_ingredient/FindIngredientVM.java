@@ -41,7 +41,7 @@ public class FindIngredientVM extends ViewModel {
                         Double carbs = document.get("Carbs", double.class);
                         Double lipid = document.get("Lipid", double.class);
                         Double protein = document.get("Protein", double.class);
-                        IngredientInfo temp = new IngredientInfo(document.getId(), document.get("Short_Description", String.class), calories, carbs, lipid, protein);
+                        IngredientInfo temp = new IngredientInfo(document.get("Short_Description", String.class), calories, carbs, lipid, protein);
                         tempList.add(temp);
                     }
                     ingredientInfoArrayList.setValue(tempList);

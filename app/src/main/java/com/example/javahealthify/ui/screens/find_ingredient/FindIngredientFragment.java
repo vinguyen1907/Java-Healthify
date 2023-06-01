@@ -70,6 +70,12 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
                 GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
             }
         });
+        binding.addOwnIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addPersonalIngredientFragment);
+            }
+        });
         return binding.getRoot();
     }
 
