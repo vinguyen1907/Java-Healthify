@@ -57,6 +57,9 @@ public class WorkoutFragment extends Fragment {
         navController = NavHostFragment.findNavController(WorkoutFragment.this);
 
 //        viewModel.loadSelectedExercises();
+
+                    viewModel.initDailyActivity();
+
         setUpExerciseList();
         setOnClick();
 
@@ -89,6 +92,20 @@ public class WorkoutFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(WorkoutFragment.this).navigate(R.id.action_workoutFragment_to_workoutCategoriesFragment);
+            }
+        });
+
+        binding.startExercisesBtn.setOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(WorkoutFragment.this).navigate(R.id.action_workoutFragment_to_workoutExercisePracticingFragment);
+            }
+        });
+
+        binding.historyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(WorkoutFragment.this).navigate(R.id.action_workoutFragment_to_workoutHistoryFragment);
             }
         });
     }
