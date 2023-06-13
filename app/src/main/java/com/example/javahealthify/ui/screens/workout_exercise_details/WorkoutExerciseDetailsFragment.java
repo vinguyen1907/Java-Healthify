@@ -30,7 +30,7 @@ public class WorkoutExerciseDetailsFragment extends Fragment {
 
         Exercise exercise = WorkoutExerciseDetailsFragmentArgs.fromBundle(getArguments()).getExercise();
         viewModel.setExercise(exercise);
-        Glide.with(requireContext()).load(exercise.getImageUrl()).into(binding.exerciseDetailsImage);
+        Glide.with(requireContext()).load(exercise.getImageUrl()).into(binding.exercisePracticingImage);
         binding.exerciseDetailsTimeOrRepTv.setText(GlobalMethods.formatTimeOrRep(exercise.getCountNumber(), exercise.getUnit()));
 
         setOnClick();

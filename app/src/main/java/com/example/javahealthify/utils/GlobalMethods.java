@@ -1,5 +1,9 @@
 package com.example.javahealthify.utils;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -9,7 +13,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
+import com.example.javahealthify.ui.screens.workout_exercise_practicing.PracticingOnBackDialogInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +46,6 @@ public class GlobalMethods {
         return String.format(Locale.US, "%." + 2 + "f", value);
     }
 
-
     public static String formatTimeOrRep(int count, String unitType) {
         if (unitType == "rep") {
             return "x" + String.valueOf(count);
@@ -67,5 +72,36 @@ public class GlobalMethods {
     public static String convertDateToHyphenSplittingFormat(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         return dateFormat.format(date);
+    }
+
+    public static String convertTimeInSeconds(int timeInSeconds) {
+        int hour = timeInSeconds / 3600;
+        int minute = (timeInSeconds - hour * 3600) / 60;
+        int second = timeInSeconds - hour * 3600 - minute * 60;
+        return (hour == 0 ? "" :String.valueOf(hour) + ":") + (minute ==0 ? "00:" : String.valueOf(minute) + ":") + (second < 10 ? "0" : "")  + String.valueOf(second);
+    }
+
+    public static void showWarningDialog(Context context, String message, PracticingOnBackDialogInterface onBack) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Warning");
+        builder.setMessage(message);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                onBack.onPositiveButton();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                onBack.onNegativeButton();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setCancelable(true);
+        builder.setIcon(R.drawable.ic_warning);
+        AlertDialog warningDialog = builder.create();
+        warningDialog.show();
     }
 }

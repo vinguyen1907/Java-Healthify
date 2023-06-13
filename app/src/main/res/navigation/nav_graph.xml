@@ -109,6 +109,12 @@
         <action
             android:id="@+id/action_workoutFragment_to_workoutExerciseDetailsFragment"
             app:destination="@id/workoutExerciseDetailsFragment" />
+        <action
+            android:id="@+id/action_workoutFragment_to_workoutExercisePracticingFragment"
+            app:destination="@id/workoutExercisePracticingFragment" />
+        <action
+            android:id="@+id/action_workoutFragment_to_workoutHistoryFragment"
+            app:destination="@id/workoutHistoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/fillInPersonalInformationFragment"
@@ -274,5 +280,28 @@
             android:name="exercise"
             app:argType="com.example.javahealthify.data.models.Exercise" />
     </fragment>
+    <fragment
+        tools:layout="@layout/fragment_workout_exercise_practicing"
+        android:id="@+id/workoutExercisePracticingFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_exercise_practicing.WorkoutExercisePracticingFragment"
+        android:label="WorkoutExercisePracticingFragment" >
+        <action
+            android:id="@+id/action_workoutExercisePracticingFragment_to_workoutFinishFragment"
+            app:destination="@id/workoutFinishFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutFinishFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_finish.WorkoutFinishFragment"
+        android:label="fragment_workout_finish"
+        tools:layout="@layout/fragment_workout_finish" >
+        <action
+            android:id="@+id/action_workoutFinishFragment_to_workoutFragment"
+            app:destination="@id/workoutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutHistoryFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragment"
+        android:label="fragment_workout_history"
+        tools:layout="@layout/fragment_workout_history" />
 
 </navigation>

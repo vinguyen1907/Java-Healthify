@@ -11,7 +11,10 @@ import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -22,20 +25,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkoutVM extends ViewModel {
     private MutableLiveData<List<Exercise>> selectedExercises = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Integer> selectedTotalCalories = new MutableLiveData<Integer>(0);
     //    private MutableLiveData<Workout> selectedExercises = new MutableLiveData<>();
     private MutableLiveData<String> addSelectedExercisesToDbMessage = new MutableLiveData<>(null);
+    private MutableLiveData<Integer> exerciseCalories = new MutableLiveData<>(0);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     public WorkoutVM() {
         loadSelectedExercises();
+        loadExercisesCalories();
     }
 
-    // Methods handle data
+    // Methods handle data on database
     public void loadSelectedExercises() {
         firestore.collection("users").document(auth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
@@ -49,6 +55,25 @@ public class WorkoutVM extends ViewModel {
                         }
                         selectedExercises.setValue(newList);
                         recalculateSelectedExercisesCalories();
+                    }
+                });
+    }
+
+    public void loadExercisesCalories() {
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if (doc.exists()) {
+                                Long inLong = doc.getLong("exerciseCalories");
+                                exerciseCalories.setValue(inLong.intValue());
+                            }
+                        } else {
+                            Log.e("ERROR", "Load exercises calories failed", task.getException());
+                        }
                     }
                 });
     }
@@ -89,12 +114,107 @@ public class WorkoutVM extends ViewModel {
         });
     }
 
+    public void finishSelectedExercises() {
+        updateWorkoutListOnDb();
+
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
+                .collection("today_selected_exercises").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int numberOfExercises = task.getResult().size();
+                            AtomicInteger count = new AtomicInteger(0);
+
+                            for (DocumentSnapshot doc : task.getResult()) {
+                                doc.getReference().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        count.incrementAndGet();
+                                        if (count.get() == numberOfExercises) {
+                                            updateExercisesCaloriesOnDb();
+                                            clearSelectedExercises();
+                                        }
+                                    }
+                                });
+                            }
+                        } else {
+                            Log.e("ERROR", "Delete selected exercises failed.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void updateExercisesCaloriesOnDb() {
+        DocumentReference ref = firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
+
+        WriteBatch batch = firestore.batch();
+        batch.update(ref, "exerciseCalories", FieldValue.increment(selectedTotalCalories.getValue()));
+        batch.update(ref, "calories", FieldValue.increment(selectedTotalCalories.getValue()));
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    loadSelectedExercises();
+                } else {
+                    Log.d("ERROR", "Error updating fields: ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void initDailyActivity() {
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot snapshot = task.getResult();
+                            if (!snapshot.exists()) {
+                                Map<String, Object> newDailyActivity = new HashMap<>();
+                                newDailyActivity.put("foodCalories", 0);
+                                newDailyActivity.put("exerciseCalories", 0);
+                                newDailyActivity.put("calories", 0);
+                                snapshot.getReference().set(newDailyActivity)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.i("Initial daily activity successfully", "");
+                                                } else {
+                                                    Log.e("ERROR", "Initial daily activity failed", task.getException());
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    // Methods handle data in this view model
     private void recalculateSelectedExercisesCalories() {
         selectedTotalCalories.setValue(GlobalMethods.calculateTotalCalories(selectedExercises.getValue()));
     }
 
     public void moveTempListToSelectedList(List<Exercise> tempList) {
         addExercisesToDb(tempList);
+    }
+
+    private void clearSelectedExercises() {
+        selectedExercises.setValue(new ArrayList<>());
+    }
+
+    private void updateWorkoutListOnDb() {
+        CollectionReference collection = firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).collection("workouts");
+        for (Exercise exercise : selectedExercises.getValue()) {
+            collection.add(exercise);
+        }
     }
 
     // Getters and Setters
@@ -115,4 +235,11 @@ public class WorkoutVM extends ViewModel {
         addSelectedExercisesToDbMessage.setValue(newMessage);
     }
 
+    public int getSelectedExerciseSize() {
+        return selectedExercises.getValue().size();
+    }
+
+    public MutableLiveData<Integer> getExerciseCalories() {
+        return exerciseCalories;
+    }
 }

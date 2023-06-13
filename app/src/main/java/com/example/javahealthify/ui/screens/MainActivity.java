@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
 
+
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
         } else {
