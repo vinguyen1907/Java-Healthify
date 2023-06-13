@@ -28,7 +28,7 @@
                 android:id="@+id/display_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="53dp"
                 android:fontFamily="@font/poppins_semi_bold"
                 android:text="@string/menu_today"
@@ -48,7 +48,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="@dimen/default_horizontal_margin"
-                    android:text=""
                     android:fontFamily="@font/poppins_semi_bold"
                     android:textColor="@color/secondaryColor"
                     android:textSize="26sp" />
@@ -57,7 +56,7 @@
                     android:id="@+id/add_meal_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
                     android:background="@drawable/ic_pill_shape_add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -68,8 +67,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/meals"
             android:layout_width="match_parent"
+            android:paddingBottom="100dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="200dp"
             app:layout_constraintTop_toBottomOf="@+id/menu_info_banner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

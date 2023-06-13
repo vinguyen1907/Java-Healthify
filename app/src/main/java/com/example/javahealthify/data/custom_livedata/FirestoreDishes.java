@@ -14,6 +14,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -28,6 +30,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     private CollectionReference dailyActivitiesRef = userRef.collection("daily_activities");
     private DocumentReference dailyActivityRef;
     private ListenerRegistration listenerRegistration;
+
     private void queryDailyActivities() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -41,32 +44,21 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
         Timestamp startTimestamp = new Timestamp(start);
         Timestamp endTimestamp = new Timestamp(end);
 
-        dailyActivitiesRef
-                .whereGreaterThanOrEqualTo("date", startTimestamp)
-                .whereLessThan("date", endTimestamp)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().isEmpty()) {
-                            Map<String, Object> newDailyActivity = new HashMap<>();
-                            newDailyActivity.put("date", startTimestamp);
-                            newDailyActivity.put("dishes", new ArrayList<Map<String, Object>>());
+        Date currentDate = new Date();
 
-                            dailyActivitiesRef.add(newDailyActivity)
-                                    .addOnSuccessListener(documentReference -> {
-                                        dailyActivityRef = documentReference;
-                                    }).addOnFailureListener( e-> {
-                                        Log.e("SOMEERRORS", "queryDailyActivities: error in query",  e);
-                                    });
-                            Log.d("FIRESTOREDISHES", "queryDailyActivities: I Created a new dailyactivities");
-                        } else {
-                            dailyActivityRef = task.getResult().getDocuments().get(0).getReference();
-                        }
-                    } else {
-                        // Handle error
-                        Log.d("FIRESTOREDISHES", "queryDailyActivities: something went wrong");
-                    }
-                });
+        dailyActivityRef = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(currentDate));
+
+        dailyActivityRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().getData() == null || task.getResult().getData().isEmpty()) {
+                    Map<String, Object> newDailyActivity = new HashMap<>();
+                    newDailyActivity.put("date", startTimestamp);
+                    newDailyActivity.put("dishes", new ArrayList<Map<String, Object>>());
+                    newDailyActivity.put("foodCalories", 0);
+                    dailyActivityRef.set(newDailyActivity, SetOptions.merge());
+                }
+            }
+        });
     }
 
     @Override
@@ -139,30 +131,56 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
 
     public void addDish(Dish newDish) {
         if (dailyActivityRef != null) {
+            dailyActivityRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Object foodCaloriesObj = task.getResult().get("foodCalories");
+                    double initialCalories = 0;
+                    if (foodCaloriesObj instanceof Long) {
+                        initialCalories = ((Long) foodCaloriesObj).doubleValue();
+                    } else if (foodCaloriesObj instanceof Double) {
+                        initialCalories = (Double) foodCaloriesObj;
+                    }
+                    dailyActivityRef.update("calories", initialCalories + newDish.getCalories());
+                } else {
+                    Log.d("ERROR", "addDish: " + task.getException());
+                }
+            });
+
             dailyActivityRef.update("dishes", FieldValue.arrayUnion(GlobalMethods.toKeyValuePairs(newDish)))
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "addDish: Dish added successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "addDish: Error adding dish", e));
         }
     }
-
     public void deleteDish(Dish dishToDelete) {
+        AtomicReference<Double> initialCalories = new AtomicReference<>((double) 0);
+
         Log.d("DELETE DISH NAME", "deleteDish: " + dishToDelete.getIngredients());
         if (dailyActivityRef != null) {
+            dailyActivityRef.get().addOnCompleteListener(
+                    task -> {
+                        initialCalories.set((Double) task.getResult().get("foodCalories"));
+                    }
+            );
             dailyActivityRef.update("dishes", FieldValue.arrayRemove(GlobalMethods.toKeyValuePairs(dishToDelete)))
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "deleteDish: Dish deleted successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "deleteDish: Error deleting dish", e));
+            dailyActivityRef.update("calories", initialCalories.get() - dishToDelete.getCalories());
+
         }
     }
 
     public void updateDishes(List<Dish> newDishes) {
+        double totalCalories = 0;
         if (dailyActivityRef != null) {
             List<Map<String, Object>> newDishesKeyValuePairs = new ArrayList<>();
             for (Dish dish : newDishes) {
                 newDishesKeyValuePairs.add(GlobalMethods.toKeyValuePairs(dish));
+                totalCalories += dish.getCalories();
             }
             dailyActivityRef.update("dishes", newDishesKeyValuePairs)
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
+            dailyActivityRef.update("foodCalories", totalCalories);
         }
     }
 }

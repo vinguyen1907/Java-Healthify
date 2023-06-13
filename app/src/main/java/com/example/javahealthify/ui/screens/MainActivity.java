@@ -8,10 +8,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +35,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.ActivityMainBinding;
+import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
+import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,40 +49,58 @@ public class MainActivity extends AppCompatActivity {
     String[] permissions = new String[]{
             Manifest.permission.POST_NOTIFICATIONS
     };
-
+    private ActivityMainBinding binding;
+    private MainVM viewModel;
+    private NavController navController;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private BeginSignInRequest signInRequest;
+    static private FirebaseFirestore db;
     boolean permission_post_notification=false;
-    private static final String CHANNEL_ID = "my_channel";
-    private static final String CHANNEL_NAME = "My Channel";
-    private static final String CHANNEL_DESC = "This is my notification channel";
-    private static final int NOTIFICATION_ID = 1;
+    private static final String CHANNEL_WORKOUT_ID = "my_channel";
+    private static final String CHANNEL_WORKOUT_NAME = "Notification Channel";
+    private static final String CHANNEL_WORKOUT_DESC = "This is my notification channel";
+    private static final int NOTIFICATION_WORKOUT_ID = 1;
     private static final int REQUEST_CODE = 123;
+
+//    private static final String CHANNEL_MEAL_ID = "my_channel";
+//    private static final String CHANNEL_MEAL_NAME = "My Channel";
+//    private static final String CHANNEL_MEAL_DESC = "This is my notification channel";
+//    private static final int NOTIFICATION_MEAL_ID = 2;
+//    private static final int REQUEST_CODE_MEAL = 123;
 
     private NotificationManager notificationManager;
     private AlarmManager alarmManager;
     private PendingIntent notificationIntent;
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(CHANNEL_DESC);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void scheduleNotification() {
+    private void scheduleWorkoutNotification(int hour, int minute, int second) {
         // Set the desired time for the notification
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 21); // Hour in 24-hour format
-        calendar.set(Calendar.MINUTE, 49);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, hour); // Hour in 24-hour format
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
 
         // Create an explicit intent for the notification receiver
-        Intent intent = new Intent(this, NotificationReceiver.class);
+        Intent intent = new Intent(this, workoutNotificationReceiver.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Log.i("test1","test");
             notificationIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         } else {
-            Log.i("test2","test");
+            notificationIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        // Schedule the notification
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationIntent);
+    }
+    private void scheduleMealNotification(int hour, int minute, int second) {
+        // Set the desired time for the notification
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour); // Hour in 24-hour format
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+
+        // Create an explicit intent for the notification receiver
+        Intent intent = new Intent(this, mealNotificationReceiver.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            notificationIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
             notificationIntent = PendingIntent.getBroadcast(this, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
@@ -86,18 +108,43 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationIntent);
     }
 
-//    private void cancelNotification() {
-//        if (notificationIntent != null) {
-//            alarmManager.cancel(notificationIntent);
-//        }
-//    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_WORKOUT_ID, CHANNEL_WORKOUT_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(CHANNEL_WORKOUT_DESC);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
-    private ActivityMainBinding binding;
-    private MainVM viewModel;
-    private NavController navController;
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private BeginSignInRequest signInRequest;
-    static private FirebaseFirestore db;
+    private int getNotificationWorkoutHour() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_workout_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+    }
+
+    private int getNotificationWorkoutMinute() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_workout_minute", 9); // 0 là giá trị mặc định nếu không tìm thấy khóa
+    }
+
+    private int getNotificationWorkoutSecond() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_workout_second", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
+    }
+    private int getNotificationMealHour() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_meal_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+    }
+
+    private int getNotificationMealMinute() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_meal_minute", 10); // 0 là giá trị mặc định nếu không tìm thấy khóa
+    }
+
+    private int getNotificationMealSecond() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return sharedPreferences.getInt("notification_meal_second", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +158,12 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
 
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        createNotificationChannel();
+
+        scheduleWorkoutNotification(getNotificationWorkoutHour(),getNotificationWorkoutMinute(),getNotificationWorkoutSecond());
+        scheduleMealNotification(getNotificationMealHour(),getNotificationMealMinute(),getNotificationMealSecond());
 
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
@@ -127,28 +180,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
         }
-
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        scheduleNotification();
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
-
-
-//        Button scheduleButton = findViewById(R.id.scheduleButton);
-//        scheduleButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                scheduleNotification(); //gọi hàm set thông báo
-//            }
-//        });
-
-//        Button cancelButton = findViewById(R.id.cancelButton);
-//        cancelButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cancelNotification();
-//            }
-//        });
     }
 
     private void requestPermissionNotification() {

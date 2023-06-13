@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
-import com.example.javahealthify.data.custom_livedata.FirestoreDishes;
 import com.example.javahealthify.data.models.Dish;
 import com.example.javahealthify.utils.GlobalMethods;
 
@@ -59,7 +58,7 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         holder.tvDishName.setText(dishes.get(position).getName());
-        holder.tvMealCalories.setText(GlobalMethods.format(dishes.get(position).getCalories()));
+        holder.tvMealCalories.setText(GlobalMethods.formatDoubleToString(dishes.get(position).getCalories()));
 
         IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredients());
         holder.rvIngredients.setLayoutManager(new LinearLayoutManager(context));
@@ -70,23 +69,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
                 showDialog(context, position);
             }
         });
-        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mealOptionsClickListener != null) {
-                    mealOptionsClickListener.onMealOptionClick(position);
-                }
-            }
-        });
-        holder.btnAddIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addIngredientClickListener != null) {
-                    addIngredientClickListener.onAddIngredientClick(position);
-                }
-            }
-        });
-
 
         Drawable startDrawable;
         switch (dishes.get(position).getSession()) {
@@ -115,7 +97,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
         dialog.show();
 
         Button editMeal = (Button) dialog.findViewById(R.id.dialog_edit_meal_button);
-        Button addIngredient = (Button) dialog.findViewById(R.id.dialog_add_ingredient_button);
         Button deleteMeal = (Button) dialog.findViewById(R.id.dialog_delete_meal_button);
         Button btnCancel = (Button) dialog.findViewById(R.id.dialog_cancel_button);
 
@@ -124,16 +105,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
             public void onClick(View v) {
                 if (mealOptionDialogListener != null) {
                     mealOptionDialogListener.onEditMealClick(position);
-                }
-                dialog.dismiss();
-            }
-        });
-
-        addIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mealOptionDialogListener != null) {
-                    mealOptionDialogListener.onAddIngredientClick(position);
                 }
                 dialog.dismiss();
             }
@@ -176,7 +147,6 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
             tvMealCalories = itemView.findViewById(R.id.meal_calories);
             rvIngredients = itemView.findViewById(R.id.meal_ingredients_list);
             btnMealOption = itemView.findViewById(R.id.meal_options);
-            btnAddIngredient = itemView.findViewById(R.id.add_ingredient);
         }
     }
 

@@ -7,8 +7,13 @@ import android.content.DialogInterface;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.javahealthify.data.models.Exercise;
+
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -42,8 +47,17 @@ public class GlobalMethods {
                         }));
     }
 
-    public static String format(double value) {
-        return String.format(Locale.US, "%." + 2 + "f", value);
+    public static String formatDoubleToString(double value) {
+        return String.format(Locale.US, "%." + 1 + "f", value);
+    }
+    public static String convertDateToSlashSplittingFormat(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return dateFormat.format(date);
+    }
+
+    public static String convertDateToHyphenSplittingFormat(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return dateFormat.format(date);
     }
 
     public static String formatTimeOrRep(int count, String unitType) {
@@ -62,16 +76,6 @@ public class GlobalMethods {
             totalCalories += exercise.getCaloriesPerUnit();
         }
         return totalCalories;
-    }
-
-    public static String convertDateToSlashSplittingFormat(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(date);
-    }
-
-    public static String convertDateToHyphenSplittingFormat(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        return dateFormat.format(date);
     }
 
     public static String convertTimeInSeconds(int timeInSeconds) {
