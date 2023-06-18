@@ -43,7 +43,7 @@
 
 
                 <ImageView
-                    android:id="@+id/exercise_details_image"
+                    android:id="@+id/exercise_practicing_image"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/background_primary"
@@ -73,17 +73,26 @@
                 android:textColor="@color/primaryColor"
                 android:textSize="30sp" />
 
+            <ImageButton
+                android:id="@+id/play_pause_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_pause"
+                android:background="@null"
+                android:layout_gravity="center_horizontal"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_horizontal_margin"
                 android:layout_marginTop="26dp"
                 android:fontFamily="@font/poppins_semi_bold"
-                android:text="Start postion"
+                android:text="Starting position"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/exercise_details_start_position_tv"
+                android:id="@+id/exercise_practicing_starting_position_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_horizontal_margin"
@@ -101,7 +110,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/exercise_details_execution_tv"
+                android:id="@+id/exercise_practicing_execution_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/default_horizontal_margin"
