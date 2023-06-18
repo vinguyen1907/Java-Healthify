@@ -287,6 +287,14 @@
     <fragment
         android:id="@+id/addPersonalIngredientFragment"
         android:name="com.example.javahealthify.ui.screens.add_personal_ingredient.AddPersonalIngredientFragment"
-        android:label="AddPersonalIngredientFragment" />
+        android:label="AddPersonalIngredientFragment" >
+        <action
+            android:id="@+id/action_addPersonalIngredientFragment_to_newIngredientAddedFragment"
+            app:destination="@id/newIngredientAddedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newIngredientAddedFragment"
+        android:name="com.example.javahealthify.ui.screens.new_ingredient_added_screen.NewIngredientAddedFragment"
+        android:label="NewIngredientAddedFragment" />
 
 </navigation>

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.IngredientInfo;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,13 +16,19 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddPersonalIngredientVM extends ViewModel {
+    public GlobalMethods getGlobalMethods() {
+        return globalMethods;
+    }
+
+    private GlobalMethods globalMethods;
     private MutableLiveData<IngredientInfo> newIngredient = new MutableLiveData<>();
 
     public MutableLiveData<IngredientInfo> getNewIngredient() {
         return newIngredient;
     }
 
-    public AddPersonalIngredientVM(){}
+    public AddPersonalIngredientVM() {
+    }
 
     public void setNewIngredient(MutableLiveData<IngredientInfo> newIngredient) {
         this.newIngredient = newIngredient;
@@ -33,17 +40,16 @@ public class AddPersonalIngredientVM extends ViewModel {
     }
 
 
-
     public void addPersonalIngredient() {
         DocumentReference userDocumentRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
         CollectionReference personalIngredientRef = userDocumentRef.collection("personal_ingredient");
         personalIngredientRef.add(this.newIngredient.getValue()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("ADDED NEW INGREDIENT", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("ADDED NEW INGREDIENT", "DocumentSnapshot added with ID: " + documentReference.getId());
 
-            }
-        })
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

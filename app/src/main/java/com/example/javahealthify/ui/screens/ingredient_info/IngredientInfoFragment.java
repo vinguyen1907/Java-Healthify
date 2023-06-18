@@ -36,7 +36,7 @@ public class IngredientInfoFragment extends Fragment {
         Log.d("INGREDIENT NAME", "onCreateView: " + ingredientInfoVM.ingredientInfo.getShortDescription());
         binding.setViewModel(ingredientInfoVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        binding.ingredientHeader.setText(ingredientInfoVM.getIngredientInfo().getShortDescription());
+//        binding.ingredientHeader.setText(ingredientInfoVM.getIngredientInfo().getShortDescription());
 
         return binding.getRoot();
     }

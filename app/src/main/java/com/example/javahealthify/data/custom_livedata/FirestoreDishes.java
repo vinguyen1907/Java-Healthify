@@ -32,6 +32,10 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     private ListenerRegistration listenerRegistration;
 
     private void queryDailyActivities() {
+        queryDailyActivities(null);
+    }
+
+    private void queryDailyActivities(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -44,9 +48,13 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
         Timestamp startTimestamp = new Timestamp(start);
         Timestamp endTimestamp = new Timestamp(end);
 
-        Date currentDate = new Date();
+        Date queryDate = new Date();
 
-        dailyActivityRef = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(currentDate));
+        if(date != null) {
+            queryDate = date;
+        }
+
+        dailyActivityRef = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(queryDate));
 
         dailyActivityRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

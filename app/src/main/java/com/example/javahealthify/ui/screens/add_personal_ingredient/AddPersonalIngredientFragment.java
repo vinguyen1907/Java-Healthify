@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentAddPersonalIngredientBinding;
 
@@ -32,15 +34,32 @@ public class AddPersonalIngredientFragment extends Fragment {
         binding.addNewIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                Log.d("AddIngredient", "Button clicked");
+//                Log.d("AddIngredient", "Button enabled: " + binding.addNewIngredientBtn.isEnabled()); // Add this line
+//                Log.d("AddIngredient", "Button focusable: " + binding.addNewIngredientBtn.isFocusable());
                 if (binding.etNewIngredientName.getText() == null || binding.etNewIngredientServingSize.getText() == null || binding.etNewIngredientCalories.getText() == null || binding.etNewIngredientProtein.getText() == null || binding.etNewIngredientLipid.getText() == null) {
                     return;
                 }
-                IngredientInfo temp = new IngredientInfo(binding.etNewIngredientName.getText().toString(), Double.parseDouble(binding.etNewIngredientCalories.getText().toString()), Double.parseDouble(binding.etNewIngredientCarbs.getText().toString()), Double.parseDouble(binding.etNewIngredientLipid.getText().toString()), Double.parseDouble(binding.etNewIngredientProtein.getText().toString()));
+                double weightRatio = Double.parseDouble(binding.etNewIngredientServingSize.getText().toString()) / 100;
+                if (weightRatio <= 0) return;
+
+                IngredientInfo temp = new IngredientInfo(binding.etNewIngredientName.getText().toString(), Double.parseDouble(binding.etNewIngredientCalories.getText().toString()) / weightRatio, Double.parseDouble(binding.etNewIngredientCarbs.getText().toString()) / weightRatio, Double.parseDouble(binding.etNewIngredientLipid.getText().toString()) / weightRatio, Double.parseDouble(binding.etNewIngredientProtein.getText().toString()) / weightRatio);
                 MutableLiveData<IngredientInfo> tempMutableLiveData = new MutableLiveData<>(temp);
                 viewModel.setNewIngredient(tempMutableLiveData);
                 viewModel.addPersonalIngredient();
+                binding.etNewIngredientName.setText("");
+                binding.etNewIngredientServingSize.setText("");
+                binding.etNewIngredientCalories.setText("");
+                binding.etNewIngredientProtein.setText("");
+                binding.etNewIngredientCarbs.setText("");
+                binding.etNewIngredientLipid.setText("");
+//                weightRatio = 0;
+//                Toast.makeText(requireActivity(), "Ingredient Added Successfully", Toast.LENGTH_LONG).show();
+                NavHostFragment.findNavController(AddPersonalIngredientFragment.this).navigate(R.id.action_addPersonalIngredientFragment_to_newIngredientAddedFragment);
             }
+
         });
+//        binding.createIngredientToolbar.
         return binding.getRoot();
     }
 }
