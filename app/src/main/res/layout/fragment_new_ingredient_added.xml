@@ -15,7 +15,7 @@
         android:layout_marginHorizontal="@dimen/default_horizontal_margin">
 
         <RelativeLayout
-            android:id="@+id/ingredient_info_toolbar"
+            android:id="@+id/new_ingredient_added_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
             android:text="@{String.valueOf(viewModel.newIngredient.shortDescription)}"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredient_info_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/new_ingredient_added_toolbar"/>
 
         <TextView
             android:layout_marginVertical="20dp"
@@ -190,13 +190,29 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
         <com.airbnb.lottie.LottieAnimationView
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/submit_checkbox"
             app:lottie_rawRes="@raw/ingredient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             />
+        <CheckBox
+            android:id="@+id/submit_checkbox"
+            app:layout_constraintBottom_toTopOf="@id/new_ingredient_confirm_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primaryTextColor"
+            android:fontFamily="@font/poppins_regular"
+            android:text="Submit to our system. After confirmation, you can find your ingredient in our list."/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/new_ingredient_confirm_button"
 
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cool"
+            style="@style/PrimaryButtonStyle"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -15,6 +15,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AddPersonalIngredientVM extends ViewModel {
     public GlobalMethods getGlobalMethods() {
         return globalMethods;
@@ -56,5 +59,18 @@ public class AddPersonalIngredientVM extends ViewModel {
                         Log.w("ADDED NEW INGREDIENT failure", "Error adding document", e);
                     }
                 });
+    }
+
+    public void addToPendingList() {
+        CollectionReference user_ingredients = FirebaseFirestore.getInstance().collection("user_ingredients");
+        Map<String, Object> data = new HashMap<>();
+        IngredientInfo temp = this.newIngredient.getValue();
+        data.put("Calories", temp.getCalories());
+        data.put("Carbs", temp.getCarbs());
+        data.put("Lipid", temp.getLipid());
+        data.put("Protein", temp.getProtein());
+        data.put("Short_Description", temp.getShortDescription());
+        data.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user_ingredients.add(data);
     }
 }

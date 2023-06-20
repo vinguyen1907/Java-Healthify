@@ -33,8 +33,25 @@ public class NewIngredientAddedFragment extends Fragment {
         binding.protein.setText(GlobalMethods.formatDoubleToString(viewModel.getNewIngredient().getValue().getProtein()));
         binding.lipid.setText(GlobalMethods.formatDoubleToString(viewModel.getNewIngredient().getValue().getLipid()));
         binding.carbohydrate.setText(GlobalMethods.formatDoubleToString(viewModel.getNewIngredient().getValue().getCarbs()));
-
+        binding.newIngredientAddedToolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitScreen();
+            }
+        });
+        binding.newIngredientConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               exitScreen();
+            }
+        });
         // Inflate the layout for this fragment
         return binding.getRoot();
+    }
+    public void exitScreen() {
+        if (binding.submitCheckbox.isChecked()) {
+            viewModel.addToPendingList();
+        }
+        GlobalMethods.backToPreviousFragment(NewIngredientAddedFragment.this);
     }
 }

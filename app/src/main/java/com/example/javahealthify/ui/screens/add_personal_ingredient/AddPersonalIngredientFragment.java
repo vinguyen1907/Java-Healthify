@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentAddPersonalIngredientBinding;
+import com.example.javahealthify.utils.GlobalMethods;
 
 public class AddPersonalIngredientFragment extends Fragment {
 
@@ -51,6 +52,12 @@ public class AddPersonalIngredientFragment extends Fragment {
                 binding.etNewIngredientProtein.setText("");
                 binding.etNewIngredientCarbs.setText("");
                 binding.etNewIngredientLipid.setText("");
+                binding.createIngredientToolbar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GlobalMethods.backToPreviousFragment(AddPersonalIngredientFragment.this);
+                    }
+                });
                 Toast.makeText(requireActivity(), "Ingredient Added Successfully", Toast.LENGTH_LONG).show();
                 NavHostFragment.findNavController(AddPersonalIngredientFragment.this).navigate(R.id.action_addPersonalIngredientFragment_to_newIngredientAddedFragment);
             }
