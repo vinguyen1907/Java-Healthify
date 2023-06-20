@@ -61,7 +61,7 @@ public class GlobalMethods {
     }
 
     public static String formatTimeOrRep(int count, String unitType) {
-        if (unitType == "rep") {
+        if (unitType.equals("reps")) {
             return "x" + String.valueOf(count);
         } else {
             int minute = count / 60;
