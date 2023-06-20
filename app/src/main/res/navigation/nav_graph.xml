@@ -226,6 +226,9 @@
         <action
             android:id="@+id/action_findIngredientFragment_to_ingredientInfoFragment"
             app:destination="@id/ingredientInfoFragment" />
+        <action
+            android:id="@+id/action_findIngredientFragment_to_addPersonalIngredientFragment"
+            app:destination="@id/addPersonalIngredientFragment" />
     </fragment>
     <fragment
         android:id="@+id/editMealFragment"

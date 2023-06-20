@@ -69,7 +69,9 @@ public class WorkoutVM extends ViewModel {
                             DocumentSnapshot doc = task.getResult();
                             if (doc.exists()) {
                                 Long inLong = doc.getLong("exerciseCalories");
-                                exerciseCalories.setValue(inLong.intValue());
+                                if (inLong != null) {
+                                    exerciseCalories.setValue(inLong.intValue());
+                                }
                             }
                         } else {
                             Log.e("ERROR", "Load exercises calories failed", task.getException());
