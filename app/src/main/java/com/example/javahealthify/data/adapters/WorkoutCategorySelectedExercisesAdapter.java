@@ -99,7 +99,6 @@ public class WorkoutCategorySelectedExercisesAdapter extends RecyclerView.Adapte
     public void removeItem(int position) {
         selectedExercises.remove(position);
         notifyItemRemoved(position);
-        notifyDataSetChanged();
-//        notifyItemRangeRemoved(position, 1);
+        notifyItemRangeChanged(position, selectedExercises.size() - position);
     }
 }

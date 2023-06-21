@@ -37,11 +37,18 @@ public class WorkoutFavoriteVM extends ViewModel {
                         if (task.isSuccessful()) {
                             List<Exercise> newList = new ArrayList<>();
                             for (DocumentSnapshot doc : task.getResult()) {
-                                newList.add(doc.toObject(Exercise.class));
+                                Exercise newExercise = doc.toObject(Exercise.class);
+                                newExercise.setId(doc.getId());
+                                newList.add(newExercise);
                             }
                             favoriteList.setValue(newList);
                         }
                     }
                 });
+    }
+
+    public void removeFavoriteExercise(int position) {
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("favorite_exercises").document(favoriteList.getValue().get(position).getId()).delete();
     }
 }

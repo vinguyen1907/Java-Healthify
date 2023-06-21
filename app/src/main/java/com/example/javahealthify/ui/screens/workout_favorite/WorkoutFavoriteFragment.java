@@ -18,6 +18,7 @@ import com.example.javahealthify.data.adapters.WorkoutCategoryExercisesAdapter;
 import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesAdapter;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutFavoriteBinding;
+import com.example.javahealthify.ui.animations.SlideLeftAnimator;
 import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
 import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections;
 import com.example.javahealthify.utils.GlobalMethods;
@@ -45,6 +46,7 @@ public class WorkoutFavoriteFragment extends Fragment implements ActionOnExercis
         adapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), new ArrayList<>(), this);
         binding.favoriteExercisesLst.setAdapter(adapter);
         binding.favoriteExercisesLst.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.favoriteExercisesLst.setItemAnimator(new SlideLeftAnimator());
 
         viewModel.getFavoriteList().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
             @Override
@@ -76,6 +78,8 @@ public class WorkoutFavoriteFragment extends Fragment implements ActionOnExercis
 
     @Override
     public void onDelete(int position) {
-
+        viewModel.removeFavoriteExercise(position);
+        adapter.removeItem(position);
+//        adapter.notifyDataSetChanged();
     }
 }
