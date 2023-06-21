@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -24,13 +25,15 @@ import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesA
 import com.example.javahealthify.data.adapters.WorkoutPageAdapter;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutBinding;
+import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
+import com.example.javahealthify.ui.screens.workout.WorkoutFragmentDirections;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkoutFragment extends Fragment {
+public class WorkoutFragment extends Fragment implements ActionOnExerciseItem {
     private FragmentWorkoutBinding binding;
     private WorkoutVM viewModel;
     private WorkoutCategorySelectedExercisesAdapter adapter;
@@ -73,7 +76,7 @@ public class WorkoutFragment extends Fragment {
     }
 
     private void setUpExerciseList() {
-        adapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedExercises().getValue(), navController);
+        adapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedExercises().getValue(), this);
         binding.selectedExercisesLst.setAdapter(adapter);
         binding.selectedExercisesLst.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -102,12 +105,31 @@ public class WorkoutFragment extends Fragment {
             }
         });
 
+        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(WorkoutFragment.this).navigate(R.id.action_workoutFragment_to_workoutFavoriteFragment);
+            }
+        });
+
         binding.historyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(WorkoutFragment.this).navigate(R.id.action_workoutFragment_to_workoutHistoryFragment);
             }
         });
+    }
+
+    @Override
+    public void onInformationBtn(Exercise exercise) {
+        com.example.javahealthify.ui.screens.workout.WorkoutFragmentDirections.ActionWorkoutFragmentToWorkoutExerciseDetailsFragment action =
+                WorkoutFragmentDirections.actionWorkoutFragmentToWorkoutExerciseDetailsFragment(exercise);
+        navController.navigate(action);
+    }
+
+    @Override
+    public void onDelete() {
+
     }
 
 //    private void setUpTabLayoutWithViewPager() {

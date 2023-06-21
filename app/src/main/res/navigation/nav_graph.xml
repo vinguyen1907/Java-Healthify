@@ -115,6 +115,9 @@
         <action
             android:id="@+id/action_workoutFragment_to_workoutHistoryFragment"
             app:destination="@id/workoutHistoryFragment" />
+        <action
+            android:id="@+id/action_workoutFragment_to_workoutFavoriteFragment"
+            app:destination="@id/workoutFavoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/fillInPersonalInformationFragment"
@@ -310,5 +313,14 @@
         android:name="com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragment"
         android:label="fragment_workout_history"
         tools:layout="@layout/fragment_workout_history" />
+    <fragment
+        android:id="@+id/workoutFavoriteFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_favorite.WorkoutFavoriteFragment"
+        android:label="WorkoutFavoriteFragment"
+        tools:layout="@layout/fragment_workout_favorite">
+        <action
+            android:id="@+id/action_workoutFavoriteFragment_to_workoutExerciseDetailsFragment"
+            app:destination="@id/workoutExerciseDetailsFragment" />
+    </fragment>
 
 </navigation>

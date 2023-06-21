@@ -21,12 +21,13 @@ import com.example.javahealthify.data.adapters.WorkoutCategoryExercisesAdapter;
 import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesAdapter;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutCategoryExercisesBinding;
+import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.List;
 
-public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTempListToSelectedExerciseList {
+public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTempListToSelectedExerciseList, ActionOnExerciseItem {
     private FragmentWorkoutCategoryExercisesBinding binding;
     private WorkoutCategoryExercisesVM viewModel;
     private WorkoutVM workoutVM;
@@ -73,7 +74,7 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTe
     }
 
     private void setUpSelectedExercisesRecyclerView() {
-        selectedExercisesAdapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedTempList().getValue(), navController);
+        selectedExercisesAdapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedTempList().getValue(), this);
         binding.selectedExerciseLst.setAdapter(selectedExercisesAdapter);
         LinearLayoutManager selectedExercisesLayoutManager = new LinearLayoutManager(requireContext()) {};
         binding.selectedExerciseLst.setLayoutManager(selectedExercisesLayoutManager);
@@ -132,5 +133,17 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTe
     @Override
     public void addExerciseToTempList(Exercise exercise) {
         viewModel.addExerciseToTempList(exercise);
+    }
+
+    @Override
+    public void onInformationBtn(Exercise exercise) {
+        com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections.ActionWorkoutCategoryExercisesFragmentToWorkoutExerciseDetailsFragment action =
+                com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections.actionWorkoutCategoryExercisesFragmentToWorkoutExerciseDetailsFragment(exercise);
+        navController.navigate(action);
+    }
+
+    @Override
+    public void onDelete() {
+
     }
 }

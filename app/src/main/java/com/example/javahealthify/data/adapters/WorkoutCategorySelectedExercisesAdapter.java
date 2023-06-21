@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
+import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
 import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections;
 import com.example.javahealthify.utils.GlobalMethods;
 
@@ -23,12 +24,14 @@ import java.util.List;
 public class WorkoutCategorySelectedExercisesAdapter extends RecyclerView.Adapter<WorkoutCategorySelectedExercisesAdapter.ViewHolder> {
     private List<Exercise> selectedExercises;
     private Context context;
-    private NavController navController;
+//    private NavController navController;
+    private ActionOnExerciseItem action;
 
-    public WorkoutCategorySelectedExercisesAdapter(Context context, List<Exercise> selectedExercises,  NavController navController) {
+    public WorkoutCategorySelectedExercisesAdapter(Context context, List<Exercise> selectedExercises, ActionOnExerciseItem actionOnExerciseItem) {
         this.selectedExercises = selectedExercises;
         this.context = context;
-        this.navController = navController;
+//        this.navController = navController;
+        this.action = actionOnExerciseItem;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,9 +71,7 @@ public class WorkoutCategorySelectedExercisesAdapter extends RecyclerView.Adapte
         holder.informationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections.ActionWorkoutCategoryExercisesFragmentToWorkoutExerciseDetailsFragment action =
-                        WorkoutCategoryExercisesFragmentDirections.actionWorkoutCategoryExercisesFragmentToWorkoutExerciseDetailsFragment(exercise);
-                navController.navigate(action);
+                action.onInformationBtn(exercise);
             }
         });
     }

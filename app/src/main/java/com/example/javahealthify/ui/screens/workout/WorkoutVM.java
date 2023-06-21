@@ -165,6 +165,17 @@ public class WorkoutVM extends ViewModel {
         });
     }
 
+    public void removeSelectedExercise(int position) {
+        List<Exercise> newList = selectedExercises.getValue();
+        newList.remove(position);
+        selectedExercises.setValue(newList);
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
+                .collection("today_selected_exercises").document(selectedExercises.getValue().get(position).getId())
+                .delete();
+
+    }
+
     public void initDailyActivity() {
         firestore.collection("users").document(auth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
