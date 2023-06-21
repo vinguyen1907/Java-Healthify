@@ -143,7 +143,7 @@ public class WorkoutCategoryExercisesFragment extends Fragment implements MoveTe
     }
 
     @Override
-    public void onDelete() {
+    public void onDelete(int position) {
 
     }
 }

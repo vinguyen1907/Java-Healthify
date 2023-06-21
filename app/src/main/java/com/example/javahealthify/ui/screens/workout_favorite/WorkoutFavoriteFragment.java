@@ -75,7 +75,7 @@ public class WorkoutFavoriteFragment extends Fragment implements ActionOnExercis
     }
 
     @Override
-    public void onDelete() {
+    public void onDelete(int position) {
 
     }
 }

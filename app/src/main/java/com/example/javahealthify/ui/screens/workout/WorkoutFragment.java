@@ -25,6 +25,7 @@ import com.example.javahealthify.data.adapters.WorkoutCategorySelectedExercisesA
 import com.example.javahealthify.data.adapters.WorkoutPageAdapter;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutBinding;
+import com.example.javahealthify.ui.animations.SlideLeftAnimator;
 import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
 import com.example.javahealthify.ui.screens.workout.WorkoutFragmentDirections;
 import com.google.android.material.tabs.TabLayout;
@@ -79,6 +80,7 @@ public class WorkoutFragment extends Fragment implements ActionOnExerciseItem {
         adapter = new WorkoutCategorySelectedExercisesAdapter(requireContext(), viewModel.getSelectedExercises().getValue(), this);
         binding.selectedExercisesLst.setAdapter(adapter);
         binding.selectedExercisesLst.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.selectedExercisesLst.setItemAnimator(new SlideLeftAnimator());
 
         viewModel.getSelectedExercises().observe(getViewLifecycleOwner(), new Observer<List<Exercise>>() {
             @Override
@@ -128,8 +130,10 @@ public class WorkoutFragment extends Fragment implements ActionOnExerciseItem {
     }
 
     @Override
-    public void onDelete() {
-
+    public void onDelete(int position) {
+        viewModel.removeSelectedExercise(position);
+        adapter.removeItem(position);
+        viewModel.recalculateSelectedExercisesCalories();
     }
 
 //    private void setUpTabLayoutWithViewPager() {
