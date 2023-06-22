@@ -59,7 +59,10 @@ public class WorkoutExercisePracticingFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                pauseTimer(); // reset timer if it existed
                 handleTimer(position);
+                Log.i("Position", String.valueOf(position));
+                Log.i("UNIT", selectedExercises.get(position).getUnit());
             }
 
             @Override
@@ -104,32 +107,47 @@ public class WorkoutExercisePracticingFragment extends Fragment {
                 binding.exerciseList.setCurrentItem(binding.exerciseList.getCurrentItem() + 1);
             }
         });
-
-        binding.playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (timer != null) {
-                    pauseTimer();
-                    binding.playBtn.setImageResource(R.drawable.ic_play);
-                } else {
-                    resumeTimer();
-                    binding.playBtn.setImageResource(R.drawable.ic_pause);
-                }
-            }
-        });
     }
 
     private void handleRestTime() {
 
     }
 
-    private void handleTimer(int index) {
-        if (selectedExercises.get(index).getUnit().equals("seconds")) {
-            createTimer(selectedExercises.get(index).getCount() * 1000, index);
+    private void handleTimer(int position) {
+        handlePlayBtn(position);
+        if (selectedExercises.get(position).getUnit().equals("seconds")) {
+            Log.i("Seconds", "true");
+            createTimer(selectedExercises.get(position).getCount() * 1000, position);
         } else {
-            binding.exercisePracticingTimeOrRepTv.setText("x" + String.valueOf(selectedExercises.get(index).getCount()));
+            binding.exercisePracticingTimeOrRepTv.setText("x" + String.valueOf(selectedExercises.get(position).getCount()));
         }
-        handleVisibility(index);
+        handleVisibility(position);
+    }
+
+    private void handlePlayBtn(int position) {
+        if (selectedExercises.get(position).getUnit().equals("seconds")) {
+            binding.playBtn.setImageResource(R.drawable.ic_pause);
+            binding.playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (timer != null) {
+                        pauseTimer();
+                        binding.playBtn.setImageResource(R.drawable.ic_play);
+                    } else {
+                        resumeTimer();
+                        binding.playBtn.setImageResource(R.drawable.ic_pause);
+                    }
+                }
+            });
+        } else {
+            binding.playBtn.setImageResource(R.drawable.ic_done);
+            binding.playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    binding.exerciseList.setCurrentItem(binding.exerciseList.getCurrentItem() + 1);
+                }
+            });
+        }
     }
 
     private void createTimer(int timeInMilliseconds, int currentPosition) {
@@ -137,6 +155,7 @@ public class WorkoutExercisePracticingFragment extends Fragment {
             timer.cancel();
         }
 
+        Log.i("Create timer", "done");
         timer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -164,6 +183,7 @@ public class WorkoutExercisePracticingFragment extends Fragment {
     }
 
     private void resumeTimer() {
+        Log.i("On resume","");
         timer = new CountDownTimer(remainingTimeInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
