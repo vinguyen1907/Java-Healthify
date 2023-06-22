@@ -41,4 +41,5 @@
         app:cnb_iconColor="@color/primaryTextColor"
         app:cnb_iconTintMode="src_in"
         app:cnb_textColor="@color/primaryTextColor" />
+
 </menu>

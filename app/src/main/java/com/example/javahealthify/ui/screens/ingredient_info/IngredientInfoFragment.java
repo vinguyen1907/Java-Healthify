@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.javahealthify.databinding.FragmentIngredientInfoBinding;
 import com.example.javahealthify.ui.screens.find_ingredient.FindIngredientVM;
+import com.example.javahealthify.utils.GlobalMethods;
 
 public class IngredientInfoFragment extends Fragment {
     IngredientInfoVM ingredientInfoVM;
@@ -31,13 +32,21 @@ public class IngredientInfoFragment extends Fragment {
         findIngredientVM = new ViewModelProvider(requireActivity()).get(FindIngredientVM.class);
         binding = FragmentIngredientInfoBinding.inflate(inflater, container, false);
         position = requireArguments().getInt("position");
-
-        ingredientInfoVM.setIngredientInfo(findIngredientVM.getIngredientInfoArrayList().getValue().get(position));
+        String type = requireArguments().getString("type");
+        if (type == "global") {
+            ingredientInfoVM.setIngredientInfo(findIngredientVM.getIngredientInfoArrayList().getValue().get(position));
+        } else {
+            ingredientInfoVM.setIngredientInfo(findIngredientVM.getPersonalIngredientInfoArrayList().getValue().get(position));
+        }
         Log.d("INGREDIENT NAME", "onCreateView: " + ingredientInfoVM.ingredientInfo.getShortDescription());
         binding.setViewModel(ingredientInfoVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-        binding.ingredientHeader.setText(ingredientInfoVM.getIngredientInfo().getShortDescription());
-
+binding.ingredientInfoToolbar.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        GlobalMethods.backToPreviousFragment(IngredientInfoFragment.this);
+    }
+});
         return binding.getRoot();
     }
 }

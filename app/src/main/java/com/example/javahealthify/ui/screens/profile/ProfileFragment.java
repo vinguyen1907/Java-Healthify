@@ -1,21 +1,14 @@
 package com.example.javahealthify.ui.screens.profile;
 
 import android.os.Bundle;
-
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
-import androidx.navigation.NavHostController;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.User;
@@ -45,7 +38,12 @@ public class ProfileFragment extends Fragment {
         profileVM.getUserLiveData().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                mainVM.loadUser();
+                mainVM.loadUser(new MainVM.UserLoadCallback() {
+                    @Override
+                    public void onUserLoaded(User user) {
+                        ProfileFragment.this.user = mainVM.getUser();
+                    }
+                });
             }
         });
 

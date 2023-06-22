@@ -1,7 +1,6 @@
 package com.example.javahealthify.data.models;
 
 public class IngredientInfo {
-    private String id = "";
     private String shortDescription;
     private double calories = 0;
     private double carbs = 0;
@@ -10,8 +9,7 @@ public class IngredientInfo {
     private double protein = 0;
 
 
-    public IngredientInfo(String id, String shortDescription, int calories, double carbs, double lipid, double protein) {
-        this.id = id;
+    public IngredientInfo(String shortDescription, double calories, double carbs, double lipid, double protein) {
         this.shortDescription = shortDescription;
         this.calories = calories;
         this.carbs = carbs;
@@ -21,14 +19,6 @@ public class IngredientInfo {
 
     public IngredientInfo() {
 
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getShortDescription() {
