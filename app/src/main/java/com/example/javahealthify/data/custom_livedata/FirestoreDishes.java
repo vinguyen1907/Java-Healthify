@@ -50,7 +50,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
 
         Date queryDate = new Date();
 
-        if(date != null) {
+        if (date != null) {
             queryDate = date;
         }
 
@@ -83,7 +83,9 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     List<Map<String, Object>> dishesMapList = (List<Map<String, Object>>) documentSnapshot.get("dishes");
                     ArrayList<Dish> dishes = new ArrayList<>();
-
+                    if (dishesMapList == null) {
+                        return;
+                    }
                     for (Map<String, Object> dishMap : dishesMapList) {
                         Dish dish = new Dish();
                         dish.setName((String) dishMap.get("name"));
@@ -149,6 +151,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                         initialCalories = (Double) foodCaloriesObj;
                     }
                     dailyActivityRef.update("calories", initialCalories + newDish.getCalories());
+                    dailyActivityRef.update("foodCalories", initialCalories + newDish.getCalories());
                 } else {
                     Log.d("ERROR", "addDish: " + task.getException());
                 }
@@ -159,6 +162,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "addDish: Error adding dish", e));
         }
     }
+
     public void deleteDish(Dish dishToDelete) {
         AtomicReference<Double> initialCalories = new AtomicReference<>((double) 0);
 
@@ -173,6 +177,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "deleteDish: Dish deleted successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "deleteDish: Error deleting dish", e));
             dailyActivityRef.update("calories", initialCalories.get() - dishToDelete.getCalories());
+            dailyActivityRef.update("foodCalories", initialCalories.get() - dishToDelete.getCalories());
 
         }
     }
@@ -185,10 +190,21 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                 newDishesKeyValuePairs.add(GlobalMethods.toKeyValuePairs(dish));
                 totalCalories += dish.getCalories();
             }
+            AtomicReference<Object> initialCaloriesObject = new AtomicReference<>(new Object());
+            AtomicReference<Object> initialFoodCaloriesObject = new AtomicReference<>(new Object());
+            dailyActivityRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    initialCaloriesObject.set(task.getResult().get("calories"));
+                    initialCaloriesObject.set(task.getResult().get("foodCalories"));
+
+                }
+            });
             dailyActivityRef.update("dishes", newDishesKeyValuePairs)
                     .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
                     .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
             dailyActivityRef.update("foodCalories", totalCalories);
+            dailyActivityRef.update("calories", (Double) initialCaloriesObject.get() + (Double) initialFoodCaloriesObject.get() - totalCalories);
+
         }
     }
 }
