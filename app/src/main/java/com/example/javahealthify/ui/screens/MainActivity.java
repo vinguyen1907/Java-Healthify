@@ -159,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
+        binding.adminNavBar.setVisibility(View.GONE);
+        binding.navBar.setVisibility(View.GONE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -253,31 +255,47 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);
 //                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.menuFragment:
                         setNavbarItem(R.id.nav_menu);
 //                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.workoutFragment:
                         setNavbarItem(R.id.nav_workout);
 //                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.communityFragment:
                         setNavbarItem(R.id.nav_community);
 //                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.profileFragment:
                         setNavbarItem(R.id.nav_profile);
 //                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.adminCommunityFragment:
                         binding.adminNavBar.setItemSelected(R.id.nav_community_admin, true);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.adminIngredientFragment:
                         binding.adminNavBar.setItemSelected(R.id.nav_ingredient_admin, true);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.adminWorkoutFragment:
                         binding.adminNavBar.setItemSelected(R.id.nav_workout_admin, true);
+                        setNavBarVisibility();
+
                         break;
                     default:
                         binding.navBar.setVisibility(View.GONE);
