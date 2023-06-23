@@ -14,76 +14,59 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.databinding.FragmentHomeBinding;
+import com.example.javahealthify.ui.screens.profile.ProfileVM;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
+    private HomeVM homeVM;
+    private FragmentHomeBinding binding;
 
     private PieChart pieChart;
     private LinearLayout legendLayout;
-    LineChart lineChart;
+    private LineChart lineChart;
+    private TextView selectedValueTextView;
+
     private List<String> legendEntries;
     private List<Integer> legendValues; // List for corresponding values
+
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        binding = FragmentHomeBinding.inflate(inflater,container,false);
+        binding.setViewModel(homeVM);
+        binding.setLifecycleOwner(this);
 
-        pieChart = rootView.findViewById(R.id.pieChart);
-        legendLayout = rootView.findViewById(R.id.legendLayout);
-        lineChart = rootView.findViewById(R.id.lineChart);
 
         // ----------------------------------LINECHART----------------------------------------------
 
-        // Customize chart properties
-        lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(false);
-
-        // Set chart description
-        Description description = new Description();
-        description.setText("Weight Change");
-        lineChart.setDescription(description);
-
-        List<Entry> weightEntries = new ArrayList<>();
-
-        // Add your weight data to the list of entries
-        weightEntries.add(new Entry(0, 150)); // Example entry: x = 0 (index), y = 150 lbs
-        weightEntries.add(new Entry(1, 148)); // Example entry: x = 1 (index), y = 148 lbs
-        weightEntries.add(new Entry(2, 147)); // Example entry: x = 2 (index), y = 147 lbs
-        // Add more entries as needed
-
-        LineDataSet weightDataSet = new LineDataSet(weightEntries, "Weight");
-
-        // Customize line appearance
-        weightDataSet.setColor(Color.WHITE);
-        weightDataSet.setCircleColor(Color.GREEN);
-        weightDataSet.setLineWidth(2f);
-        weightDataSet.setCircleRadius(4f);
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(weightDataSet);
-
-        LineData lineData = new LineData(dataSets);
-        lineChart.setData(lineData);
-        lineChart.invalidate(); // Refresh the chart to display the data
+        lineChart = binding.lineChart;
+        drawChart();
 
         // ----------------------------------PIECHART-----------------------------------------------
 
+        pieChart = binding.pieChart;
+        legendLayout = binding.legendLayout;
         // Initialize the legend entries list
         legendEntries = new ArrayList<>();
         legendEntries.add("Goal");
@@ -175,6 +158,55 @@ public class HomeFragment extends Fragment {
             legendLayout.addView(legendItemView);
         }
 
-        return rootView;
+        return binding.getRoot();
     }
+    private void drawChart() {
+
+        ArrayList<CustomEntry> entries = new ArrayList<>();
+        entries.add(new CustomEntry(0, 65f, "Ngày 1")); // Ví dụ dữ liệu cân nặng, sử dụng số thực và chỉ số của ngày
+        entries.add(new CustomEntry(1, 68f, "Ngày 2"));
+        entries.add(new CustomEntry(2, 70f, "Ngày 3"));
+        // Thêm các điểm dữ liệu cân nặng vào danh sách
+
+
+        List<Entry> entryList = new ArrayList<>();
+        for (CustomEntry customEntry : entries) {
+            entryList.add(customEntry);
+        }
+
+        LineDataSet dataSet = new LineDataSet(entryList, "Weight");
+        LineData lineData = new LineData(dataSet);
+
+        String[] labels = new String[entries.size()];
+        for (int i = 0; i < entries.size(); i++) {
+            labels[i] = entries.get(i).getXLabel();
+        }
+
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setValueFormatter(new XAxisValueFormatter(labels));
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(dataSet); // Thêm dữ liệu dòng vào danh sách
+
+        lineChart.setData(lineData); // Đặt dữ liệu vào biểu đồ
+
+        Description description = new Description();
+        description.setText("Weight per day");
+        description.setTextColor(Color.WHITE);
+        lineChart.setDescription(description);
+
+        Legend legend = lineChart.getLegend();
+        legend.setTextColor(Color.WHITE);
+
+        // Tùy chỉnh các thiết lập khác cho biểu đồ (màu, định dạng, v.v.)
+        dataSet.setColor(Color.parseColor("#69E6A6"));
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setLineWidth(2f);
+        lineChart.getAxisLeft().setTextColor(Color.WHITE);
+        lineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
+        lineChart.getXAxis().setTextColor(Color.WHITE);
+
+        lineChart.invalidate(); // Cập nhật biểu đồ
+    }
+
 }
