@@ -1,6 +1,12 @@
 package com.example.javahealthify.ui.screens.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +40,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -46,9 +54,30 @@ public class HomeFragment extends Fragment {
     private TextView selectedValueTextView;
 
     private List<String> legendEntries;
-    private List<Integer> legendValues; // List for corresponding values
+    private List<Integer> legendValues;
 
+    private SensorManager sensorManager;
+    private Sensor stepSensor;
+    private TextView stepCountTextView;
+    private int currentStepCount = 0;
+    private Date currentDate = new Date();
+    private static final int ACCELEROMETER_BUFFER_SIZE = 100;// cái này là kích thước bộ đệm gia tốc
+    private static final float STEP_THRESHOLD = 8.0f; // cái này là ngưỡng phát hiện bước châm
 
+    private float[] accelerometerBuffer = new float[ACCELEROMETER_BUFFER_SIZE];
+    private int bufferIndex = 0;
+    private boolean isStepDetected = false;
+    private int stepCount = 0;
+
+    // Xác định các trục gia tốc
+    private float previousX = 0.0f;
+    private float previousY = 0.0f;
+    private float previousZ = 0.0f;
+
+    // Xác định thời gian giữa các lần đọc gia tốc
+    private long previousTimestamp = 0;
+
+    Date previousDate;
 
     @Nullable
     @Override
@@ -56,6 +85,25 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(this);
+
+        stepCountTextView = binding.stepCountTextView;
+
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        if (stepSensor != null) {
+            sensorManager.registerListener(accelerometerSensorEventListener, stepSensor, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            Toast.makeText(requireContext(), "Bộ đếm bước không khả dụng trên thiết bị của bạn", Toast.LENGTH_SHORT).show();
+        }
+
+        // Lấy số bước chân từ SharedPreferences
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        long previousDateMillis = sharedPreferences.getLong("previousDate", 0);
+        previousDate = new Date(previousDateMillis);
+        stepCount = sharedPreferences.getInt("stepCount", 0);
+
+        // Hiển thị số bước chân trên TextView
+        stepCountTextView.setText(String.valueOf(stepCount));
 
 
         // ----------------------------------LINECHART----------------------------------------------
@@ -124,17 +172,14 @@ public class HomeFragment extends Fragment {
         pieChart.setCenterTextSize(16f);
         pieChart.setCenterTextColor(Color.WHITE);
 
-
-        // Customize legend
         Legend legend = pieChart.getLegend();
         legend.setEnabled(false);
 
         for (int i = 0; i < entries.size(); i++) {
             PieEntry entry = entries.get(i);
-            String legendEntry = legendEntries.get(i); // Get the legend entry from the list
-            int legendValue = legendValues.get(i); // Get the corresponding value from the list
+            String legendEntry = legendEntries.get(i);
+            int legendValue = legendValues.get(i);
 
-            // Create legend item view
             View legendItemView = LayoutInflater.from(getContext()).inflate(R.layout.legend_item, null);
 //            View legendColorView = legendItemView.findViewById(R.id.legendColor);
             ImageView legendIconView = legendItemView.findViewById(R.id.legendIcon);
@@ -160,13 +205,105 @@ public class HomeFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    // Tạo bộ lắng nghe sự kiện cho cảm biến gia tốc
+    private SensorEventListener accelerometerSensorEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            // Tính toán gia tốc tổng hợp
+            float acceleration = Math.abs(x + y + z - previousX - previousY - previousZ);
+
+            // Kiểm tra xem có phát hiện bước chân hay không
+            if (acceleration > STEP_THRESHOLD) {
+                // Kiểm tra thời gian giữa các lần phát hiện
+                long currentTimestamp = System.currentTimeMillis();
+                long timeDifference = currentTimestamp - previousTimestamp;
+
+                if (timeDifference > 300) { // Giới hạn khoảng thời gian giữa các bước chân
+                    isStepDetected = true;
+                    previousTimestamp = currentTimestamp;
+                }
+            }
+
+            previousX = x;
+            previousY = y;
+            previousZ = z;
+
+            // Đếm số bước chân
+            if (isStepDetected) {
+                stepCount++;
+                isStepDetected = false;
+            }
+
+            stepCountTextView.setText(String.valueOf(stepCount));
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Lấy SharedPreferences để lưu trữ ngày trước đó
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        long previousDateMillis = sharedPreferences.getLong("previousDate", 0);
+        previousDate = new Date(previousDateMillis);
+        currentDate = new Date(); // Cập nhật currentDate
+
+        // Kiểm tra xem ngày hiện tại có khác ngày trước đó không
+        if (!isSameDay(currentDate, previousDate)) {
+            // Reset stepCount về 0 và cập nhật TextView
+            stepCount = 0;
+            stepCountTextView.setText(String.valueOf(stepCount));
+
+            // Lưu ngày hiện tại vào SharedPreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("previousDate", currentDate.getTime());
+            editor.putInt("stepCount", stepCount); // Thêm dòng này để lưu giá trị mới nhất của stepCount
+            editor.apply();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("stepCount", stepCount);
+        editor.putLong("previousDate", currentDate.getTime());
+        editor.apply();
+        SensorManager sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(accelerometerSensorEventListener);
+        }
+    }
+
+
+
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+
+
     private void drawChart() {
 
         ArrayList<CustomEntry> entries = new ArrayList<>();
         entries.add(new CustomEntry(0, 65f, "Ngày 1")); // Ví dụ dữ liệu cân nặng, sử dụng số thực và chỉ số của ngày
         entries.add(new CustomEntry(1, 68f, "Ngày 2"));
         entries.add(new CustomEntry(2, 70f, "Ngày 3"));
-        // Thêm các điểm dữ liệu cân nặng vào danh sách
 
 
         List<Entry> entryList = new ArrayList<>();
