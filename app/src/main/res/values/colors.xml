@@ -12,6 +12,7 @@
     <color name="primaryColor">#59C9A5</color>
     <color name="secondaryColor">#162D51</color>
     <color name="primaryBackgroundColor">#091528</color>
+    <color name="dateGreyTextColor">#99FFFFFF</color>
 
     <color name="primaryTextColor">#E5E5E5</color>
     <color name="primaryHintColor">#99E5E5E5</color>
