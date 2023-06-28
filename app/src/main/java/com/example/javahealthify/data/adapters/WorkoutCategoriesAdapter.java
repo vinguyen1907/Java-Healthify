@@ -1,9 +1,7 @@
 package com.example.javahealthify.data.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.WorkoutCategory;
-import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
-import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragmentDirections;
 
 import java.util.List;
 

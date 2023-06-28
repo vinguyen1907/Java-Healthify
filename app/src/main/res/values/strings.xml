@@ -3,6 +3,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--    Common-->
+    <string name="upload_button_title">Upload</string>
+
+    <!--    Onboarding  -->
     <string name="onboarding_title_1">Track your daily calories</string>
     <string name="onboarding_title_2">Control calories in your meals</string>z
     <string name="onboarding_title_3">Exercise for you</string>
@@ -121,10 +125,14 @@
     <string name="community_achievmentdetails_textfood">Chicken Breast</string>
     <string name="community_details_kalo">246</string>
     <string name="community_detail_kcal">kcal</string>
-    <string name="community_detail_excercisetext">Excercises</string>
+    <string name="achievement_details_exercises_txt">Excercises</string>
     <string name="community_ahievemnt_Detail_excercise">Crunches</string>
     <string name="community_achievementdetail_kcal_excerise">20</string>
     <string name="community_achievement_detail_rep">50</string>
     <string name="reps">reps</string>
     <string name="workout_history_app_bar_title">History</string>
+    <string name="workout_favorite_app_bar_title">Favorite</string>
+
+    <!--     Community-->
+    <string name="community_share_achievement_app_bar_title">Share your today achievement</string>
 </resources>

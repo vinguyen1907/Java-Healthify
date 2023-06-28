@@ -9,10 +9,6 @@ public class MenuVM extends ViewModel {
     public FirestoreDishes getFirestoreDishes() {
         return firestoreDishes;
     }
-
-    public void setFirestoreDishes(FirestoreDishes firestoreDishes) {
-        this.firestoreDishes = firestoreDishes;
-    }
     public MenuVM() {
         firestoreDishes = new FirestoreDishes();
     }

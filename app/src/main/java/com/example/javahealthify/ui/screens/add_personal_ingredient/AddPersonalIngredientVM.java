@@ -1,53 +1,76 @@
 package com.example.javahealthify.ui.screens.add_personal_ingredient;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.javahealthify.data.models.IngredientInfo;
+import com.example.javahealthify.utils.GlobalMethods;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class AddPersonalIngredientVM extends ViewModel {
-    MutableLiveData<String> ingredientName;
-
-    public MutableLiveData<String> getIngredientName() {
-        return ingredientName;
+    public GlobalMethods getGlobalMethods() {
+        return globalMethods;
     }
 
-    public void setIngredientName(MutableLiveData<String> ingredientName) {
-        this.ingredientName = ingredientName;
+    private GlobalMethods globalMethods;
+    private MutableLiveData<IngredientInfo> newIngredient = new MutableLiveData<>();
+
+    public MutableLiveData<IngredientInfo> getNewIngredient() {
+        return newIngredient;
     }
 
-    public MutableLiveData<Double> getServingSize() {
-        return servingSize;
+    public AddPersonalIngredientVM() {
     }
 
-    public void setServingSize(MutableLiveData<Double> servingSize) {
-        this.servingSize = servingSize;
+    public void setNewIngredient(MutableLiveData<IngredientInfo> newIngredient) {
+        this.newIngredient = newIngredient;
     }
 
-    public MutableLiveData<Double> getCalories() {
-        return calories;
+
+    public AddPersonalIngredientVM(MutableLiveData<IngredientInfo> newIngredient) {
+        this.newIngredient = newIngredient;
     }
 
-    public void setCalories(MutableLiveData<Double> calories) {
-        this.calories = calories;
+
+    public void addPersonalIngredient() {
+        DocumentReference userDocumentRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        CollectionReference personalIngredientRef = userDocumentRef.collection("personal_ingredient");
+        personalIngredientRef.add(this.newIngredient.getValue()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("ADDED NEW INGREDIENT", "DocumentSnapshot added with ID: " + documentReference.getId());
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("ADDED NEW INGREDIENT failure", "Error adding document", e);
+                    }
+                });
     }
 
-    public MutableLiveData<Double> getProtein() {
-        return protein;
+    public void addToPendingList() {
+        CollectionReference user_ingredients = FirebaseFirestore.getInstance().collection("user_ingredients");
+        Map<String, Object> data = new HashMap<>();
+        IngredientInfo temp = this.newIngredient.getValue();
+        data.put("Calories", temp.getCalories());
+        data.put("Carbs", temp.getCarbs());
+        data.put("Lipid", temp.getLipid());
+        data.put("Protein", temp.getProtein());
+        data.put("Short_Description", temp.getShortDescription());
+        data.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user_ingredients.add(data);
     }
-
-    public void setProtein(MutableLiveData<Double> protein) {
-        this.protein = protein;
-    }
-
-    public MutableLiveData<Double> getLipid() {
-        return lipid;
-    }
-
-    public void setLipid(MutableLiveData<Double> lipid) {
-        this.lipid = lipid;
-    }
-
-    MutableLiveData<Double> servingSize;
-    MutableLiveData<Double> calories;
-    MutableLiveData<Double> protein;
-    MutableLiveData<Double> lipid;
 }

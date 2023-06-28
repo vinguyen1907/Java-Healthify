@@ -57,7 +57,14 @@
         android:id="@+id/communityFragment"
         android:name="com.example.javahealthify.ui.screens.community.CommunityFragment"
         android:label="fragment_community"
-        tools:layout="@layout/fragment_community" />
+        tools:layout="@layout/fragment_community" >
+        <action
+            android:id="@+id/action_communityFragment_to_workoutShareAchievementFragment"
+            app:destination="@id/workoutShareAchievementFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_achievementDetailsFragment"
+            app:destination="@id/achievementDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.example.javahealthify.ui.screens.menu.MenuFragment"
@@ -115,6 +122,9 @@
         <action
             android:id="@+id/action_workoutFragment_to_workoutHistoryFragment"
             app:destination="@id/workoutHistoryFragment" />
+        <action
+            android:id="@+id/action_workoutFragment_to_workoutFavoriteFragment"
+            app:destination="@id/workoutFavoriteFragment" />
     </fragment>
     <fragment
         android:id="@+id/fillInPersonalInformationFragment"
@@ -226,6 +236,9 @@
         <action
             android:id="@+id/action_findIngredientFragment_to_ingredientInfoFragment"
             app:destination="@id/ingredientInfoFragment" />
+        <action
+            android:id="@+id/action_findIngredientFragment_to_addPersonalIngredientFragment"
+            app:destination="@id/addPersonalIngredientFragment" />
     </fragment>
     <fragment
         android:id="@+id/editMealFragment"
@@ -288,6 +301,18 @@
             app:argType="com.example.javahealthify.data.models.Exercise" />
     </fragment>
     <fragment
+        android:id="@+id/addPersonalIngredientFragment"
+        android:name="com.example.javahealthify.ui.screens.add_personal_ingredient.AddPersonalIngredientFragment"
+        android:label="AddPersonalIngredientFragment" >
+        <action
+            android:id="@+id/action_addPersonalIngredientFragment_to_newIngredientAddedFragment"
+            app:destination="@id/newIngredientAddedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newIngredientAddedFragment"
+        android:name="com.example.javahealthify.ui.screens.new_ingredient_added_screen.NewIngredientAddedFragment"
+        android:label="NewIngredientAddedFragment" />
+    <fragment
         tools:layout="@layout/fragment_workout_exercise_practicing"
         android:id="@+id/workoutExercisePracticingFragment"
         android:name="com.example.javahealthify.ui.screens.workout_exercise_practicing.WorkoutExercisePracticingFragment"
@@ -310,5 +335,43 @@
         android:name="com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragment"
         android:label="fragment_workout_history"
         tools:layout="@layout/fragment_workout_history" />
+    <fragment
+        android:id="@+id/workoutFavoriteFragment"
+        android:name="com.example.javahealthify.ui.screens.workout_favorite.WorkoutFavoriteFragment"
+        android:label="WorkoutFavoriteFragment"
+        tools:layout="@layout/fragment_workout_favorite">
+        <action
+            android:id="@+id/action_workoutFavoriteFragment_to_workoutExerciseDetailsFragment"
+            app:destination="@id/workoutExerciseDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminCommunityFragment"
+        android:name="com.example.javahealthify.ui.screens.admin_community_screen.AdminCommunityFragment"
+        android:label="fragment_admin_community"
+        tools:layout="@layout/fragment_admin_community" />
+    <fragment
+        android:id="@+id/adminIngredientFragment"
+        android:name="com.example.javahealthify.ui.screens.admin_ingredient_screen.AdminIngredientFragment"
+        android:label="fragment_admin_ingredient"
+        tools:layout="@layout/fragment_admin_ingredient" />
+    <fragment
+        android:id="@+id/adminWorkoutFragment"
+        android:name="com.example.javahealthify.ui.screens.admin_workout_screen.AdminWorkoutFragment"
+        android:label="fragment_admin_workout"
+        tools:layout="@layout/fragment_admin_workout" />
+    <fragment
+        android:id="@+id/workoutShareAchievementFragment"
+        tools:layout="@layout/fragment_community_share_achievement"
+        android:name="com.example.javahealthify.ui.screens.community_share_achievement.CommunityShareAchievementFragment"
+        android:label="WorkoutShareAchievementFragment" />
+    <fragment
+        android:id="@+id/achievementDetailsFragment"
+        tools:layout="@layout/fragment_achievement_details"
+        android:name="com.example.javahealthify.ui.screens.community_achievement_details.AchievementDetailsFragment"
+        android:label="AchievementDetailsFragment" >
+        <argument
+            android:name="achievement"
+            app:argType="com.example.javahealthify.data.models.Achievement" />
+    </fragment>
 
 </navigation>

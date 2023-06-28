@@ -51,7 +51,9 @@ public class WorkoutVM extends ViewModel {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<Exercise> newList = new ArrayList<>();
                         for (QueryDocumentSnapshot doc : task.getResult()) {
-                            newList.add(doc.toObject(Exercise.class));
+                            Exercise newExercise = doc.toObject(Exercise.class);
+                            newExercise.setId(doc.getId());
+                            newList.add(newExercise);
                         }
                         selectedExercises.setValue(newList);
                         recalculateSelectedExercisesCalories();
@@ -169,6 +171,14 @@ public class WorkoutVM extends ViewModel {
         });
     }
 
+    public void removeSelectedExercise(int position) {
+        firestore.collection("users").document(auth.getCurrentUser().getUid())
+                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
+                .collection("today_selected_exercises").document(selectedExercises.getValue().get(position).getId())
+                .delete();
+        // removing item in adapter will remove item in ViewModel concurrently, so we do not need remove item in ViewModel here
+    }
+
     public void initDailyActivity() {
         firestore.collection("users").document(auth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
@@ -201,7 +211,7 @@ public class WorkoutVM extends ViewModel {
 
 
     // Methods handle data in this view model
-    private void recalculateSelectedExercisesCalories() {
+    public void recalculateSelectedExercisesCalories() {
         selectedTotalCalories.setValue(GlobalMethods.calculateTotalCalories(selectedExercises.getValue()));
     }
 
