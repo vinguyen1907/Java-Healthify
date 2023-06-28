@@ -59,5 +59,12 @@ public class CommunityFragment extends Fragment {
                 NavHostFragment.findNavController(CommunityFragment.this).navigate(R.id.action_communityFragment_to_workoutShareAchievementFragment);
             }
         });
+
+        binding.searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CommunityFragment.this).navigate(R.id.action_communityFragment_to_communitySearchFragment);
+            }
+        });
     }
 }

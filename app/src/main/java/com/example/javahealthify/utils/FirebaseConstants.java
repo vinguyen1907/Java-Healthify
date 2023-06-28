@@ -10,6 +10,7 @@ import java.util.Date;
 public class FirebaseConstants {
     public static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     public static FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    public static CollectionReference usersRef = firestore.collection("users");
     public static CollectionReference communityRef = firestore.collection("community");
     public static CollectionReference dailyActivitiesRef = firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid())
             .collection("daily_activities");

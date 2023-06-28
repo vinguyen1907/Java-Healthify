@@ -64,6 +64,9 @@
         <action
             android:id="@+id/action_communityFragment_to_achievementDetailsFragment"
             app:destination="@id/achievementDetailsFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_communitySearchFragment"
+            app:destination="@id/communitySearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -372,6 +375,25 @@
         <argument
             android:name="achievement"
             app:argType="com.example.javahealthify.data.models.Achievement" />
+    </fragment>
+    <fragment
+        android:id="@+id/communitySearchFragment"
+        tools:layout="@layout/fragment_community_search"
+        android:name="com.example.javahealthify.ui.screens.community_search.CommunitySearchFragment"
+        android:label="CommunitySearchFragment" >
+
+        <action
+            android:id="@+id/action_communitySearchFragment_to_communityUserProfileFragment"
+            app:destination="@id/communityUserProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/communityUserProfileFragment"
+        tools:layout="@layout/fragment_community_user_profile"
+        android:name="com.example.javahealthify.ui.screens.community_user_profile.CommunityUserProfileFragment"
+        android:label="CommunityUserProfileFragment" >
+        <argument
+            android:name="uid"
+            app:argType="string" />
     </fragment>
 
 </navigation>
