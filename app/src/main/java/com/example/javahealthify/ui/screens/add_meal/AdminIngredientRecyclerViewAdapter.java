@@ -18,15 +18,22 @@ import com.example.javahealthify.utils.GlobalMethods;
 import java.util.ArrayList;
 
 public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
+    public Context getContext() {
+        return context;
+    }
+
     Context context;
     ArrayList<IngredientInfo> ingredientInfoArrayList = new ArrayList<>();
 
+    private OnItemDeleteListener onItemDeleteListener;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
-    public AdminIngredientRecyclerViewAdapter(Context context, ArrayList<IngredientInfo> ingredientInfoArrayList) {
+
+    public AdminIngredientRecyclerViewAdapter(Context context, ArrayList<IngredientInfo> ingredientInfoArrayList, OnItemDeleteListener onItemDeleteListener) {
         this.context = context;
         this.ingredientInfoArrayList = ingredientInfoArrayList;
+        this.onItemDeleteListener = onItemDeleteListener;
     }
 
     @NonNull
@@ -41,6 +48,12 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
            LayoutInflater inflater = LayoutInflater.from(context);
            View view = inflater.inflate(R.layout.loading_item, parent, false);
            return new LoadingViewHolder(view);
+        }
+    }
+
+    public void deleteItem(int position)  {
+        if(onItemDeleteListener != null) {
+            onItemDeleteListener.onItemDelete(position);
         }
     }
 
@@ -96,6 +109,10 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
             tvCaloriesNumber = itemView.findViewById(R.id.admin_calories_number);
             btnEdit = itemView.findViewById(R.id.admin_edit_ingredient_button);
         }
+    }
+
+    public interface OnItemDeleteListener {
+        void onItemDelete(int position);
     }
 
     public static class LoadingViewHolder extends RecyclerView.ViewHolder {

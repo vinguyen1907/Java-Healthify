@@ -1,6 +1,12 @@
 package com.example.javahealthify.data.models;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+
 public class IngredientInfo {
+
+    private String id;
     private String Short_Description;
     private double Calories = 0;
     private double Carbs = 0;
@@ -15,6 +21,16 @@ public class IngredientInfo {
         this.Carbs = carbs;
         this.Lipid = lipid;
         this.Protein = protein;
+    }
+
+    @Exclude
+    public String getId() {
+        return id;
+    }
+
+    public <T extends IngredientInfo> T withId(@NonNull final String id) {
+        this.id = id;
+        return (T) this;
     }
 
     public IngredientInfo() {

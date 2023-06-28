@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,13 +22,13 @@ import com.example.javahealthify.ui.screens.add_meal.AdminIngredientRecyclerView
 
 import java.util.ArrayList;
 
-public class AdminIngredientFragment extends Fragment {
+public class AdminIngredientFragment extends Fragment implements AdminIngredientRecyclerViewAdapter.OnItemDeleteListener {
 
     FragmentAdminIngredientBinding binding;
     AdminIngredientVM adminIngredientVM;
     AdminIngredientRecyclerViewAdapter ingredientRecyclerViewAdapter;
     private boolean isLoading = false;
-    private int visibleThreshold = 5;
+    private int visibleThreshold = 10;
     private int lastVisibleItem, totalItemCount;
 
     public AdminIngredientFragment() {
@@ -39,10 +40,14 @@ public class AdminIngredientFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewModelProvider provider = new ViewModelProvider(requireActivity());
         adminIngredientVM = provider.get(AdminIngredientVM.class);
-        ingredientRecyclerViewAdapter = new AdminIngredientRecyclerViewAdapter(this.getContext(), adminIngredientVM.databaseIngredientList.getValue());
+        ingredientRecyclerViewAdapter = new AdminIngredientRecyclerViewAdapter(this.getContext(), adminIngredientVM.databaseIngredientList.getValue(), this);
 
         binding = FragmentAdminIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(adminIngredientVM);
+
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(ingredientRecyclerViewAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchHelper.attachToRecyclerView(binding.adminIngredientRecyclerView);
 
         binding.adminIngredientRecyclerView.setAdapter(ingredientRecyclerViewAdapter);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
@@ -83,8 +88,8 @@ public class AdminIngredientFragment extends Fragment {
                 isLoading = false;
             }
         }, 2000);
-
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -104,5 +109,10 @@ public class AdminIngredientFragment extends Fragment {
         if(adminIngredientVM.registration != null) {
             adminIngredientVM.registration.remove();
         }
+    }
+
+    @Override
+    public void onItemDelete(int position) {
+        adminIngredientVM.deleteIngredient(adminIngredientVM.databaseIngredientList.getValue().get(position).getId());
     }
 }
