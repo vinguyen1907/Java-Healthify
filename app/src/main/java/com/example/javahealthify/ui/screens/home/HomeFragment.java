@@ -109,7 +109,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
-//        homeVM.loadDocument();
     }
 
     public HomeFragment() {
@@ -119,7 +118,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-
+//        homeVM.loadDocument();
+//
 //        setLoading();
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -302,45 +302,52 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        homeVM.getUserLiveData(); // Gọi lại phương thức để đảm bảo cập nhật dữ liệu người dùng khi fragment được hoạt động lại
+        homeVM.getUserLiveData();
 
         // Lấy SharedPreferences để lưu trữ ngày trước đó
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         long previousDateMillis = sharedPreferences.getLong("previousDate", 0);
         previousDate = new Date(previousDateMillis);
-        currentDate = new Date(); // Cập nhật currentDate
+        currentDate = new Date();
 
 
-        // Kiểm tra xem ngày hiện tại có khác ngày trước đó không
         if (!isSameDay(currentDate, previousDate)) {
 //            homeVM.saveDailySteps(stepCount);
-            // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
-            Map<String, Object> dailyActivities = new HashMap<>();
-            dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
 
-            // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
-            Date currentDate = new Date();
-            String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(currentDate);
-            db.collection("users")
-                    .document(homeVM.getUser().getUid())
-                    .collection("daily_activities").document(dateString)
-                    .set(dailyActivities)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.i("success","Lưu giá trị thành công");
-                            // Lưu giá trị thành công
-                            // Thực hiện các tác vụ khác (nếu cần)
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i("success","Lưu giá trị thất bại");
-                            Log.i("bug",e.toString());
-                            // Xử lý khi lưu giá trị thất bại
-                        }
-                    });
+            homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean isLoadingData) {
+                    if (isLoadingData != null && !isLoadingData) {
+                        Map<String, Object> dailyActivities = new HashMap<>();
+                        dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
+
+
+                        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
+                        // Sử dụng previousDate trực tiếp thay vì dateString
+                        db.collection("users")
+                                .document(homeVM.getUser().getUid())
+                                .collection("daily_activities").document(dateString)
+                                .set(dailyActivities)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.i("success","Lưu giá trị thành công");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.i("success","Lưu giá trị thất bại");
+                                        Log.i("bug",e.toString());
+                                    }
+                                });
+                    }
+                    else {
+
+                    }
+                }
+            });
+
             // Reset stepCount về 0 và cập nhật TextView
             stepCount = 0;
             binding.stepCountTextView.setText(String.valueOf(stepCount));

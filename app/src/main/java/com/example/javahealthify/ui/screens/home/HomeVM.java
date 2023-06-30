@@ -70,7 +70,7 @@ public class HomeVM extends ViewModel {
         Date currentDate = new Date();
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(currentDate);
         firestore.collection("users")
-                .document(firebaseAuth.getCurrentUser().getUid())
+                .document(this.getUser().getUid())
                 .collection("daily_activities").document(dateString)
                 .set(dailyActivities)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -94,7 +94,7 @@ public class HomeVM extends ViewModel {
     public void loadDocument() {
         isLoadingData.setValue(true);
         firestore.collection("users")
-                .document(firebaseAuth.getCurrentUser().getUid())
+                .document(this.getUser().getUid())
                 .collection("daily_activities")
                 .document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
                 .get()
