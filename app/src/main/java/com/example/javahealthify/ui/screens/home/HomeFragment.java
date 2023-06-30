@@ -302,8 +302,35 @@ public class HomeFragment extends Fragment {
         previousDate = new Date(previousDateMillis);
         currentDate = new Date(); // Cập nhật currentDate
 
+
         // Kiểm tra xem ngày hiện tại có khác ngày trước đó không
         if (!isSameDay(currentDate, previousDate)) {
+            // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
+            Map<String, Object> dailyActivities = new HashMap<>();
+            dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
+
+            // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
+            Date currentDate = new Date();
+            String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(currentDate);
+            db.collection("users")
+                    .document(homeVM.getUser().getUid()).collection("daily_activities").document(dateString)
+                    .set(dailyActivities)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("success","Lưu giá trị thành công");
+                            // Lưu giá trị thành công
+                            // Thực hiện các tác vụ khác (nếu cần)
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("success","Lưu giá trị thất bại");
+                            Log.i("bug",e.toString());
+                            // Xử lý khi lưu giá trị thất bại
+                        }
+                    });
             // Reset stepCount về 0 và cập nhật TextView
             stepCount = 0;
             binding.stepCountTextView.setText(String.valueOf(stepCount));
@@ -328,32 +355,6 @@ public class HomeFragment extends Fragment {
         if (sensorManager != null) {
             sensorManager.unregisterListener(accelerometerSensorEventListener);
         }
-
-        // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
-        Map<String, Object> dailyActivities = new HashMap<>();
-        dailyActivities.put("steps", 5000); // Giả sử giá trị steps là 5000
-
-        // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
-        Date currentDate = new Date();
-        String dateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(currentDate);
-        db.collection("daily_activities").document(dateString)
-                .set(dailyActivities)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i("success","Lưu giá trị thành công");
-                        // Lưu giá trị thành công
-                        // Thực hiện các tác vụ khác (nếu cần)
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("success","Lưu giá trị thất bại");
-                        Log.i("bug",e.toString());
-                        // Xử lý khi lưu giá trị thất bại
-                    }
-                });
 
     }
 
