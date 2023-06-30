@@ -22,13 +22,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class AdminIngredientVM extends ViewModel {
     MutableLiveData<ArrayList<IngredientInfo>> databaseIngredientList;
     MutableLiveData<ArrayList<IngredientInfo>> pendingIngredientList;
 
+
+
     MutableLiveData<ArrayList<IngredientInfo>> searchResultList;
+    MutableLiveData<Integer> ingredientCount;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Query query;
     ListenerRegistration registration;
@@ -40,9 +45,21 @@ public class AdminIngredientVM extends ViewModel {
         databaseIngredientList = new MutableLiveData<>(new ArrayList<>());
         pendingIngredientList = new MutableLiveData<>(new ArrayList<>());
         searchResultList = new MutableLiveData<>(new ArrayList<>());
+        ingredientCount = new MutableLiveData<>(0);
+        fetchIngredientCount();
         query = db.collection("ingredient-data").limit(pageSize);
+
         loadMore();
     }
+
+    public MutableLiveData<ArrayList<IngredientInfo>> getSearchResultList() {
+        return searchResultList;
+    }
+
+    public void setSearchResultList(MutableLiveData<ArrayList<IngredientInfo>> searchResultList) {
+        this.searchResultList = searchResultList;
+    }
+
     public void loadMore() {
         Query newQuery;
         if (lastVisibleDocument != null) {
@@ -72,13 +89,22 @@ public class AdminIngredientVM extends ViewModel {
     }
 
     public void addIngredient(IngredientInfo ingredientInfo) {
-        db.collection("ingredient-data").add(ingredientInfo).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        Log.d("NEW INGREDIENT", ingredientInfo.getShort_Description());
+        Map<String, Object> data = new HashMap<>();
+        data.put("Calories", ingredientInfo.getCalories());
+        data.put("Carbs", ingredientInfo.getCarbs());
+        data.put("Lipid", ingredientInfo.getLipid());
+        data.put("Protein", ingredientInfo.getProtein());
+        data.put("Short_Description", ingredientInfo.getShort_Description());
+        db.collection("ingredient-data").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 ArrayList<IngredientInfo> currentList = databaseIngredientList.getValue();
-                ingredientInfo.withId(documentReference.getId()); // Assuming IngredientInfo has a `withId` method to set the document ID
+                ingredientInfo.withId(documentReference.getId()); //`withId` method to set the document ID
+                Log.d("ID", "onSuccess: " + documentReference.getId());
                 currentList.add(ingredientInfo);
                 databaseIngredientList.postValue(currentList);
+                updateCount(1);
             }
         });
     }
@@ -100,7 +126,7 @@ public class AdminIngredientVM extends ViewModel {
             @Override
             public void onFailure(@NonNull Exception e) {
                 ArrayList<IngredientInfo> currentList = databaseIngredientList.getValue();
-                for (Iterator<IngredientInfo> it = currentList.iterator(); it.hasNext();) {
+                for (Iterator<IngredientInfo> it = currentList.iterator(); it.hasNext(); ) {
                     IngredientInfo ingredient = it.next();
                     if (ingredient.getId().equals(id)) {
                         it.remove();
@@ -111,18 +137,30 @@ public class AdminIngredientVM extends ViewModel {
         });
     }
 
+    public void updateCount(int numIncreased) {
+        if(numIncreased > 0) {
+            ingredientCount.postValue(ingredientCount.getValue() + numIncreased);
+        }  else {
+            ingredientCount.postValue(ingredientCount.getValue() - numIncreased);
+
+        }
+        db.collection("count").document("ingredients_count").update("count",ingredientCount.getValue());
+    }
+
     public void deleteIngredient(String id) {
+        Log.d("DELETE ID", "deleteIngredient: " + id);
         db.collection("ingredient-data").document(id).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 ArrayList<IngredientInfo> currentList = databaseIngredientList.getValue();
-                for (Iterator<IngredientInfo> it = currentList.iterator(); it.hasNext();) {
+                for (Iterator<IngredientInfo> it = currentList.iterator(); it.hasNext(); ) {
                     IngredientInfo ingredient = it.next();
                     if (ingredient.getId().equals(id)) {
                         it.remove();
                     }
                 }
                 databaseIngredientList.postValue(currentList);
+                updateCount(-1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -143,22 +181,36 @@ public class AdminIngredientVM extends ViewModel {
         searchQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("FOOOOD", "onComplete: hello");
 
                 if (task.isSuccessful()) {
-                    Log.d("SUCCESS", "Task is successful");
                     ArrayList<IngredientInfo> tempList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Integer calories = document.get("Calories", int.class);
                         Double carbs = document.get("Carbs", double.class);
                         Double lipid = document.get("Lipid", double.class);
                         Double protein = document.get("Protein", double.class);
+
                         IngredientInfo temp = new IngredientInfo(document.get("Short_Description", String.class), calories, carbs, lipid, protein);
+                        temp.withId(document.getId());
                         tempList.add(temp);
                     }
                     searchResultList.postValue(tempList);
                 } else {
                     Log.d("FAILURE", "onComplete: " + task.getException());
+                }
+            }
+        });
+    }
+
+    public void fetchIngredientCount() {
+        db.collection("count").document("ingredients_count").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Long count = documentSnapshot.getLong("count");
+                    if (count != null) {
+                        ingredientCount.postValue(count.intValue());
+                    }
                 }
             }
         });

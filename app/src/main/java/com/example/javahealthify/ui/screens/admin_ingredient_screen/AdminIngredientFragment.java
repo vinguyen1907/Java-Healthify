@@ -2,6 +2,7 @@ package com.example.javahealthify.ui.screens.admin_ingredient_screen;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,7 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    if(enableLoadOnScroll){
+                    if (enableLoadOnScroll) {
                         loadMore();
                         isLoading = true;
                     }
@@ -75,14 +76,30 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
         binding.adminFindIngredientSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String searchQuery = binding.adminFindIngredientSearch.getText().toString();
-                if(searchQuery.length() == 0) {
-                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue());
-                    enableLoadOnScroll =true;
+                String searchQuery = binding.adminFindIngredientSearch.getText().toString().trim();
+                if (searchQuery.length() == 0) {
+                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue(), true);
+                    enableLoadOnScroll = true;
                 } else {
                     showResult(searchQuery);
                 }
                 return true;
+            }
+        });
+
+        binding.adminAddNewIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("operation", "add");
+                NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminEditIngredientFragment, bundle);
+            }
+        });
+
+        binding.adminPendingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -116,7 +133,7 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
         adminIngredientVM.databaseIngredientList.observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
             @Override
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
-                ingredientRecyclerViewAdapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                ingredientRecyclerViewAdapter.setIngredientInfoArrayList(ingredientInfoArrayList, false);
             }
         });
 
@@ -125,11 +142,18 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
                 if (ingredientInfoArrayList.isEmpty()) {
                     enableLoadOnScroll = true;
-                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue());
+                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue(), true);
                 } else {
                     enableLoadOnScroll = false;
-                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(ingredientInfoArrayList, true);
                 }
+            }
+        });
+
+        adminIngredientVM.ingredientCount.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                binding.adminCurrentIngredientCountNumber.setText(String.valueOf(integer));
             }
         });
 
@@ -145,13 +169,26 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
 
     @Override
     public void onItemDelete(int position) {
-        adminIngredientVM.deleteIngredient(adminIngredientVM.databaseIngredientList.getValue().get(position).getId());
+        if (ingredientRecyclerViewAdapter.isSearchResult()) {
+            IngredientInfo temp = adminIngredientVM.searchResultList.getValue().get(position);
+            adminIngredientVM.deleteIngredient(temp.getId());
+
+        } else {
+            IngredientInfo temp = adminIngredientVM.databaseIngredientList.getValue().get(position);
+            adminIngredientVM.deleteIngredient(temp.getId());
+        }
     }
 
     @Override
     public void onEditClick(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
+        bundle.putString("operation", "edit");
+        if (ingredientRecyclerViewAdapter.isSearchResult()) {
+            bundle.putBoolean("isSearchResult", true);
+        } else {
+            bundle.putBoolean("isSearchResult", false);
+        }
         NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminEditIngredientFragment, bundle);
     }
 }

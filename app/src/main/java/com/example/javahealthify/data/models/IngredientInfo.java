@@ -19,12 +19,12 @@ public class IngredientInfo {
     private double Protein = 0;
 
 
-    public IngredientInfo(String Short_Description, double calories, double carbs, double lipid, double protein) {
+    public IngredientInfo(String Short_Description, double Calories, double Carbs, double Lipid, double Protein) {
         this.Short_Description = Short_Description;
-        this.Calories = calories;
-        this.Carbs = carbs;
-        this.Lipid = lipid;
-        this.Protein = protein;
+        this.Calories = Calories;
+        this.Carbs = Carbs;
+        this.Lipid = Lipid;
+        this.Protein = Protein;
     }
 
     @Exclude
@@ -45,39 +45,39 @@ public class IngredientInfo {
         return Short_Description;
     }
 
-    public void setShort_Description(String short_Description) {
-        this.Short_Description = short_Description;
+    public void setShort_Description(String Short_Description) {
+        this.Short_Description = Short_Description;
     }
 
     public double getCalories() {
         return Calories;
     }
 
-    public void setCalories(double calories) {
-        this.Calories = calories;
+    public void setCalories(double Calories) {
+        this.Calories = Calories;
     }
 
     public double getCarbs() {
         return Carbs;
     }
 
-    public void setCarbs(double carbs) {
-        this.Carbs = carbs;
+    public void setCarbs(double Carbs) {
+        this.Carbs = Carbs;
     }
 
     public double getLipid() {
         return Lipid;
     }
 
-    public void setLipid(double lipid) {
-        this.Lipid = lipid;
+    public void setLipid(double Lipid) {
+        this.Lipid = Lipid;
     }
 
     public double getProtein() {
         return Protein;
     }
 
-    public void setProtein(double protein) {
-        this.Protein = protein;
+    public void setProtein(double Protein) {
+        this.Protein = Protein;
     }
 }
