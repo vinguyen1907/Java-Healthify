@@ -31,8 +31,8 @@ public class NormalUser extends User {
 
     public NormalUser() {}
 
-    public NormalUser(String uid, String email, String name, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity) {
-        super(uid, email, name, "NORMAL_USER");
+    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity) {
+        super(uid, email, name, imageUrl, "NORMAL_USER");
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
         this.address = address;

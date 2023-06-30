@@ -4,13 +4,15 @@ public class User {
     protected String uid;
     protected String email;
     protected String name;
+    protected String imageUrl;
     protected String type; // { "NORMAL_USER", "ADMIN" }
 
     public User() {}
-    public User(String uid, String email, String name, String type) {
+    public User(String uid, String email, String name, String imageUrl, String type) {
         this.uid = uid;
         this.email = email;
         this.name = name;
+        this.imageUrl = imageUrl;
         this.type = type;
     }
 
@@ -28,6 +30,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getType() {

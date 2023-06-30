@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private BeginSignInRequest signInRequest;
-    static private FirebaseFirestore db;
+    static private FirebaseFirestore db = FirebaseFirestore.getInstance();
     boolean permission_post_notification = false;
     private static final String CHANNEL_WORKOUT_ID = "my_channel";
     private static final String CHANNEL_WORKOUT_NAME = "Notification Channel";
@@ -70,6 +70,44 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private AlarmManager alarmManager;
     private PendingIntent notificationIntent;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        navController = navHostFragment.getNavController();
+
+        viewModel = new ViewModelProvider(this).get(MainVM.class);
+        binding.setMainVM(viewModel);
+
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        createNotificationChannel();
+
+        scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
+        scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
+            viewModel.loadUser(new MainVM.UserLoadCallback() {
+                @Override
+                public void onUserLoaded(User user) {
+                    setUpNavbar();
+                }
+            });
+        }
+
+        if (!permission_post_notification) {
+            requestPermissionNotification();
+        } else {
+            Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void scheduleWorkoutNotification(int hour, int minute, int second) {
         // Set the desired time for the notification
@@ -145,46 +183,6 @@ public class MainActivity extends AppCompatActivity {
     private int getNotificationMealSecond() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getInt("notification_meal_second", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
-    }
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        navController = navHostFragment.getNavController();
-
-        viewModel = new ViewModelProvider(this).get(MainVM.class);
-        binding.setMainVM(viewModel);
-        binding.adminNavBar.setVisibility(View.GONE);
-        binding.navBar.setVisibility(View.GONE);
-
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
-
-        scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
-        scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
-
-        if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
-        } else {
-            viewModel.loadUser(new MainVM.UserLoadCallback() {
-                @Override
-                public void onUserLoaded(User user) {
-                    setUpNavbar();
-                }
-            });
-        }
-
-        if (!permission_post_notification) {
-            requestPermissionNotification();
-        } else {
-            Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void requestPermissionNotification() {
