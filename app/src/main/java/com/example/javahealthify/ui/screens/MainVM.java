@@ -3,6 +3,7 @@ package com.example.javahealthify.ui.screens;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
@@ -24,7 +25,7 @@ import java.util.Map;
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private User user;
+    private MutableLiveData<User> user = new MutableLiveData<>(null);
 
     public void loadUser() {
 
@@ -32,7 +33,7 @@ public class MainVM extends ViewModel {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
+                        user.setValue(task.getResult().getDocuments().get(0).toObject(NormalUser.class)) ;
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -42,7 +43,11 @@ public class MainVM extends ViewModel {
                 });
     }
 
-    public User getUser() {
+    public MutableLiveData<User> getUser() {
         return user;
+    }
+
+    public void setUser(MutableLiveData<User> user) {
+        this.user = user;
     }
 }

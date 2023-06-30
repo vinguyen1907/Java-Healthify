@@ -27,28 +27,14 @@ public class ProfileFragment extends Fragment {
     private ProfileVM profileVM;
     private FragmentProfileBinding binding;
 
-    private User user;
-
     public ProfileFragment() {
-        // Required empty public constructor
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         profileVM = new ViewModelProvider(this).get(ProfileVM.class);
-
-        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-
-        user = mainVM.getUser();
-
-        profileVM.getUserLiveData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                mainVM.loadUser();
-            }
-        });
-
+        profileVM.getUserLiveData();
 
     }
 
@@ -57,10 +43,9 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater,container,false);
         binding.setViewModel(profileVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.profileEmailTv.setText(user.getEmail());
-        binding.profileNameTv.setText(user.getName());
+        setLoading();
 
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,5 +86,21 @@ public class ProfileFragment extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void setLoading() {
+        profileVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
+                    binding.profileNameTv.setText(profileVM.getUser().getName());
+
+                } else {
+                    binding.profileEmailTv.setText("");
+                    binding.profileNameTv.setText("");
+                }
+            }
+        });
     }
 }

@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.adapters.WorkoutCategoriesAdapter;
+import com.example.javahealthify.data.models.NormalUser;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
+import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.profile.ProfileVM;
+import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -38,20 +50,30 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
+    private User user;
     private HomeVM homeVM;
     private FragmentHomeBinding binding;
 
     private PieChart pieChart;
     private LinearLayout legendLayout;
     private LineChart lineChart;
-    private TextView selectedValueTextView;
+    private TextView exerciseTv;
 
     private List<String> legendEntries;
     private List<Integer> legendValues;
@@ -76,17 +98,27 @@ public class HomeFragment extends Fragment {
 
     // Xác định thời gian giữa các lần đọc gia tốc
     private long previousTimestamp = 0;
-
     Date previousDate;
 
-    @Nullable
+    private MainVM mainVM;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
+        homeVM.getUserLiveData();
+    }
+
+    public HomeFragment() {
+    }
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         binding.setViewModel(homeVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        stepCountTextView = binding.stepCountTextView;
+        setLoading();
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
@@ -103,7 +135,7 @@ public class HomeFragment extends Fragment {
         stepCount = sharedPreferences.getInt("stepCount", 0);
 
         // Hiển thị số bước chân trên TextView
-        stepCountTextView.setText(String.valueOf(stepCount));
+        binding.stepCountTextView.setText(String.valueOf(stepCount));
 
 
         // ----------------------------------LINECHART----------------------------------------------
@@ -115,7 +147,7 @@ public class HomeFragment extends Fragment {
 
         pieChart = binding.pieChart;
         legendLayout = binding.legendLayout;
-        // Initialize the legend entries list
+
         legendEntries = new ArrayList<>();
         legendEntries.add("Goal");
         legendEntries.add("Food");
@@ -126,13 +158,13 @@ public class HomeFragment extends Fragment {
         legendValues.add(33);
         legendValues.add(33);
 
-        // Create a list of icon resources
+
         List<Integer> iconResources = new ArrayList<>();
-        iconResources.add(R.drawable.home_target); // Replace with the appropriate resource ID for each icon
+        iconResources.add(R.drawable.home_target);
         iconResources.add(R.drawable.home_food);
         iconResources.add(R.drawable.home_calories);
 
-        // Create pie chart entries
+
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(33f, "Goal"));
         entries.add(new PieEntry(33f, "Food"));
@@ -143,13 +175,13 @@ public class HomeFragment extends Fragment {
         colors.add(Color.parseColor("#69E6A6"));
         colors.add(Color.parseColor("#FFAA7E"));
 
-        // Create pie chart dataset
+
         PieDataSet dataSet = new PieDataSet(entries, "Categories");
         dataSet.setColors(colors);
         dataSet.setValueTextColor(Color.TRANSPARENT);
         dataSet.setValueTextSize(12f);
 
-        // Create pie chart data object
+
         PieData pieData = new PieData(dataSet);
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
@@ -157,7 +189,7 @@ public class HomeFragment extends Fragment {
         pieChart.getLegend().setEnabled(false);
         pieChart.setHoleRadius(70f);
 
-        // Customize pie chart
+
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
         pieChart.setUsePercentValues(true);
@@ -166,7 +198,7 @@ public class HomeFragment extends Fragment {
         pieChart.setTransparentCircleRadius(58f);
         pieChart.setEntryLabelTextSize(12f);
         pieChart.setEntryLabelColor(android.R.color.black);
-        // Set custom center text
+
         pieChart.setDrawCenterText(true);
         pieChart.setCenterText("700 Left");
         pieChart.setCenterTextSize(16f);
@@ -181,15 +213,13 @@ public class HomeFragment extends Fragment {
             int legendValue = legendValues.get(i);
 
             View legendItemView = LayoutInflater.from(getContext()).inflate(R.layout.legend_item, null);
-//            View legendColorView = legendItemView.findViewById(R.id.legendColor);
             ImageView legendIconView = legendItemView.findViewById(R.id.legendIcon);
             TextView legendLabelTextView = legendItemView.findViewById(R.id.legendLabel);
             TextView legendValueTextView = legendItemView.findViewById(R.id.legendValue);
 
-            // Set legend item color and label
-//            legendColorView.setBackgroundColor(dataSet.getColor(i));
-            legendIconView.setImageResource(iconResources.get(i)); // Set the icon resource for the current legend item
-            legendLabelTextView.setText(legendEntry); // Set the legend entry and value as the label
+
+            legendIconView.setImageResource(iconResources.get(i));
+            legendLabelTextView.setText(legendEntry);
             legendValueTextView.setText(String.valueOf(legendValue));
 
             LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
@@ -206,7 +236,21 @@ public class HomeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    // Tạo bộ lắng nghe sự kiện cho cảm biến gia tốc
+    private void setLoading() {
+        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    binding.exerciseTv.setText(homeVM.getUser().getPhone());
+
+
+                } else {
+                    binding.exerciseTv.setText("");
+                }
+            }
+        });
+    };
+
     private SensorEventListener accelerometerSensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -239,7 +283,7 @@ public class HomeFragment extends Fragment {
                 isStepDetected = false;
             }
 
-            stepCountTextView.setText(String.valueOf(stepCount));
+            binding.stepCountTextView.setText(String.valueOf(stepCount));
         }
 
         @Override
@@ -250,6 +294,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        homeVM.getUserLiveData(); // Gọi lại phương thức để đảm bảo cập nhật dữ liệu người dùng khi fragment được hoạt động lại
 
         // Lấy SharedPreferences để lưu trữ ngày trước đó
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -261,12 +306,12 @@ public class HomeFragment extends Fragment {
         if (!isSameDay(currentDate, previousDate)) {
             // Reset stepCount về 0 và cập nhật TextView
             stepCount = 0;
-            stepCountTextView.setText(String.valueOf(stepCount));
+            binding.stepCountTextView.setText(String.valueOf(stepCount));
 
             // Lưu ngày hiện tại vào SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong("previousDate", currentDate.getTime());
-            editor.putInt("stepCount", stepCount); // Thêm dòng này để lưu giá trị mới nhất của stepCount
+            editor.putInt("stepCount", stepCount); // lưu giá trị mới nhất của stepCount
             editor.apply();
         }
     }
@@ -283,6 +328,33 @@ public class HomeFragment extends Fragment {
         if (sensorManager != null) {
             sensorManager.unregisterListener(accelerometerSensorEventListener);
         }
+
+        // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
+        Map<String, Object> dailyActivities = new HashMap<>();
+        dailyActivities.put("steps", 5000); // Giả sử giá trị steps là 5000
+
+        // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
+        Date currentDate = new Date();
+        String dateString = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(currentDate);
+        db.collection("daily_activities").document(dateString)
+                .set(dailyActivities)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("success","Lưu giá trị thành công");
+                        // Lưu giá trị thành công
+                        // Thực hiện các tác vụ khác (nếu cần)
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("success","Lưu giá trị thất bại");
+                        Log.i("bug",e.toString());
+                        // Xử lý khi lưu giá trị thất bại
+                    }
+                });
+
     }
 
 
@@ -323,9 +395,9 @@ public class HomeFragment extends Fragment {
         xAxis.setValueFormatter(new XAxisValueFormatter(labels));
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(dataSet); // Thêm dữ liệu dòng vào danh sách
+        dataSets.add(dataSet);
 
-        lineChart.setData(lineData); // Đặt dữ liệu vào biểu đồ
+        lineChart.setData(lineData);
 
         Description description = new Description();
         description.setText("Weight per day");
@@ -335,7 +407,6 @@ public class HomeFragment extends Fragment {
         Legend legend = lineChart.getLegend();
         legend.setTextColor(Color.WHITE);
 
-        // Tùy chỉnh các thiết lập khác cho biểu đồ (màu, định dạng, v.v.)
         dataSet.setColor(Color.parseColor("#69E6A6"));
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setLineWidth(2f);
@@ -343,7 +414,7 @@ public class HomeFragment extends Fragment {
         lineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
         lineChart.getXAxis().setTextColor(Color.WHITE);
 
-        lineChart.invalidate(); // Cập nhật biểu đồ
+        lineChart.invalidate();
     }
 
 }

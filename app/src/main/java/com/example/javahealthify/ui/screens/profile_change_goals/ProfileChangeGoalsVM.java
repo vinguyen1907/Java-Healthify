@@ -1,27 +1,20 @@
-package com.example.javahealthify.ui.screens.home;
+package com.example.javahealthify.ui.screens.profile_change_goals;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
-import com.example.javahealthify.data.models.User;
-import com.example.javahealthify.data.models.WorkoutCategory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HomeVM extends ViewModel {
+public class ProfileChangeGoalsVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -44,8 +37,7 @@ public class HomeVM extends ViewModel {
                             user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
                             isLoadingData.setValue(false);
 
-                        }
-                        else {
+                        } else {
                             Log.d("Get user data error", "Error getting user documents: ", task.getException());
                             isLoadingData.setValue(false);
                         }
@@ -56,19 +48,5 @@ public class HomeVM extends ViewModel {
                         Log.i("Error", e.getMessage());
                     }
                 });
-//        if (userLiveData == null) {
-//            userLiveData = new MutableLiveData<>();
-//            loadUser();
-//        }
     }
-
-//    private void loadUser() {
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (firebaseUser != null) {
-//            User user = new User();
-//            user.setName(firebaseUser.getDisplayName());
-//            user.setEmail(firebaseUser.getEmail());
-//            userLiveData.setValue(user);
-//        }
-//    }
 }
