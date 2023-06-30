@@ -53,7 +53,6 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
         if (achievement.getUserImageUrl() == null) {
             holder.avatarImg.setImageResource(R.drawable.ic_profile);
         } else {
-            Log.i("Avatar url", achievement.getUserImageUrl());
             Glide.with(context).load(achievement.getUserImageUrl()).into(holder.avatarImg);
         }
 

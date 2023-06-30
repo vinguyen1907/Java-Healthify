@@ -55,7 +55,7 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater,container,false);
         binding.setViewModel(profileVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         binding.profileEmailTv.setText(user.getEmail());
         binding.profileNameTv.setText(user.getName());

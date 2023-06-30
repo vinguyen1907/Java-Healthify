@@ -135,4 +135,5 @@
 
     <!--     Community-->
     <string name="community_share_achievement_app_bar_title">Share your today achievement</string>
+    <string name="community_following_app_bar_title">Your following today activities</string>
 </resources>

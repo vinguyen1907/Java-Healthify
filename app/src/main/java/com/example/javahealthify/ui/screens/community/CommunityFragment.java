@@ -60,6 +60,13 @@ public class CommunityFragment extends Fragment {
             }
         });
 
+        binding.followingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(CommunityFragment.this).navigate(R.id.action_communityFragment_to_communityFollowingFragment2);
+            }
+        });
+
         binding.searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

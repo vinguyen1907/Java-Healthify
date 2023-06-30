@@ -192,6 +192,7 @@ public class WorkoutVM extends ViewModel {
                                 newDailyActivity.put("foodCalories", 0);
                                 newDailyActivity.put("exerciseCalories", 0);
                                 newDailyActivity.put("calories", 0);
+                                newDailyActivity.put("steps", 0);
                                 snapshot.getReference().set(newDailyActivity)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

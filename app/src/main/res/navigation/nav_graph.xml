@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_communityFragment_to_communitySearchFragment"
             app:destination="@id/communitySearchFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_communityFollowingFragment2"
+            app:destination="@id/communityFollowingFragment2" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -395,5 +398,10 @@
             android:name="uid"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/communityFollowingFragment2"
+        tools:layout="@layout/fragment_community_following"
+        android:name="com.example.javahealthify.ui.screens.community_following.CommunityFollowingFragment"
+        android:label="CommunityFollowingFragment" />
 
 </navigation>
