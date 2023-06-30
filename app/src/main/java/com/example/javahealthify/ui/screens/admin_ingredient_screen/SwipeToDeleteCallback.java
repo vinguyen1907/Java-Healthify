@@ -67,7 +67,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        new AlertDialog.Builder(viewHolder.itemView.getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(viewHolder.itemView.getContext())
                 .setMessage("Are you sure you want to delete this item?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -81,8 +81,17 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                     public void onClick(DialogInterface dialog, int which) {
                         adapter.notifyItemChanged(viewHolder.getAdapterPosition());
                     }
-                })
-                .create()
-                .show();
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+            }
+        });
+
+        dialog.show();
     }
 }

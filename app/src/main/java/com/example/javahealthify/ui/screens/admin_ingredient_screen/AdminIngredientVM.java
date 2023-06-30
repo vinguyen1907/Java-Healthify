@@ -1,14 +1,18 @@
 package com.example.javahealthify.ui.screens.admin_ingredient_screen;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.IngredientInfo;
+import com.example.javahealthify.ui.screens.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +27,8 @@ import java.util.Iterator;
 public class AdminIngredientVM extends ViewModel {
     MutableLiveData<ArrayList<IngredientInfo>> databaseIngredientList;
     MutableLiveData<ArrayList<IngredientInfo>> pendingIngredientList;
+
+    MutableLiveData<ArrayList<IngredientInfo>> searchResultList;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Query query;
     ListenerRegistration registration;
@@ -33,6 +39,7 @@ public class AdminIngredientVM extends ViewModel {
     public AdminIngredientVM() {
         databaseIngredientList = new MutableLiveData<>(new ArrayList<>());
         pendingIngredientList = new MutableLiveData<>(new ArrayList<>());
+        searchResultList = new MutableLiveData<>(new ArrayList<>());
         query = db.collection("ingredient-data").limit(pageSize);
         loadMore();
     }
@@ -121,6 +128,38 @@ public class AdminIngredientVM extends ViewModel {
             @Override
             public void onFailure(@NonNull Exception e) {
 
+            }
+        });
+    }
+
+    public void search(String query) {
+        query = query.toUpperCase();
+        if (query.isEmpty()) {
+            searchResultList = new MutableLiveData<>(new ArrayList<>());
+            return;
+        }
+        CollectionReference ingredientInfoRef = MainActivity.getDb().collection("ingredient-data");
+        Query searchQuery = ingredientInfoRef.whereGreaterThanOrEqualTo("Short_Description", query).whereLessThanOrEqualTo("Short_Description", query + "\uf8ff").limit(10);
+        searchQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Log.d("FOOOOD", "onComplete: hello");
+
+                if (task.isSuccessful()) {
+                    Log.d("SUCCESS", "Task is successful");
+                    ArrayList<IngredientInfo> tempList = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Integer calories = document.get("Calories", int.class);
+                        Double carbs = document.get("Carbs", double.class);
+                        Double lipid = document.get("Lipid", double.class);
+                        Double protein = document.get("Protein", double.class);
+                        IngredientInfo temp = new IngredientInfo(document.get("Short_Description", String.class), calories, carbs, lipid, protein);
+                        tempList.add(temp);
+                    }
+                    searchResultList.postValue(tempList);
+                } else {
+                    Log.d("FAILURE", "onComplete: " + task.getException());
+                }
             }
         });
     }
