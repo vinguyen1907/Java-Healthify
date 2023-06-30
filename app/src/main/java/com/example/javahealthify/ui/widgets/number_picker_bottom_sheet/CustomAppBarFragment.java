@@ -26,7 +26,6 @@ public class CustomAppBarFragment extends Fragment {
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Hello", "back nè");
 //                NavHostFragment.findNavController(CustomAppBarFragment.this).popBackStack();
             }
         });

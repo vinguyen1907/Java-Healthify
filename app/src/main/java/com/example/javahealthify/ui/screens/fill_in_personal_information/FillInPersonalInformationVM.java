@@ -57,6 +57,7 @@ public class FillInPersonalInformationVM extends ViewModel {
                     "",
                     firebaseAuth.getCurrentUser().getEmail(),
                     name.getValue(),
+                    "",
                     phone.getValue(),
                     birthdate,
                     address.getValue(),

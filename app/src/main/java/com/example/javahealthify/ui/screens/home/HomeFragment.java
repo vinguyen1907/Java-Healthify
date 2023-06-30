@@ -46,6 +46,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -108,6 +109,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
+//        homeVM.loadDocument();
     }
 
     public HomeFragment() {
@@ -118,7 +120,7 @@ public class HomeFragment extends Fragment {
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        setLoading();
+//        setLoading();
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
@@ -141,13 +143,19 @@ public class HomeFragment extends Fragment {
         // ----------------------------------LINECHART----------------------------------------------
 
         lineChart = binding.lineChart;
-        drawChart();
+        drawLine();
 
         // ----------------------------------PIECHART-----------------------------------------------
 
         pieChart = binding.pieChart;
         legendLayout = binding.legendLayout;
 
+        drawPie();
+
+        return binding.getRoot();
+    }
+
+    private void drawPie() {
         legendEntries = new ArrayList<>();
         legendEntries.add("Goal");
         legendEntries.add("Food");
@@ -232,19 +240,19 @@ public class HomeFragment extends Fragment {
             // Add legend item view to the legend layout
             legendLayout.addView(legendItemView);
         }
-
-        return binding.getRoot();
     }
 
     private void setLoading() {
         homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData) {
-                    binding.exerciseTv.setText(homeVM.getUser().getPhone());
-
-
-                } else {
+                if (isLoadingData != null && !isLoadingData)
+                    homeVM.getSteps().observe(getViewLifecycleOwner(), steps -> {
+                        if(steps != null) {
+                            binding.exerciseTv.setText(steps);
+                        }
+                    });
+                else {
                     binding.exerciseTv.setText("");
                 }
             }
@@ -305,6 +313,7 @@ public class HomeFragment extends Fragment {
 
         // Kiểm tra xem ngày hiện tại có khác ngày trước đó không
         if (!isSameDay(currentDate, previousDate)) {
+//            homeVM.saveDailySteps(stepCount);
             // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
             Map<String, Object> dailyActivities = new HashMap<>();
             dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
@@ -313,7 +322,8 @@ public class HomeFragment extends Fragment {
             Date currentDate = new Date();
             String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(currentDate);
             db.collection("users")
-                    .document(homeVM.getUser().getUid()).collection("daily_activities").document(dateString)
+                    .document(homeVM.getUser().getUid())
+                    .collection("daily_activities").document(dateString)
                     .set(dailyActivities)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -371,7 +381,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void drawChart() {
+    private void drawLine() {
 
         ArrayList<CustomEntry> entries = new ArrayList<>();
         entries.add(new CustomEntry(0, 65f, "Ngày 1")); // Ví dụ dữ liệu cân nặng, sử dụng số thực và chỉ số của ngày
@@ -391,9 +401,16 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < entries.size(); i++) {
             labels[i] = entries.get(i).getXLabel();
         }
+        // cái này để hiển thị ngày ở cột có giá trị thôi
+        IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(labels);
 
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setValueFormatter(new XAxisValueFormatter(labels));
+        xAxis.setValueFormatter(xAxisFormatter);
+        xAxis.setGranularity(1);
+
+        xAxis.setAxisMaximum(entries.size() - 1);
+
+
 
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);

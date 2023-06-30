@@ -1,21 +1,14 @@
 package com.example.javahealthify.ui.screens.profile;
 
 import android.os.Bundle;
-
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
-import androidx.navigation.NavHostController;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.User;
@@ -27,15 +20,18 @@ public class ProfileFragment extends Fragment {
     private ProfileVM profileVM;
     private FragmentProfileBinding binding;
 
+    private User user;
+
     public ProfileFragment() {
+        // Required empty public constructor
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         profileVM = new ViewModelProvider(this).get(ProfileVM.class);
-        profileVM.getUserLiveData();
 
+        profileVM.getUserLiveData();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,7 +41,7 @@ public class ProfileFragment extends Fragment {
         binding.setViewModel(profileVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        setLoading();
+        loadData();
 
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,19 +84,18 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setLoading() {
+    private void loadData() {
         profileVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
-                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
-                    binding.profileNameTv.setText(profileVM.getUser().getName());
+                    binding.profileEmailTv.setText(user.getEmail());
+                    binding.profileNameTv.setText(user.getName());
 
                 } else {
-                    binding.profileEmailTv.setText("");
-                    binding.profileNameTv.setText("");
                 }
             }
         });
+
     }
 }

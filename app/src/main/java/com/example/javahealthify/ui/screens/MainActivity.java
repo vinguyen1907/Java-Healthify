@@ -17,7 +17,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -34,6 +32,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
@@ -54,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private NavController navController;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private BeginSignInRequest signInRequest;
-    static private FirebaseFirestore db;
-    boolean permission_post_notification=false;
+    static private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    boolean permission_post_notification = false;
     private static final String CHANNEL_WORKOUT_ID = "my_channel";
     private static final String CHANNEL_WORKOUT_NAME = "Notification Channel";
     private static final String CHANNEL_WORKOUT_DESC = "This is my notification channel";
@@ -71,6 +70,45 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private AlarmManager alarmManager;
     private PendingIntent notificationIntent;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        navController = navHostFragment.getNavController();
+
+        viewModel = new ViewModelProvider(this).get(MainVM.class);
+        binding.setMainVM(viewModel);
+
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        createNotificationChannel();
+
+        scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
+        scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
+            viewModel.loadUser(new MainVM.UserLoadCallback() {
+                @Override
+                public void onUserLoaded(User user) {
+                    setUpNavbar();
+                }
+            });
+        }
+
+        if (!permission_post_notification) {
+            requestPermissionNotification();
+        } else {
+            Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void scheduleWorkoutNotification(int hour, int minute, int second) {
         // Set the desired time for the notification
         Calendar calendar = Calendar.getInstance();
@@ -89,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         // Schedule the notification
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), notificationIntent);
     }
+
     private void scheduleMealNotification(int hour, int minute, int second) {
         // Set the desired time for the notification
         Calendar calendar = Calendar.getInstance();
@@ -130,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getInt("notification_workout_second", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
+
     private int getNotificationMealHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         return sharedPreferences.getInt("notification_meal_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
@@ -145,92 +185,51 @@ public class MainActivity extends AppCompatActivity {
         return sharedPreferences.getInt("notification_meal_second", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        db = FirebaseFirestore.getInstance();
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        NavHostFragment navHostFragment =(NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
-        navController = navHostFragment.getNavController();
-
-        viewModel = new ViewModelProvider(this).get(MainVM.class);
-        binding.setMainVM(viewModel);
-
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
-
-        scheduleWorkoutNotification(getNotificationWorkoutHour(),getNotificationWorkoutMinute(),getNotificationWorkoutSecond());
-        scheduleMealNotification(getNotificationMealHour(),getNotificationMealMinute(),getNotificationMealSecond());
-
-        if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
-        } else {
-            viewModel.loadUser();
-            navController.navigate(R.id.homeFragment);
-        }
-
-        setUpNavbar();
-
-        if(!permission_post_notification) {
-            requestPermissionNotification();
-        }
-        else {
-            Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void requestPermissionNotification() {
-        if(ContextCompat.checkSelfPermission(this,permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             permission_post_notification = true;
-        }
-        else {
-            if(shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                Log.d("Permission ","inside else 1 time don't allow");
-            }
-            else {
-                Log.d("Permission ","inside else 2 time don't allow");
+        } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.d("Permission ", "inside else 1 time don't allow");
+            } else {
+                Log.d("Permission ", "inside else 2 time don't allow");
             }
             requestPermissiongLauncherNotification.launch(permissions[0]);
         }
     }
 
     private ActivityResultLauncher<String> requestPermissiongLauncherNotification =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(),isGranted->{
-                if(isGranted) {
-                    permission_post_notification=true;
-                }
-                else
-                {
-                    permission_post_notification=false;
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    permission_post_notification = true;
+                } else {
+                    permission_post_notification = false;
                     showPermissiongDialog("Notification Permission");
                 }
             });
 
-    public void  showPermissiongDialog(String permissiong_desc) {
+    public void showPermissiongDialog(String permissiong_desc) {
         new AlertDialog.Builder(
                 this
         ).setTitle("Alert for Permission")
-                        .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent rintent = new Intent();
-                                rintent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri uri = Uri.fromParts("package",getPackageName(),null);
-                                rintent.setData(uri);
-                                startActivity(rintent);
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .show();
+                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent rintent = new Intent();
+                        rintent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        rintent.setData(uri);
+                        startActivity(rintent);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void setNavbarItem(int itemId) {
@@ -238,6 +237,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpNavbar() {
+        if(viewModel.getUser().getType().equals("NORMAL_USER")){
+            navController.navigate(R.id.homeFragment);
+        } else {
+            navController.navigate(R.id.adminIngredientFragment);
+        }
+
+        setNavBarVisibility();
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller,
@@ -246,33 +252,59 @@ public class MainActivity extends AppCompatActivity {
                 switch (destination.getId()) {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);
-                        binding.navBar.setVisibility(View.VISIBLE);
+//                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.menuFragment:
                         setNavbarItem(R.id.nav_menu);
-                        binding.navBar.setVisibility(View.VISIBLE);
+//                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.workoutFragment:
                         setNavbarItem(R.id.nav_workout);
-                        binding.navBar.setVisibility(View.VISIBLE);
+//                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.communityFragment:
                         setNavbarItem(R.id.nav_community);
-                        binding.navBar.setVisibility(View.VISIBLE);
+//                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
                         break;
                     case R.id.profileFragment:
                         setNavbarItem(R.id.nav_profile);
-                        binding.navBar.setVisibility(View.VISIBLE);
+//                        binding.navBar.setVisibility(View.VISIBLE);
+                        setNavBarVisibility();
+
+                        break;
+                    case R.id.adminCommunityFragment:
+                        binding.adminNavBar.setItemSelected(R.id.nav_community_admin, true);
+                        setNavBarVisibility();
+
+                        break;
+                    case R.id.adminIngredientFragment:
+                        binding.adminNavBar.setItemSelected(R.id.nav_ingredient_admin, true);
+                        setNavBarVisibility();
+
+                        break;
+                    case R.id.adminWorkoutFragment:
+                        binding.adminNavBar.setItemSelected(R.id.nav_workout_admin, true);
+                        setNavBarVisibility();
+
                         break;
                     default:
                         binding.navBar.setVisibility(View.GONE);
+                        binding.adminNavBar.setVisibility(View.GONE);
                 }
             }
         });
         binding.navBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
             @Override
             public void onItemSelected(int i) {
-                switch(i) {
+                switch (i) {
                     case R.id.nav_home:
                         navController.navigate(R.id.homeFragment);
                         break;
@@ -291,6 +323,35 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        binding.adminNavBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(int i) {
+                switch (i) {
+                    case R.id.nav_ingredient_admin:
+                        navController.navigate(R.id.adminIngredientFragment);
+                        break;
+                    case R.id.nav_community_admin:
+                        navController.navigate(R.id.adminCommunityFragment);
+                        break;
+                    case R.id.nav_workout_admin:
+                        navController.navigate(R.id.adminWorkoutFragment);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setNavBarVisibility() {
+        if (viewModel.getUser().getType().equals("NORMAL_USER"))
+        {
+            binding.navBar.setVisibility(View.VISIBLE);
+            binding.adminNavBar.setVisibility(View.GONE);
+
+        } else {
+            binding.navBar.setVisibility(View.GONE);
+            binding.adminNavBar.setVisibility(View.VISIBLE);
+        }
     }
 
     public static FirebaseFirestore getDb() {

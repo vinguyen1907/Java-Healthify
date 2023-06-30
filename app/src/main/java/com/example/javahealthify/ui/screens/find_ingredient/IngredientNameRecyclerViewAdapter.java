@@ -1,7 +1,6 @@
 package com.example.javahealthify.ui.screens.find_ingredient;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,21 +46,24 @@ public class IngredientNameRecyclerViewAdapter extends RecyclerView.Adapter<Ingr
 
     @Override
     public void onBindViewHolder(@NonNull IngredientNameViewHolder holder, int position) {
-        holder.tvIngredientName.setText(ingredientInfoArrayList.get(position).getShortDescription());
+        holder.tvIngredientName.setText(ingredientInfoArrayList.get(position).getShort_Description());
         holder.btnViewIngredientInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ingredientInfoClickListener != null) {
-                    ingredientInfoClickListener.onViewIngredientInfoClick(position);
+                    ViewGroup parent = (ViewGroup) holder.itemView.getParent();
+                    int recyclerViewId = parent.getId();
+                    ingredientInfoClickListener.onViewIngredientInfoClick(position, recyclerViewId);
                 }
             }
         });
         holder.tvIngredientName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CLICKCY", "onClick: hihihi");
                 if(ingredientInfoNameClickListener != null) {
-                    ingredientInfoNameClickListener.onIngredientInfoNameClick(position);
+                    ViewGroup parent = (ViewGroup) holder.itemView.getParent();
+                    int recyclerViewId = parent.getId();
+                    ingredientInfoNameClickListener.onIngredientInfoNameClick(position, recyclerViewId);
                 }
             }
         });
@@ -85,10 +87,10 @@ public class IngredientNameRecyclerViewAdapter extends RecyclerView.Adapter<Ingr
     }
 
     public interface ViewIngredientInfoClickListener {
-        void onViewIngredientInfoClick(int position);
+        void onViewIngredientInfoClick(int position, int recyclerViewId);
     }
 
     public interface IngredientInfoNameClickListener {
-        void onIngredientInfoNameClick(int position);
+        void onIngredientInfoNameClick(int position, int recyclerViewId);
     }
 }

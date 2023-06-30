@@ -16,17 +16,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Dish;
+import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.databinding.FragmentMenuBinding;
 import com.example.javahealthify.utils.GlobalMethods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener, DishRecycleViewAdapter.MealOptionDialogListener {
+public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener, DishRecycleViewAdapter.MealOptionDialogListener,DateAdapter.OnDateClickListener {
 
     MenuVM menuVM;
     private FragmentMenuBinding binding;
 
     DishRecycleViewAdapter adapter;
+    DateAdapter dateAdapter;
+    List<Date> dates;
+
 
     private Double totalCalories = 0.0;
 
@@ -41,7 +56,9 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         menuVM = provider.get(MenuVM.class);
         binding = FragmentMenuBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        dates = initializeDatesList();
 
         // Remove the observer before setting up a new one
         menuVM.getFirestoreDishes().removeObservers(this);
@@ -51,7 +68,19 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         binding.meals.setAdapter(adapter);
         Log.d("OBSERVING DISHES", "onCreateView: " + menuVM.getFirestoreDishes().getValue());
         // Update the RecyclerView adapter with new data
+        dateAdapter = new DateAdapter(dates, this);
+        dateAdapter.setSelectedPosition(2);
+        binding.dateSlider.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        });
+        binding.dateSlider.setAdapter(dateAdapter);
 
+        updateDatesList(Calendar.getInstance().getTime());
+        int centerPos = 2;
+        binding.dateSlider.scrollToPosition(centerPos);
         binding.addMealButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +100,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                 adapter.setDishes(dishArrayList);
                 totalCalories = 0.0;
                 for (Dish dish: dishArrayList
-                     ) {
+                ) {
                     totalCalories += dish.getCalories();
                     binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
                 }
@@ -110,6 +139,115 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     @Override
     public void onMealOptionClick(int position) {
+
+    }
+
+    private void updateDatesList(Date chosenDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(chosenDate);
+        calendar.add(Calendar.DATE, -2);
+        dates.clear();
+        for (int i = 0; i < 5; i++) {
+            dates.add(calendar.getTime());
+            calendar.add(Calendar.DATE, 1);
+        }
+    }
+
+    private List<Date> initializeDatesList() {
+        List<Date> dates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -2); // Go back two days from today (or chosen date)
+
+        for (int i = 0; i < 5; i++) {
+            dates.add(calendar.getTime());
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return dates;
+    }
+
+    @Override
+    public void onDateClick(Date date) {
+        updateDatesList(date);
+        int centerPosition =2;
+        dateAdapter.setSelectedPosition(centerPosition);
+        dateAdapter.notifyDataSetChanged();
+        binding.dateSlider.scrollToPosition(centerPosition);
+        if(GlobalMethods.isToday(date)) {
+            adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), this);
+            adapter.notifyDataSetChanged();
+            binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+            binding.meals.setAdapter(adapter);
+            binding.meals.requestLayout();
+
+        } else {
+            fetchDishes(date);
+        }
+
+    }
+
+    private void fetchDishes(Date date) {
+        Log.d("Fetch old dishes", "fetchDishes: is called");
+        ArrayList<Dish> dishes = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        CollectionReference dailyActivitiesRef = userRef.collection("daily_activities");
+        DocumentReference dailyActivityRef = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(date));
+        MenuFragment menuFragment = this;
+        dailyActivityRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        Log.d("fetch old dishes", "onComplete: document exists");
+                        List<Map<String, Object>> dishesMapLists = (List<Map<String,Object>>) document.get("dishes");
+                        for(Map<String,Object> dishMap : dishesMapLists) {
+                            Dish dish = new Dish();
+                            dish.setName((String) dishMap.get("name"));
+                            dish.setSession((String) dishMap.get("session"));
+                            List<Map<String, Object>> ingredientsMapList = (List<Map<String, Object>>) dishMap.get("ingredients");
+                            if (ingredientsMapList == null || ingredientsMapList.isEmpty()) {
+                                continue;
+                            }
+                            List<Ingredient> ingredients = new ArrayList<>();
+                            double dishTotalCalories = 0;
+                            double dishTotalCarb = 0;
+                            double dishTotalLipid = 0;
+                            double dishTotalProtein = 0;
+                            for (Map<String, Object> ingredientMap : ingredientsMapList) {
+                                Ingredient ingredient = new Ingredient();
+                                ingredient.setName((String) ingredientMap.get("name"));
+                                ingredient.setCalories(((Number) ingredientMap.get("calories")).doubleValue());
+                                ingredient.setCarb(((Number) ingredientMap.get("carb")).doubleValue());
+                                ingredient.setLipid(((Number) ingredientMap.get("lipid")).doubleValue());
+                                ingredient.setProtein(((Number) ingredientMap.get("protein")).doubleValue());
+                                ingredient.setWeight(((Number) ingredientMap.get("weight")).doubleValue());
+                                dishTotalCalories += ingredient.getCalories();
+                                dishTotalCarb += ingredient.getCarb();
+                                dishTotalLipid += ingredient.getLipid();
+                                dishTotalProtein += ingredient.getProtein();
+                                ingredients.add(ingredient);
+                            }
+                            dish.setIngredients(ingredients);
+                            dish.setCalories(dishTotalCalories);
+                            dish.setCarb(dishTotalCarb);
+                            dish.setLipid(dishTotalLipid);
+                            dish.setProtein(dishTotalProtein);
+                            dishes.add(dish);
+
+                        }
+                    }
+                }
+
+                adapter = new DishRecycleViewAdapter(menuFragment.getContext(), dishes, menuFragment);
+                adapter.notifyDataSetChanged();
+                binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+                binding.meals.setAdapter(adapter);
+                binding.meals.requestLayout();
+            }
+        });
 
     }
 }

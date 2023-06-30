@@ -4,373 +4,162 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.javahealthify.utils.GlobalMethods" />
+        <import type="android.view.View" />
 
+        <variable
+            name="detailsVM"
+            type="com.example.javahealthify.ui.screens.community_achievement_details.AchievementDetailsVM" />
     </data>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.screens.achievement_details.AchievementDetailsFragment">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:layout_marginStart="0dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_chevron_backward"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="15dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/achievementdetail_detailstext"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="15dp"
-                    android:textSize="18sp"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_more"
-                    android:layout_marginStart="240dp"
-                    android:layout_marginTop="15dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="250dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="0dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_frame"
-                    android:layout_marginStart="145dp"
-                    android:layout_marginTop="50dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Community_name"
-                    android:layout_marginStart="-90dp"
-                    android:layout_marginTop="140dp"
-                    android:textSize="14sp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_calories"
-                    android:layout_marginStart="-95dp"
-                    android:layout_marginTop="160dp"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_calo"
-                    android:textSize="17sp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:layout_marginStart="-77dp"
-                    android:layout_marginTop="200dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_calotext"
-                    android:textSize="17sp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="200dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="25dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_achieventmentdetail_foodtext"
-                    android:layout_marginStart="20dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"/>
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="80dp"
-                android:background="@drawable/onboarding_radius_panel"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_fooddemo"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"/>
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-1dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/community_achievmentdetails_textfood"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/poppins_semi_bold"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="6dp"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_details_kalo"
-                            android:textSize="16sp"
-                            android:layout_marginStart="10dp"
-                            android:textColor="#59C9A5"
-                            android:fontFamily="@font/poppins_semi_bold"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_detail_kcal"
-                            android:textSize="13sp"
-                            android:layout_marginStart="5dp"
-                            android:textColor="#59C9A5"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="80dp"
-                android:background="@drawable/onboarding_radius_panel"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_fooddemo"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"/>
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-1dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/community_achievmentdetails_textfood"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/poppins_semi_bold"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="6dp"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_details_kalo"
-                            android:textSize="16sp"
-                            android:layout_marginStart="10dp"
-                            android:textColor="#59C9A5"
-                            android:fontFamily="@font/poppins_semi_bold"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_detail_kcal"
-                            android:textSize="13sp"
-                            android:layout_marginStart="5dp"
-                            android:textColor="#59C9A5"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="80dp"
-                android:background="@drawable/onboarding_radius_panel"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_fooddemo"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"/>
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-1dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/community_achievmentdetails_textfood"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/poppins_semi_bold"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="6dp"/>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_details_kalo"
-                            android:textSize="16sp"
-                            android:layout_marginStart="10dp"
-                            android:textColor="#59C9A5"
-                            android:fontFamily="@font/poppins_semi_bold"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/community_detail_kcal"
-                            android:textSize="13sp"
-                            android:layout_marginStart="5dp"
-                            android:textColor="#59C9A5"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_detail_excercisetext"
-                    android:layout_marginStart="20dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginTop="15dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="100dp"
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_ahievemnt_Detail_excercise"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_achievementdetail_kcal_excerise"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#59C9A5"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_achievement_detail_rep"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"
-                    android:textColor="#59C9A5"/>
+                android:src="@drawable/ic_chevron_backward" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:orientation="vertical"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="-50dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/community_detail_kcal"
-                        android:textSize="13sp"
-                        android:textColor="#59C9A5"
-                        android:layout_marginTop="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reps"
-                        android:textSize="13sp"
-                        android:textColor="#59C9A5"
-                        android:layout_marginTop="5dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="370dp"
-                android:layout_height="100dp"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_ahievemnt_Detail_excercise"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_achievementdetail_kcal_excerise"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#59C9A5"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/community_achievement_detail_rep"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="5dp"
-                    android:textColor="#59C9A5"/>
+                android:text="@string/achievementdetail_detailstext"
+                android:textSize="18sp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:orientation="vertical"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="-50dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/community_detail_kcal"
-                        android:textSize="13sp"
-                        android:textColor="#59C9A5"
-                        android:layout_marginTop="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reps"
-                        android:textSize="13sp"
-                        android:textColor="#59C9A5"
-                        android:layout_marginTop="5dp"/>
-                </LinearLayout>
-            </LinearLayout>
-
-
-
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="240dp"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_more" />
         </LinearLayout>
-    </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.screens.community_achievement_details.AchievementDetailsFragment">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/default_horizontal_margin"
+                android:gravity="center_horizontal">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_frame" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/achievement_detail_user_avatar_img"
+                        android:layout_gravity="center"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/achievement_detail_user_name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@{detailsVM.achievement.userName}"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/achievement_detail_date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{GlobalMethods.convertDateToHyphenSplittingFormat(detailsVM.achievement.createdTime)}"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="@color/dateGreyTextColor"
+                    android:textSize="12sp"
+                    tools:ignore="SmallSp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="19dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/achievement_detail_total_calories_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@{String.valueOf(detailsVM.achievement.calories)}"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/community_calotext"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:text="@string/community_achieventmentdetail_foodtext"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/foods_progress_bar"
+                    android:visibility="@{detailsVM.isLoadingFoods ? View.VISIBLE : View.GONE }"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/food_lst"
+                    android:layout_marginTop="13dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/poppins_semi_bold"
+                    android:layout_gravity="start"
+                    android:text="@string/achievement_details_exercises_txt"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/exercises_progress_bar"
+                    android:visibility="@{detailsVM.isLoadingExercises ? View.VISIBLE : View.GONE}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="13dp"
+                    android:id="@+id/exercise_lst"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </layout>

@@ -11,6 +11,8 @@ import com.example.javahealthify.data.models.Exercise;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +62,7 @@ public class GlobalMethods {
         return dateFormat.format(date);
     }
 
+
     public static String formatTimeOrRep(int count, String unitType) {
         if (unitType.equals("reps")) {
             return "x" + String.valueOf(count);
@@ -76,6 +79,12 @@ public class GlobalMethods {
             totalCalories += exercise.getCaloriesPerUnit();
         }
         return totalCalories;
+    }
+
+    public static boolean isToday(Date date) {
+        LocalDate today = LocalDate.now();
+        LocalDate givenDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return today.isEqual(givenDate);
     }
 
     public static String convertTimeInSeconds(int timeInSeconds) {
