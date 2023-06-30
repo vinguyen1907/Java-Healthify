@@ -1,25 +1,20 @@
-package com.example.javahealthify.ui.screens.profile;
+package com.example.javahealthify.ui.screens.profile_change_pass;
 
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
-import com.example.javahealthify.data.models.User;
-import com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class ProfileVM extends ViewModel {
+public class ProfileChangePassVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

@@ -6,6 +6,13 @@
 
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission." />
+
+
     <queries>
         <package android:name="com.android.systemui" />
         <!-- Add any other packages that have the POST_NOTIFICATIONS permission -->

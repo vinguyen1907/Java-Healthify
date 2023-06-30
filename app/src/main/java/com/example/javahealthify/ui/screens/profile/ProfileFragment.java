@@ -31,23 +31,7 @@ public class ProfileFragment extends Fragment {
 
         profileVM = new ViewModelProvider(this).get(ProfileVM.class);
 
-        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-
-        user = mainVM.getUser();
-
-        profileVM.getUserLiveData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                mainVM.loadUser(new MainVM.UserLoadCallback() {
-                    @Override
-                    public void onUserLoaded(User user) {
-                        ProfileFragment.this.user = mainVM.getUser();
-                    }
-                });
-            }
-        });
-
-
+        profileVM.getUserLiveData();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,10 +39,9 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater,container,false);
         binding.setViewModel(profileVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.profileEmailTv.setText(user.getEmail());
-        binding.profileNameTv.setText(user.getName());
+        loadData();
 
         binding.personalInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,5 +82,20 @@ public class ProfileFragment extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void loadData() {
+        profileVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    binding.profileEmailTv.setText(user.getEmail());
+                    binding.profileNameTv.setText(user.getName());
+
+                } else {
+                }
+            }
+        });
+
     }
 }

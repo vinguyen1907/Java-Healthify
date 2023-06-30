@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -38,24 +39,22 @@ public class ProfilePersonalInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         profilePersonalInfoVM = new ViewModelProvider(this).get(ProfilePersonalInfoVM.class);
+        profilePersonalInfoVM.getUserLiveData();
 
-        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
-        user = mainVM.getUser();
+//        user = mainVM.getUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfilePersonalInfoBinding.inflate(inflater,container,false);
+        binding.setViewModel(profilePersonalInfoVM);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.personalprofileNameTv.setText(((NormalUser) user).getName());
-        binding.personalprofileEmailTv.setText(((NormalUser) user).getEmail());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String dateStr = formatter.format(((NormalUser) user).getDateOfBirth());
-        binding.personalprofileBirthdayTv.setText(dateStr);
-        binding.personalprofilePhoneTv.setText(((NormalUser) user).getPhone());
-        binding.personalprofileAddressTv.setText(((NormalUser) user).getAddress());
+        loadData();
+
+
 
 
         binding.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +65,28 @@ public class ProfilePersonalInfoFragment extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void loadData() {
+        profilePersonalInfoVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    binding.personalprofileNameTv.setText(profilePersonalInfoVM.getUser().getName());
+                    binding.personalprofileEmailTv.setText(profilePersonalInfoVM.getUser().getEmail());
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    String dateStr = formatter.format(profilePersonalInfoVM.getUser().getDateOfBirth());
+                    binding.personalprofileBirthdayTv.setText(dateStr);
+                    binding.personalprofilePhoneTv.setText(profilePersonalInfoVM.getUser().getPhone());
+                    binding.personalprofileAddressTv.setText(profilePersonalInfoVM.getUser().getAddress());
+
+
+                } else {
+
+                }
+            }
+        });
+
     }
 
 }
