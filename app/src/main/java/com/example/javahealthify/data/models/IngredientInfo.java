@@ -6,6 +6,10 @@ import com.google.firebase.firestore.Exclude;
 
 public class IngredientInfo {
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     private String id;
     private String Short_Description;
     private double Calories = 0;

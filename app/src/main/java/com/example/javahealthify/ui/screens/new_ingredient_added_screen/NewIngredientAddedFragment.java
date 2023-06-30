@@ -27,7 +27,7 @@ public class NewIngredientAddedFragment extends Fragment {
         Log.d("NEW INGREDIENT ADDED", "onCreateView: view is created");
         viewModel = new ViewModelProvider(requireActivity()).get(AddPersonalIngredientVM.class);
         binding = FragmentNewIngredientAddedBinding.inflate(inflater, container, false);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(viewModel);
         binding.calories.setText(GlobalMethods.formatDoubleToString(viewModel.getNewIngredient().getValue().getCalories()));
         binding.protein.setText(GlobalMethods.formatDoubleToString(viewModel.getNewIngredient().getValue().getProtein()));

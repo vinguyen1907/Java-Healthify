@@ -1,4 +1,4 @@
-package com.example.javahealthify.ui.screens.add_meal;
+package com.example.javahealthify.ui.screens.admin_ingredient_screen;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,14 +26,16 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
     ArrayList<IngredientInfo> ingredientInfoArrayList = new ArrayList<>();
 
     private OnItemDeleteListener onItemDeleteListener;
+    private OnItemEditListener onItemEditListener;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
 
-    public AdminIngredientRecyclerViewAdapter(Context context, ArrayList<IngredientInfo> ingredientInfoArrayList, OnItemDeleteListener onItemDeleteListener) {
+    public AdminIngredientRecyclerViewAdapter(Context context, ArrayList<IngredientInfo> ingredientInfoArrayList, OnItemDeleteListener onItemDeleteListener, OnItemEditListener onItemEditListener) {
         this.context = context;
         this.ingredientInfoArrayList = ingredientInfoArrayList;
         this.onItemDeleteListener = onItemDeleteListener;
+        this.onItemEditListener = onItemEditListener;
     }
 
     @NonNull
@@ -57,6 +59,12 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public void updateItem(int position) {
+        if(onItemEditListener != null) {
+            onItemEditListener.onEditClick(position);
+        }
+    }
+
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -73,6 +81,12 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
             ingredientHolder.tvCarbsNumber.setText(GlobalMethods.formatDoubleToString(ingredientInfoArrayList.get(position).getCarbs()));
             ingredientHolder.tvLipidNumber.setText(GlobalMethods.formatDoubleToString(ingredientInfoArrayList.get(position).getLipid()));
             ingredientHolder.tvCaloriesNumber.setText(GlobalMethods.formatDoubleToString(ingredientInfoArrayList.get(position).getCalories()));
+            ingredientHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateItem(position);
+                }
+            });
         } else if (holder instanceof LoadingViewHolder) {
             // Handle the loading ViewHolder
             ((LoadingViewHolder) holder).progressBar.setIndeterminate(true);
@@ -115,11 +129,15 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
         void onItemDelete(int position);
     }
 
+    public interface OnItemEditListener {
+        void onEditClick(int position);
+    }
+
     public static class LoadingViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
         public LoadingViewHolder(@NonNull View itemView) {
             super(itemView);
-            progressBar =itemView.findViewById(R.id.progressBar);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

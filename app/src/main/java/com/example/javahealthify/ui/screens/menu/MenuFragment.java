@@ -56,7 +56,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         menuVM = provider.get(MenuVM.class);
         binding = FragmentMenuBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         dates = initializeDatesList();
 

@@ -54,7 +54,7 @@ public class EditMealFragment extends Fragment implements IngredientRowRecyclerV
         }
         binding = FragmentEditMealBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.editMealDishName.setText(dishToEdit.getName());
 
         ArrayAdapter<CharSequence> adapter;

@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.javahealthify.R;
-import com.example.javahealthify.ui.screens.add_meal.AdminIngredientRecyclerViewAdapter;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     AdminIngredientRecyclerViewAdapter adapter;

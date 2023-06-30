@@ -12,17 +12,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentAdminIngredientBinding;
-import com.example.javahealthify.ui.screens.add_meal.AdminIngredientRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class AdminIngredientFragment extends Fragment implements AdminIngredientRecyclerViewAdapter.OnItemDeleteListener {
+public class AdminIngredientFragment extends Fragment implements AdminIngredientRecyclerViewAdapter.OnItemDeleteListener, AdminIngredientRecyclerViewAdapter.OnItemEditListener {
 
     FragmentAdminIngredientBinding binding;
     AdminIngredientVM adminIngredientVM;
@@ -40,7 +41,7 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
                              Bundle savedInstanceState) {
         ViewModelProvider provider = new ViewModelProvider(requireActivity());
         adminIngredientVM = provider.get(AdminIngredientVM.class);
-        ingredientRecyclerViewAdapter = new AdminIngredientRecyclerViewAdapter(this.getContext(), adminIngredientVM.databaseIngredientList.getValue(), this);
+        ingredientRecyclerViewAdapter = new AdminIngredientRecyclerViewAdapter(this.getContext(), adminIngredientVM.databaseIngredientList.getValue(), this, this);
 
         binding = FragmentAdminIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(adminIngredientVM);
@@ -72,7 +73,7 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
         });
 
 
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         return binding.getRoot();
 
@@ -114,5 +115,12 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
     @Override
     public void onItemDelete(int position) {
         adminIngredientVM.deleteIngredient(adminIngredientVM.databaseIngredientList.getValue().get(position).getId());
+    }
+
+    @Override
+    public void onEditClick(int position) {
+        Bundle bundle  = new Bundle();
+        bundle.putInt("position", position);
+        NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminEditIngredientFragment, bundle);
     }
 }

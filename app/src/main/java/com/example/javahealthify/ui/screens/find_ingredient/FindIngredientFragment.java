@@ -43,7 +43,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         editMealVM = provider.get(EditMealVM.class);
         binding = FragmentFindIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(findIngredientVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         operation = requireArguments().getString("operation");
 
 
