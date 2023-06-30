@@ -56,7 +56,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         menuVM = provider.get(MenuVM.class);
         binding = FragmentMenuBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         dates = initializeDatesList();
 
@@ -100,7 +100,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                 adapter.setDishes(dishArrayList);
                 totalCalories = 0.0;
                 for (Dish dish: dishArrayList
-                     ) {
+                ) {
                     totalCalories += dish.getCalories();
                     binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
                 }

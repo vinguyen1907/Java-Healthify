@@ -43,7 +43,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         editMealVM = provider.get(EditMealVM.class);
         binding = FragmentFindIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(findIngredientVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         operation = requireArguments().getString("operation");
 
 
@@ -134,7 +134,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     private Ingredient createTempIngredient(IngredientInfo selectedIngredientInfo) {
         Ingredient tempIngredient = new Ingredient();
         tempIngredient.setWeight(100);
-        tempIngredient.setName(selectedIngredientInfo.getShortDescription());
+        tempIngredient.setName(selectedIngredientInfo.getShort_Description());
         tempIngredient.setProtein(selectedIngredientInfo.getProtein() * tempIngredient.getWeight() / 100);
         tempIngredient.setLipid(selectedIngredientInfo.getLipid() * tempIngredient.getWeight() / 100);
         tempIngredient.setCarb(selectedIngredientInfo.getCarbs() * tempIngredient.getWeight() / 100);
