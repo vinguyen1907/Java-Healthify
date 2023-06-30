@@ -318,29 +318,30 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onChanged(Boolean isLoadingData) {
                     if (isLoadingData != null && !isLoadingData) {
-                        Map<String, Object> dailyActivities = new HashMap<>();
-                        dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
-
-
-                        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
-                        // Sử dụng previousDate trực tiếp thay vì dateString
-                        db.collection("users")
-                                .document(homeVM.getUser().getUid())
-                                .collection("daily_activities").document(dateString)
-                                .set(dailyActivities)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.i("success","Lưu giá trị thành công");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.i("success","Lưu giá trị thất bại");
-                                        Log.i("bug",e.toString());
-                                    }
-                                });
+                        homeVM.saveDailySteps(stepCount, previousDate);
+//                        homeVM.saveDailySteps(stepCount,previousDate);
+//                        Map<String, Object> dailyActivities = new HashMap<>();
+//                        dailyActivities.put("steps", stepCount);
+//
+//
+//                        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
+//                        db.collection("users")
+//                                .document(homeVM.getUser().getUid())
+//                                .collection("daily_activities").document(dateString)
+//                                .set(dailyActivities)
+//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void aVoid) {
+//                                        Log.i("success","Lưu giá trị thành công");
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Log.i("success","Lưu giá trị thất bại");
+//                                        Log.i("bug",e.toString());
+//                                    }
+//                                });
                     }
                     else {
 

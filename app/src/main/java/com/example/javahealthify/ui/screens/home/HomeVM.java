@@ -61,14 +61,13 @@ public class HomeVM extends ViewModel {
         return isLoadingData;
     }
 
-    public void saveDailySteps(int stepCount) {
+    public void saveDailySteps(int stepCount, Date previousDate) {
         // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
         Map<String, Object> dailyActivities = new HashMap<>();
         dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
 
         // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
-        Date currentDate = new Date();
-        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(currentDate);
+        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
         firestore.collection("users")
                 .document(this.getUser().getUid())
                 .collection("daily_activities").document(dateString)
