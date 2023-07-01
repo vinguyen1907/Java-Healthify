@@ -70,6 +70,12 @@
         <action
             android:id="@+id/action_communityFragment_to_communityFollowingFragment2"
             app:destination="@id/communityFollowingFragment2" />
+        <action
+            android:id="@+id/action_communityFragment_to_communityUserProfileFragment"
+            app:destination="@id/communityUserProfileFragment" />
+        <action
+            android:id="@+id/action_communityFragment_to_communityReportFragment"
+            app:destination="@id/communityReportFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -403,5 +409,14 @@
         tools:layout="@layout/fragment_community_following"
         android:name="com.example.javahealthify.ui.screens.community_following.CommunityFollowingFragment"
         android:label="CommunityFollowingFragment" />
+    <fragment
+        android:id="@+id/communityReportFragment"
+        tools:layout="@layout/fragment_community_report"
+        android:name="com.example.javahealthify.ui.screens.community_report.CommunityReportFragment"
+        android:label="CommunityReportFragment" >
+        <argument
+            android:name="achievement"
+            app:argType="com.example.javahealthify.data.models.Achievement" />
+    </fragment>
 
 </navigation>

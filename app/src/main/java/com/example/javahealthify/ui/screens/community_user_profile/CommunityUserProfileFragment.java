@@ -18,13 +18,14 @@ import com.example.javahealthify.data.adapters.AchievementsListAdapter;
 import com.example.javahealthify.data.models.Achievement;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.databinding.FragmentCommunityUserProfileBinding;
+import com.example.javahealthify.ui.interfaces.ActionOnAchievementMenu;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommunityUserProfileFragment extends Fragment {
+public class CommunityUserProfileFragment extends Fragment implements ActionOnAchievementMenu {
     private FragmentCommunityUserProfileBinding binding;
     private CommunityUserProfileVM viewModel;
     private AchievementsListAdapter adapter;
@@ -63,7 +64,7 @@ public class CommunityUserProfileFragment extends Fragment {
         });
 
         // Set up achievement list
-        adapter = new AchievementsListAdapter(requireContext(), new ArrayList<>(), NavHostFragment.findNavController(this));
+        adapter = new AchievementsListAdapter(requireContext(), new ArrayList<>(), NavHostFragment.findNavController(this), this);
         binding.profileUserAchievementLst.setAdapter(adapter);
         binding.profileUserAchievementLst.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -86,5 +87,10 @@ public class CommunityUserProfileFragment extends Fragment {
                 GlobalMethods.backToPreviousFragment(CommunityUserProfileFragment.this);
             }
         });
+    }
+
+    @Override
+    public void showPopupMenu(Achievement achievement, View button) {
+
     }
 }

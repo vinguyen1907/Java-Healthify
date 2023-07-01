@@ -1,7 +1,6 @@
 package com.example.javahealthify.data.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Achievement;
+import com.example.javahealthify.ui.interfaces.ActionOnAchievementMenu;
 import com.example.javahealthify.ui.screens.community.CommunityFragmentDirections;
 import com.example.javahealthify.utils.GlobalMethods;
 
@@ -25,11 +24,13 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
     private Context context;
     private List<Achievement> achievements;
     private NavController navController;
+    private ActionOnAchievementMenu menuAction;
 
-    public AchievementsListAdapter(Context context, List<Achievement> achievements, NavController navController) {
+    public AchievementsListAdapter(Context context, List<Achievement> achievements, NavController navController, ActionOnAchievementMenu menuAction) {
         this.context = context;
         this.achievements = achievements;
         this.navController = navController;
+        this.menuAction = menuAction;
     }
 
     @NonNull
@@ -64,6 +65,13 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
                 navController.navigate(action);
             }
         });
+
+        holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                menuAction.showPopupMenu(achievement, holder.menuBtn);
+            }
+        });
     }
 
     @Override
@@ -80,6 +88,7 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
         private TextView exercisesCaloriesTv;
         private TextView foodCaloriesTv;
         private ImageView detailsBtn;
+        private ImageView menuBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +100,7 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
             exercisesCaloriesTv = itemView.findViewById(R.id.exercise_calories_tv);
             foodCaloriesTv = itemView.findViewById(R.id.food_calories_tv);
             detailsBtn = itemView.findViewById(R.id.details_btn);
+            menuBtn = itemView.findViewById(R.id.achievement_menu_btn);
         }
     }
 
