@@ -2,7 +2,6 @@ package com.example.javahealthify.ui.screens.admin_ingredient_screen;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +39,7 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewModelProvider provider = new ViewModelProvider(requireActivity());
         adminIngredientVM = provider.get(AdminIngredientVM.class);
         ingredientRecyclerViewAdapter = new AdminIngredientRecyclerViewAdapter(this.getContext(), adminIngredientVM.databaseIngredientList.getValue(), this, this);
@@ -87,19 +85,19 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
             }
         });
 
+        binding.adminPendingCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminPendingIngredientsFragment);
+            }
+        });
+
         binding.adminAddNewIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("operation", "add");
                 NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminEditIngredientFragment, bundle);
-            }
-        });
-
-        binding.adminPendingCount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -154,6 +152,13 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
             @Override
             public void onChanged(Integer integer) {
                 binding.adminCurrentIngredientCountNumber.setText(String.valueOf(integer));
+            }
+        });
+
+        adminIngredientVM.pendingIngredientCount.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                binding.adminPendingCountNumber.setText(String.valueOf(integer));
             }
         });
 

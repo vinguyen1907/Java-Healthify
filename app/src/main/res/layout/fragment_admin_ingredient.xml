@@ -23,22 +23,13 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/admin_find_ingredient_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_chevron_backward"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/search_edit_text_border"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/admin_find_ingredient_back_button"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <EditText
@@ -146,10 +137,10 @@
                 android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/admin_pending_count_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_semi_bold"
-                    android:text="12345"
                     android:textColor="@color/primaryColor"
                     android:textSize="20sp" />
 
@@ -162,10 +153,10 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginVertical="10dp"
             android:id="@+id/admin_ingredient_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
             app:layout_constraintTop_toBottomOf="@+id/admin_information_row" />
 
 

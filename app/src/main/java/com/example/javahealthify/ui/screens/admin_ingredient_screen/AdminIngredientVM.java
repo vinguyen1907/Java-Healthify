@@ -28,12 +28,12 @@ import java.util.Map;
 
 public class AdminIngredientVM extends ViewModel {
     MutableLiveData<ArrayList<IngredientInfo>> databaseIngredientList;
-    MutableLiveData<ArrayList<IngredientInfo>> pendingIngredientList;
-
-
+    public MutableLiveData<ArrayList<IngredientInfo>> pendingIngredientList;
 
     MutableLiveData<ArrayList<IngredientInfo>> searchResultList;
     MutableLiveData<Integer> ingredientCount;
+    public MutableLiveData<Integer> pendingIngredientCount;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     Query query;
     ListenerRegistration registration;
@@ -46,6 +46,8 @@ public class AdminIngredientVM extends ViewModel {
         pendingIngredientList = new MutableLiveData<>(new ArrayList<>());
         searchResultList = new MutableLiveData<>(new ArrayList<>());
         ingredientCount = new MutableLiveData<>(0);
+        pendingIngredientCount = new MutableLiveData<>(0);
+        fetchPendingIngredientsList();
         fetchIngredientCount();
         query = db.collection("ingredient-data").limit(pageSize);
 
@@ -214,11 +216,61 @@ public class AdminIngredientVM extends ViewModel {
                 }
             }
         });
+        db.collection("count").document("pending_ingredients_count").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Long count = documentSnapshot.getLong("count");
+                    if (count != null) {
+                        pendingIngredientCount.postValue(count.intValue());
+                    }
+                }
+            }
+        });
+    }
+
+    public void fetchPendingIngredientsList() {
+        db.collection("user_ingredients").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<IngredientInfo> tempList = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        IngredientInfo ingredientInfo = doc.toObject(IngredientInfo.class).withId(doc.getId());
+                        tempList.add(ingredientInfo);
+                    }
+                    pendingIngredientList.postValue(tempList);
+                }
+            }
+        });
+    }
+
+    public void approveIngredient(int position) {
+        IngredientInfo ingredient = pendingIngredientList.getValue().get(position);
+        addIngredient(ingredient);
+        deleteFromPendingList(position);
+    }
+
+    public void deleteFromPendingList(int position) {
+        db.collection("user_ingredients").document(pendingIngredientList.getValue().get(position).getId()).delete();
+
+        ArrayList<IngredientInfo> temp = pendingIngredientList.getValue();
+        temp.remove(position);
+        pendingIngredientList.postValue(temp);
+        decreasePendingCountByOne();
+    }
+
+
+    public void decreasePendingCountByOne(){
+        int temp = pendingIngredientCount.getValue();
+        pendingIngredientCount.postValue(temp -1 );
+        db.collection("count").document("pending_ingredients_count").update("count",temp - 1);
     }
 
     public MutableLiveData<ArrayList<IngredientInfo>> getDatabaseIngredientList() {
         return databaseIngredientList;
     }
+
 
     public void setDatabaseIngredientList(MutableLiveData<ArrayList<IngredientInfo>> databaseIngredientList) {
         this.databaseIngredientList = databaseIngredientList;
