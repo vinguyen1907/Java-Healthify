@@ -369,6 +369,9 @@
         <action
             android:id="@+id/action_adminIngredientFragment_to_adminEditIngredientFragment"
             app:destination="@id/adminEditIngredientFragment" />
+        <action
+            android:id="@+id/action_adminIngredientFragment_to_adminPendingIngredientsFragment"
+            app:destination="@id/adminPendingIngredientsFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminWorkoutFragment"
@@ -412,6 +415,11 @@
             android:name="uid"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/adminPendingIngredientsFragment"
+        android:name="com.example.javahealthify.ui.screens.admin_pending_ingredients_screen.AdminPendingIngredientsFragment"
+        android:label="fragment_admin_pending_ingredients"
+        tools:layout="@layout/fragment_admin_pending_ingredients" />
     <fragment
         android:id="@+id/communityFollowingFragment2"
         tools:layout="@layout/fragment_community_following"

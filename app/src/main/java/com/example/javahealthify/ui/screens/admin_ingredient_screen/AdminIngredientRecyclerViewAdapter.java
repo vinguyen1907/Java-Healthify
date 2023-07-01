@@ -27,6 +27,8 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private OnItemDeleteListener onItemDeleteListener;
     private OnItemEditListener onItemEditListener;
+
+    private boolean isSearchResult;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
@@ -104,9 +106,18 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
         return ingredientInfoArrayList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
-    public void setIngredientInfoArrayList(ArrayList<IngredientInfo> ingredientInfoArrayList) {
+    public void setIngredientInfoArrayList(ArrayList<IngredientInfo> ingredientInfoArrayList, boolean isSearchResult) {
         this.ingredientInfoArrayList = ingredientInfoArrayList;
+        this.isSearchResult = isSearchResult;
         notifyDataSetChanged();
+    }
+
+    public boolean isSearchResult() {
+        return isSearchResult;
+    }
+
+    public void setSearchResult(boolean searchResult) {
+        isSearchResult = searchResult;
     }
 
     public static class IngredientViewHolder extends RecyclerView.ViewHolder {
