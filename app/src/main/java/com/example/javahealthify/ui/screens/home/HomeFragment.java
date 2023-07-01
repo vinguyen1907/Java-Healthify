@@ -33,6 +33,7 @@ import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.profile.ProfileFragment;
 import com.example.javahealthify.ui.screens.profile.ProfileVM;
 import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.charts.LineChart;
@@ -109,6 +110,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
+//        homeVM.loadDocument();
     }
 
     public HomeFragment() {
@@ -118,16 +120,33 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater,container,false);
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
-//        homeVM.loadDocument();
-//
-//        setLoading();
+        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    homeVM.loadDocument();
+                }
+                else {
+
+                }
+            }
+        });
+
+        setLoading();
+
+        binding.exerciseDetailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_homeFragment_to_excerciseDetail);
+            }
+        });
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
         if (stepSensor != null) {
             sensorManager.registerListener(accelerometerSensorEventListener, stepSensor, SensorManager.SENSOR_DELAY_UI);
         } else {
-            Toast.makeText(requireContext(), "Bộ đếm bước không khả dụng trên thiết bị của bạn", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Step counter is not available on your device", Toast.LENGTH_SHORT).show();
         }
 
         // Lấy số bước chân từ SharedPreferences
@@ -136,7 +155,6 @@ public class HomeFragment extends Fragment {
         previousDate = new Date(previousDateMillis);
         stepCount = sharedPreferences.getInt("stepCount", 0);
 
-        // Hiển thị số bước chân trên TextView
         binding.stepCountTextView.setText(String.valueOf(stepCount));
 
 
@@ -243,15 +261,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void setLoading() {
-        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData)
-                    homeVM.getSteps().observe(getViewLifecycleOwner(), steps -> {
-                        if(steps != null) {
-                            binding.exerciseTv.setText(steps);
-                        }
-                    });
+            public void onChanged(Boolean isLoadingDocument) {
+                if (isLoadingDocument != null && !isLoadingDocument)
+                    binding.exerciseTv.setText(homeVM.getExerciseCalories().toString());
                 else {
                     binding.exerciseTv.setText("");
                 }
@@ -302,7 +316,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        homeVM.getUserLiveData();
 
         // Lấy SharedPreferences để lưu trữ ngày trước đó
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -312,44 +325,7 @@ public class HomeFragment extends Fragment {
 
 
         if (!isSameDay(currentDate, previousDate)) {
-//            homeVM.saveDailySteps(stepCount);
 
-            homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean isLoadingData) {
-                    if (isLoadingData != null && !isLoadingData) {
-                        homeVM.saveDailySteps(stepCount, previousDate);
-//                        homeVM.saveDailySteps(stepCount,previousDate);
-//                        Map<String, Object> dailyActivities = new HashMap<>();
-//                        dailyActivities.put("steps", stepCount);
-//
-//
-//                        String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
-//                        db.collection("users")
-//                                .document(homeVM.getUser().getUid())
-//                                .collection("daily_activities").document(dateString)
-//                                .set(dailyActivities)
-//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void aVoid) {
-//                                        Log.i("success","Lưu giá trị thành công");
-//                                    }
-//                                })
-//                                .addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Log.i("success","Lưu giá trị thất bại");
-//                                        Log.i("bug",e.toString());
-//                                    }
-//                                });
-                    }
-                    else {
-
-                    }
-                }
-            });
-
-            // Reset stepCount về 0 và cập nhật TextView
             stepCount = 0;
             binding.stepCountTextView.setText(String.valueOf(stepCount));
 
@@ -364,6 +340,19 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    homeVM.saveDailySteps(stepCount, previousDate);
+                }
+                else {
+
+                }
+            }
+        });
+
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("stepCount", stepCount);
@@ -373,6 +362,7 @@ public class HomeFragment extends Fragment {
         if (sensorManager != null) {
             sensorManager.unregisterListener(accelerometerSensorEventListener);
         }
+
 
     }
 

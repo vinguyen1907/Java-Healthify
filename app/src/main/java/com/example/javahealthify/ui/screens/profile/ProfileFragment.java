@@ -89,10 +89,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
-                    binding.profileEmailTv.setText(user.getEmail());
-                    binding.profileNameTv.setText(user.getName());
-
+                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
+                    binding.profileNameTv.setText(profileVM.getUser().getName());
                 } else {
+
                 }
             }
         });

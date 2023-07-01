@@ -33,24 +33,44 @@ import java.util.Map;
 
 public class HomeVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
-
+    private MutableLiveData<Boolean> isLoadingDocument = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private NormalUser user = new NormalUser();
-    private MutableLiveData<Integer> steps = new MutableLiveData<>(0);
-    private MutableLiveData<Integer> exerciseCalories = new MutableLiveData<>();
-    private MutableLiveData<Integer> foodCalories = new MutableLiveData<>();
+    private Integer steps = new Integer(0);
+    private Integer exerciseCalories = new Integer(0);
+    private Integer foodCalories = new Integer(0);
 
-    public LiveData<Integer> getSteps() {
-        return steps;
+    public MutableLiveData<Boolean> getIsLoadingDocument() {
+        return isLoadingDocument;
     }
 
-    public LiveData<Integer> getExerciseCalories() {
+    public void setIsLoadingDocument(MutableLiveData<Boolean> isLoadingDocument) {
+        this.isLoadingDocument = isLoadingDocument;
+    }
+
+    public Integer getExerciseCalories() {
         return exerciseCalories;
     }
 
-    public LiveData<Integer> getFoodCalories() {
+    public Integer getFoodCalories() {
         return foodCalories;
+    }
+
+    public void setExerciseCalories(Integer exerciseCalories) {
+        this.exerciseCalories = exerciseCalories;
+    }
+
+    public void setFoodCalories(Integer foodCalories) {
+        this.foodCalories = foodCalories;
+    }
+
+    public Integer getSteps() {
+        return steps;
+    }
+
+    public void setSteps(Integer steps) {
+        this.steps = steps;
     }
 
     public NormalUser getUser() {
@@ -60,13 +80,11 @@ public class HomeVM extends ViewModel {
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
     }
-
     public void saveDailySteps(int stepCount, Date previousDate) {
-        // Tạo một đối tượng Map để đại diện cho các trường trong daily_activities
-        Map<String, Object> dailyActivities = new HashMap<>();
-        dailyActivities.put("steps", stepCount); // Giả sử giá trị steps là 5000
 
-        // Lưu giá trị vào collection daily_activities với tên document là ngày hiện tại
+        Map<String, Object> dailyActivities = new HashMap<>();
+        dailyActivities.put("steps", stepCount);
+
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
         firestore.collection("users")
                 .document(this.getUser().getUid())
@@ -76,8 +94,6 @@ public class HomeVM extends ViewModel {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.i("success","Lưu giá trị thành công");
-                        // Lưu giá trị thành công
-                        // Thực hiện các tác vụ khác (nếu cần)
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -85,13 +101,12 @@ public class HomeVM extends ViewModel {
                     public void onFailure(@NonNull Exception e) {
                         Log.i("success","Lưu giá trị thất bại");
                         Log.i("bug",e.toString());
-                        // Xử lý khi lưu giá trị thất bại
                     }
                 });
     }
 
     public void loadDocument() {
-        isLoadingData.setValue(true);
+        isLoadingDocument.setValue(true);
         firestore.collection("users")
                 .document(this.getUser().getUid())
                 .collection("daily_activities")
@@ -99,12 +114,10 @@ public class HomeVM extends ViewModel {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Log.i("buggg","vô đúng document rồi");
-                        int stepsValue = documentSnapshot.getLong("steps").intValue();
                         if (documentSnapshot.contains("steps")) {
-//                            int stepsValue = documentSnapshot.getLong("steps").intValue();
-                            steps.setValue(stepsValue);
-                            isLoadingData.setValue(false);
+                            int stepsValue = documentSnapshot.getLong("steps").intValue();
+                            setSteps(stepsValue);
+                            isLoadingDocument.setValue(false);
                             Log.i("steps", String.valueOf(stepsValue));
                         }
                         else {
@@ -112,15 +125,15 @@ public class HomeVM extends ViewModel {
                         }
                         if (documentSnapshot.contains("exerciseCalories")) {
                             int exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").intValue();
-                            isLoadingData.setValue(false);
-                            exerciseCalories.setValue(exerciseCaloriesValue);
+                            setExerciseCalories(exerciseCaloriesValue);
+                            isLoadingDocument.setValue(false);
                         }else {
                             Log.i("exercise", "không vô được exercise");
                         }
                         if (documentSnapshot.contains("foodCalories")) {
                             int foodCaloriesValue = documentSnapshot.getLong("foodCalories").intValue();
-                            isLoadingData.setValue(false);
-                            foodCalories.setValue(foodCaloriesValue);
+                            setFoodCalories(foodCaloriesValue);
+                            isLoadingDocument.setValue(false);
                         }else {
                             Log.i("food", "không vô được food");
                         }
@@ -131,36 +144,6 @@ public class HomeVM extends ViewModel {
                     // Xử lý khi không thể tải dữ liệu từ Firestore
                 });
     }
-
-//    public void getDailyActivities(){
-//        CollectionReference activitiesRef =
-//                firestore
-//                .collection("users")
-//                .document(firebaseAuth.getCurrentUser().getUid())
-//                .collection("daily_activities");
-//
-//        activitiesRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-//                    // Lấy dữ liệu từ document
-//                    String date = documentSnapshot.getId();
-//                    steps = documentSnapshot.getLong("steps");
-//                    exerciseCalories = documentSnapshot.getLong("exerciseCalories");
-//                    foodCalories = documentSnapshot.getLong("foodCalories");
-//                    // Hiển thị dữ liệu trong giao diện của bạn
-//                    // ...
-//                    Log.i("steps", String.valueOf(steps));
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                // Xử lý lỗi nếu có
-//            }
-//        });
-//
-//    }
     public void getUserLiveData() {
         isLoadingData.setValue(true);
         firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
