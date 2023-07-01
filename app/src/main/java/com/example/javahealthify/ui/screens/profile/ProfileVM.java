@@ -50,6 +50,7 @@ public class ProfileVM extends ViewModel {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        isLoadingData.setValue(false);
                         Log.i("Error", e.getMessage());
                     }
                 });
