@@ -1,7 +1,6 @@
 package com.example.javahealthify.ui.screens.find_ingredient;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,7 @@ public class IngredientNameRecyclerViewAdapter extends RecyclerView.Adapter<Ingr
 
     @Override
     public void onBindViewHolder(@NonNull IngredientNameViewHolder holder, int position) {
-        holder.tvIngredientName.setText(ingredientInfoArrayList.get(position).getShortDescription());
+        holder.tvIngredientName.setText(ingredientInfoArrayList.get(position).getShort_Description());
         holder.btnViewIngredientInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

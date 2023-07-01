@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,7 +24,9 @@ import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentProfileBinding;
 import com.example.javahealthify.databinding.FragmentProfileChangeGoalsBinding;
 import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment;
+import com.example.javahealthify.ui.screens.profile_change_noti_time.ProfileChangeNotiTimeVM;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -39,15 +42,13 @@ import java.util.Map;
 
 public class ProfileChangeGoalsFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     private int day = 1;
     private int month = 1;
     private int year = 2000;
     private FragmentProfileChangeGoalsBinding binding;
 
-    private User user;
-
-
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+    private ProfileChangeGoalsVM profileChangeGoalsVM;
 
     public ProfileChangeGoalsFragment() {
         // Required empty public constructor
@@ -57,10 +58,10 @@ public class ProfileChangeGoalsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        profileChangeGoalsVM = new ViewModelProvider(requireActivity()).get(ProfileChangeGoalsVM.class);
+        profileChangeGoalsVM.getUserLiveData();
 
-        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-
-        user = mainVM.getUser();
+//        user = mainVM.getUser();
 
     }
 
@@ -68,17 +69,10 @@ public class ProfileChangeGoalsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileChangeGoalsBinding.inflate(inflater,container,false);
+        binding.setViewModel(profileChangeGoalsVM);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        String goalWeight = String.valueOf(((NormalUser) user).getGoalWeight());
-        binding.weightEdt.setText(goalWeight);
-        binding.stepEdt.setText("Chưa có trong database");
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String dateStr = formatter.format(((NormalUser) user).getGoalTime());
-        binding.timeGoalEdt.setText(dateStr);
-
-
-
+        loadData();
 
         binding.updateGoalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +91,7 @@ public class ProfileChangeGoalsFragment extends Fragment {
                 data.put("goalTime",  new Timestamp(date));
 
                 db.collection("users")
-                        .document(user.getUid())
+                        .document(profileChangeGoalsVM.getUser().getUid())
                         .set(data, SetOptions.merge())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -147,5 +141,23 @@ public class ProfileChangeGoalsFragment extends Fragment {
 
         return binding.getRoot();
 
+    }
+
+    private void loadData() {
+        profileChangeGoalsVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    String goalWeight = String.valueOf((profileChangeGoalsVM.getUser().getGoalWeight()));
+                    binding.weightEdt.setText(goalWeight);
+                    binding.stepEdt.setText("Chưa có trong database");
+
+                    String dateStr = formatter.format(profileChangeGoalsVM.getUser().getGoalTime());
+                    binding.timeGoalEdt.setText(dateStr);
+
+                } else {
+                }
+            }
+        });
     }
 }

@@ -69,7 +69,7 @@ public class AddPersonalIngredientVM extends ViewModel {
         data.put("Carbs", temp.getCarbs());
         data.put("Lipid", temp.getLipid());
         data.put("Protein", temp.getProtein());
-        data.put("Short_Description", temp.getShortDescription());
+        data.put("Short_Description", temp.getShort_Description());
         data.put("userId", FirebaseAuth.getInstance().getCurrentUser().getUid());
         user_ingredients.add(data);
     }

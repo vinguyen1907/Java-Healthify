@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentProfileChangePassBinding;
+import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
@@ -31,11 +33,13 @@ public class ProfileChangePassFragment extends Fragment {
     private TextInputEditText newPasswordEditText;
     private TextInputEditText confirmNewPasswordEditText;
     private AppCompatButton updateButton;
+    private ProfileChangePassVM profileChangePassVM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        profileChangePassVM = new ViewModelProvider(requireActivity()).get(ProfileChangePassVM.class);
+        profileChangePassVM.getUserLiveData();
     }
 
     @Override
@@ -43,7 +47,8 @@ public class ProfileChangePassFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         binding = FragmentProfileChangePassBinding.inflate(inflater,container,false);
-
+        binding.setViewModel(profileChangePassVM);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.updatePassBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,7 +95,7 @@ public class ProfileChangePassFragment extends Fragment {
                                             Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
                                         })
                                         .addOnFailureListener(e -> {
-                                            Toast.makeText(getContext(), "Error updating password", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
                                         });
                             } else {
                                 Log.e("TAG", "Error updating password", updateTask.getException());

@@ -49,7 +49,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         addMealVM = provider.get(AddMealVM.class);
         binding = FragmentAddMealBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(requireContext(), R.array.meal_types, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);

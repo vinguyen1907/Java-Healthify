@@ -32,7 +32,7 @@ public class AddPersonalIngredientFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(AddPersonalIngredientVM.class);
         binding = FragmentAddPersonalIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(viewModel);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.addNewIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
