@@ -36,6 +36,7 @@ import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
+import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     };
     private ActivityMainBinding binding;
     private MainVM viewModel;
+    private WorkoutVM workoutVM;
     private NavController navController;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private BeginSignInRequest signInRequest;
@@ -83,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
+
+        // Init today activity
+        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+        workoutVM.initDailyActivity();
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

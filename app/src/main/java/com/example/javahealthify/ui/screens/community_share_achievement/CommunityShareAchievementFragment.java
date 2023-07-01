@@ -34,7 +34,7 @@ public class CommunityShareAchievementFragment extends Fragment {
 
         binding.achievementLayout.nameTv.setText(mainVM.getUser().getName());
         binding.achievementLayout.dateTv.setText(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
-        binding.achievementLayout.optionBtn.setVisibility(View.GONE);
+        binding.achievementLayout.achievementMenuBtn.setVisibility(View.GONE);
 
         viewModel.getWarningDialogMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

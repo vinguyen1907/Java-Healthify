@@ -76,7 +76,7 @@ public class WorkoutExercisePracticingFragment extends Fragment {
     }
 
     private void setOnClick() {
-        binding.appBar.getRoot().setOnClickListener(new View.OnClickListener() {
+        binding.appBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PracticingOnBackDialogInterface onBackDialogInterface = new PracticingOnBackDialogInterface() {
@@ -116,7 +116,6 @@ public class WorkoutExercisePracticingFragment extends Fragment {
     private void handleTimer(int position) {
         handlePlayBtn(position);
         if (selectedExercises.get(position).getUnit().equals("seconds")) {
-            Log.i("Seconds", "true");
             createTimer(selectedExercises.get(position).getCount() * 1000, position);
         } else {
             binding.exercisePracticingTimeOrRepTv.setText("x" + String.valueOf(selectedExercises.get(position).getCount()));
@@ -144,7 +143,11 @@ public class WorkoutExercisePracticingFragment extends Fragment {
             binding.playBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    binding.exerciseList.setCurrentItem(binding.exerciseList.getCurrentItem() + 1);
+                    if (binding.exerciseList.getCurrentItem() < selectedExercises.size() - 1) {
+                        binding.exerciseList.setCurrentItem(binding.exerciseList.getCurrentItem() + 1);
+                    } else {
+                        onFinishWorkout();
+                    }
                 }
             });
         }
@@ -155,12 +158,11 @@ public class WorkoutExercisePracticingFragment extends Fragment {
             timer.cancel();
         }
 
-        Log.i("Create timer", "done");
         timer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 binding.exercisePracticingTimeOrRepTv.setText(GlobalMethods.convertTimeInSeconds((int) millisUntilFinished / 1000));
-                remainingTimeInMilliseconds =  millisUntilFinished;
+                remainingTimeInMilliseconds = millisUntilFinished;
             }
 
             @Override
@@ -183,7 +185,6 @@ public class WorkoutExercisePracticingFragment extends Fragment {
     }
 
     private void resumeTimer() {
-        Log.i("On resume","");
         timer = new CountDownTimer(remainingTimeInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -206,8 +207,10 @@ public class WorkoutExercisePracticingFragment extends Fragment {
     private void handleVisibility(int position) {
         if (position == 0) {
             binding.previousBtn.setVisibility(View.INVISIBLE);
-        } else if (position == selectedExercises.size() - 1) {
+        }
+        if (position == selectedExercises.size() - 1) {
             binding.nextBtn.setVisibility(View.INVISIBLE);
+            return;
         } else {
             binding.previousBtn.setVisibility(View.VISIBLE);
             binding.nextBtn.setVisibility(View.VISIBLE);

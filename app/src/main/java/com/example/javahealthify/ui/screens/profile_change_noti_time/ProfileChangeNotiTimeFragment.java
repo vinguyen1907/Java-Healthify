@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -26,6 +28,7 @@ import android.widget.Toast;
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentProfileChangeNotiTimeBinding;
 import com.example.javahealthify.ui.screens.MainActivity;
+import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment;
@@ -42,6 +45,7 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
     private static final int REQUEST_CODE = 123;
     private AlarmManager alarmManager;
 
+    private ProfileChangeNotiTimeVM profileChangeNotiTimeVM;
 
     private int getNotificationWorkoutHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -81,6 +85,8 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        profileChangeNotiTimeVM = new ViewModelProvider(requireActivity()).get(ProfileChangeNotiTimeVM.class);
+        profileChangeNotiTimeVM.getUserLiveData();
         alarmManager = (AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
     }
 
@@ -88,14 +94,11 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentProfileChangeNotiTimeBinding.inflate(inflater,container,false);
+        binding.setViewModel(profileChangeNotiTimeVM);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        String WorkoutHour = String.valueOf(getNotificationWorkoutHour());
-        String WorkoutMinute = String.valueOf(getNotificationWorkoutMinute());
-        String MealHour = String.valueOf(getNotificationMealHour());
-        String MealMinute = String.valueOf(getNotificationMealMinute());
+        loadData();
 
-        binding.workoutEdt.setText(WorkoutHour + ":" + WorkoutMinute);
-        binding.mealEdt.setText(MealHour + ":" + MealMinute);
         binding.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +236,29 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
         });
         return binding.getRoot();
     }
-//    private void setWorkoutNotificationTime(int hour, int minute) {
+
+    private void loadData() {
+        profileChangeNotiTimeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    String WorkoutHour = String.valueOf(getNotificationWorkoutHour());
+                    String WorkoutMinute = String.valueOf(getNotificationWorkoutMinute());
+                    String MealHour = String.valueOf(getNotificationMealHour());
+                    String MealMinute = String.valueOf(getNotificationMealMinute());
+
+                    binding.workoutEdt.setText(String.format("%s:%s", WorkoutHour, WorkoutMinute));
+                    binding.mealEdt.setText(String.format("%s:%s", MealHour, MealMinute));
+
+                } else {
+
+                }
+            }
+        });
+
+    }
+
+    //    private void setWorkoutNotificationTime(int hour, int minute) {
 //        Calendar calendar = Calendar.getInstance();
 //        calendar.set(Calendar.HOUR_OF_DAY, hour);
 //        calendar.set(Calendar.MINUTE, minute);

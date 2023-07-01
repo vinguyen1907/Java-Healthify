@@ -60,10 +60,6 @@ public class WorkoutFragment extends Fragment implements ActionOnExerciseItem {
 
         navController = NavHostFragment.findNavController(WorkoutFragment.this);
 
-//        viewModel.loadSelectedExercises();
-
-                    viewModel.initDailyActivity();
-
         setUpExerciseList();
         setOnClick();
 
