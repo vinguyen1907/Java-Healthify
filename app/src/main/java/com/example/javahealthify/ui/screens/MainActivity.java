@@ -106,10 +106,14 @@ public class MainActivity extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
         } else {
+            navController.navigate(R.id.splashFragment);
+            hideNavBar();
+
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
                     setUpNavbar();
+                    navController.navigate(R.id.homeFragment);
                 }
             });
         }
@@ -352,11 +356,15 @@ public class MainActivity extends AppCompatActivity {
         {
             binding.navBar.setVisibility(View.VISIBLE);
             binding.adminNavBar.setVisibility(View.GONE);
-
         } else {
             binding.navBar.setVisibility(View.GONE);
             binding.adminNavBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void hideNavBar() {
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
     }
 
     public static FirebaseFirestore getDb() {
