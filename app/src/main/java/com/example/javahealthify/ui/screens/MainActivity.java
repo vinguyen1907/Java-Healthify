@@ -249,13 +249,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpNavbar() {
-        if(viewModel.getUser().getType().equals("NORMAL_USER")){
-            navController.navigate(R.id.homeFragment);
-        } else {
-            navController.navigate(R.id.adminIngredientFragment);
-        }
-
-        setNavBarVisibility();
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller,
