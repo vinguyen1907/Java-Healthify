@@ -15,6 +15,7 @@ import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainVM extends ViewModel {
@@ -27,18 +28,24 @@ public class MainVM extends ViewModel {
     }
 
     public void loadUser(UserLoadCallback callback) {
-        firestore.collection("users")
-                .whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail())
-                .get()
-                .addOnCompleteListener(task -> {
-                    user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
-                    if (callback != null) {
-                        callback.onUserLoaded(user);
+        FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                user = document.toObject(NormalUser.class);
+                                if (callback != null) {
+                                    callback.onUserLoaded(user);
+                                }
+                            }
+                        } else {
+                            Log.e("Load user failed", "", task.getException());
+                        }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.i("Error", e.getMessage());
                 });
+
     }
 
     public void updateUserProfileImage(Uri uri) {
