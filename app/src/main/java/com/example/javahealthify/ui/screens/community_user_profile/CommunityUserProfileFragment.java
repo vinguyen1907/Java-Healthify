@@ -41,7 +41,7 @@ public class CommunityUserProfileFragment extends Fragment implements ActionOnAc
 
         String uidFromPreviousFragment = CommunityUserProfileFragmentArgs.fromBundle(getArguments()).getUid();
         viewModel.loadUser(uidFromPreviousFragment);
-        viewModel.loadAchievements();
+        viewModel.loadAchievements(uidFromPreviousFragment);
 
         // Set up user avatar: if user already has avatar, use Glide to load it, else display default image
         viewModel.getUser().observe(getViewLifecycleOwner(), new Observer<NormalUser>() {

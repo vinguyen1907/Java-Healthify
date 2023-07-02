@@ -35,8 +35,8 @@ public class CommunityUserProfileVM extends ViewModel {
                 });
     }
 
-    public void loadAchievements() {
-        FirebaseConstants.achievementsRef.whereEqualTo("userId", auth.getCurrentUser().getUid()).get()
+    public void loadAchievements(String uid) {
+        FirebaseConstants.achievementsRef.whereEqualTo("userId", uid).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
