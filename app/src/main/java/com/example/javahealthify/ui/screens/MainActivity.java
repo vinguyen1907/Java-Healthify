@@ -349,15 +349,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarVisibility() {
-        if (viewModel.getUser().getType().equals("NORMAL_USER"))
-        {
-            binding.navBar.setVisibility(View.VISIBLE);
-            binding.adminNavBar.setVisibility(View.GONE);
+        boolean isNormalUser = viewModel.getUser().getType().equals("NORMAL_USER");
 
-        } else {
-            binding.navBar.setVisibility(View.GONE);
-            binding.adminNavBar.setVisibility(View.VISIBLE);
-        }
+        binding.navBar.setVisibility(isNormalUser ? View.VISIBLE : View.GONE);
+        binding.adminNavBar.setVisibility(isNormalUser ? View.GONE : View.VISIBLE);
     }
 
     public static FirebaseFirestore getDb() {
