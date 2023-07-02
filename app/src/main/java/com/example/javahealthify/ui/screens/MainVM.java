@@ -1,5 +1,6 @@
 package com.example.javahealthify.ui.screens;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,44 +11,48 @@ import androidx.navigation.NavController;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
+import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private User user;
 
-    public MutableLiveData<Boolean> getIsUserLoaded() {
-        return isUserLoaded;
+    public interface UserLoadCallback {
+        void onUserLoaded(User user);
     }
 
-    private MutableLiveData<Boolean> isUserLoaded = new MutableLiveData<>(false);
-
-    public void loadUser(NavController navController) {
-        firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
-                        isUserLoaded.setValue(true);
-                        navController.navigate(R.id.homeFragment);
+    public void loadUser(UserLoadCallback callback) {
+        firestore.collection("users")
+                .whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail())
+                .get()
+                .addOnCompleteListener(task -> {
+                    user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
+                    if (callback != null) {
+                        callback.onUserLoaded(user);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("Error", e.getMessage());
-                        isUserLoaded.setValue(true);
-                    }
-
+                })
+                .addOnFailureListener(e -> {
+                    Log.i("Error", e.getMessage());
                 });
     }
+
+    public void updateUserProfileImage(Uri uri) {
+        FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).update("imageUrl", uri)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            user.setImageUrl(uri.toString());
+                        }
+                    }
+                });
+    }
+
     public User getUser() {
         return user;
     }

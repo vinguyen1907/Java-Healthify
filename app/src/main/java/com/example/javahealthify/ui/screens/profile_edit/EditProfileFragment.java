@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -46,9 +47,6 @@ import java.util.regex.Pattern;
 
 public class EditProfileFragment extends Fragment {
 
-    private MainVM viewModel;
-
-
     Boolean isValidName = true;
     Boolean isValidDay = true;
     Boolean isValidPhone = true;
@@ -56,37 +54,30 @@ public class EditProfileFragment extends Fragment {
     private FragmentEditProfileBinding binding;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
+    private EditProfileVM editProfileVM;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-    private User user;
+    public EditProfileFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        EditProfileVM editProfileVM = new ViewModelProvider(this).get(EditProfileVM.class);
-
-        MainVM mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-
-        user = mainVM.getUser();
+        editProfileVM = new ViewModelProvider(this).get(EditProfileVM.class);
+        editProfileVM.getUserLiveData();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
+        binding.setViewModel(editProfileVM);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.editnameEdt.setText(((NormalUser) user).getName());
-//        binding.editemailEdt.setText(((NormalUser) user).getEmail());
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String dateStr = formatter.format(((NormalUser) user).getDateOfBirth());
-        binding.editdateEdt.setText(dateStr);
-        binding.editphoneEdt.setText(((NormalUser) user).getPhone());
-        binding.editaddressEdt.setText(((NormalUser) user).getAddress());
-
+        loadData();
 
         binding.editnameEdt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,7 +92,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String newName = binding.editnameEdt.getText().toString();
-                if (!newName.equals(user.getName())) {
+                if (!newName.equals(editProfileVM.getUser().getName())) {
                     if (newName.isEmpty()) {
                         binding.tickIcon1.setVisibility(View.GONE);
                         isValidName = false;
@@ -159,7 +150,7 @@ public class EditProfileFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String dateStr = formatter.format(((NormalUser) user).getDateOfBirth());
+                String dateStr = formatter.format(editProfileVM.getUser().getDateOfBirth());
 
                 if (!binding.editdateEdt.getText().toString().equals(dateStr)) {
                     try {
@@ -190,7 +181,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String newPhone = binding.editphoneEdt.getText().toString();
-                if (!newPhone.equals(((NormalUser) user).getPhone())) {
+                if (!newPhone.equals(editProfileVM.getUser().getPhone())) {
                     String phone = binding.editphoneEdt.getText().toString();
                     if (!Pattern.matches("[0-9]+", phone) || phone.length() < 10) {
                         binding.tickIcon4.setVisibility(View.GONE);
@@ -218,7 +209,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String newAddress = binding.editaddressEdt.getText().toString();
-                if (!newAddress.equals(((NormalUser) user).getAddress())) {
+                if (!newAddress.equals(editProfileVM.getUser().getAddress())) {
                     if (binding.editaddressEdt.getText().toString().isEmpty()) {
                         binding.tickIcon5.setVisibility(View.GONE);
                         isValidAddress = false;
@@ -254,7 +245,7 @@ public class EditProfileFragment extends Fragment {
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
-                    updateUserData(user.getUid(),
+                    updateUserData(editProfileVM.getUser().getUid(),
                             binding.editnameEdt.getText().toString().trim(),
 //                            binding.editemailEdt.getText().toString().trim(),
                             date,
@@ -276,6 +267,30 @@ public class EditProfileFragment extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void loadData() {
+        editProfileVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    binding.editnameEdt.setText(editProfileVM.getUser().getName());
+//        binding.editemailEdt.setText(((NormalUser) user).getEmail());
+                    String dateStr = formatter.format(editProfileVM.getUser().getDateOfBirth());
+                    binding.editdateEdt.setText(dateStr);
+                    binding.editphoneEdt.setText(editProfileVM.getUser().getPhone());
+                    binding.editaddressEdt.setText(editProfileVM.getUser().getAddress());
+                } else {
+//                    binding.editnameEdt.setText("");
+////        binding.editemailEdt.setText(((NormalUser) user).getEmail());
+//                    String dateStr = formatter.format("");
+//                    binding.editdateEdt.setText(dateStr);
+//                    binding.editphoneEdt.setText("");
+//                    binding.editaddressEdt.setText("");
+                }
+            }
+        });
+
     }
 
     public void updateUserData(String userId, String name, Date dateOfBirth, String phone, String address) {

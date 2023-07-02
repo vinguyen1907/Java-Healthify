@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.DailyActivity;
 import com.example.javahealthify.data.models.NormalUser;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -57,6 +58,7 @@ public class FillInPersonalInformationVM extends ViewModel {
                     "",
                     firebaseAuth.getCurrentUser().getEmail(),
                     name.getValue(),
+                    "",
                     phone.getValue(),
                     birthdate,
                     address.getValue(),
@@ -68,7 +70,9 @@ public class FillInPersonalInformationVM extends ViewModel {
                     0, // TODO: Calculate daily calories
                     new ArrayList<String>(),
                     new ArrayList<String>(),
-                    new DailyActivity());
+                    new DailyActivity(),
+                    GlobalMethods.generateKeyword(name.getValue())
+                    );
 
             String uid = firebaseAuth.getCurrentUser().getUid();
             newUser.setUid(uid);

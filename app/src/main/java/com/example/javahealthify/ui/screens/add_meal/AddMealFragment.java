@@ -49,7 +49,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
         addMealVM = provider.get(AddMealVM.class);
         binding = FragmentAddMealBinding.inflate(inflater, container, false);
         binding.setViewModel(menuVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         ArrayAdapter<CharSequence> adapter;
         adapter = ArrayAdapter.createFromResource(requireContext(), R.array.meal_types, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
@@ -66,11 +66,11 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
             public void onChanged(ArrayList<Ingredient> ingredients) {
                 recyclerViewAdapterForAddAndDelete.setIngredients(ingredients);
 
-                totalCalories = 0;
+                totalCalories = 0.0;
                 for (Ingredient ingredient : ingredients) {
                     totalCalories += ingredient.getCalories();
                 }
-                binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
+                binding.dishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
             }
         });
         setOnClick();
@@ -159,7 +159,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
             addMealVM.setIngredients(newIngredients);
 
             // Update the displayed total calories
-            binding.dishTotalCalories.setText(GlobalMethods.format(totalCalories));
+            binding.dishTotalCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
         }
     }
 }

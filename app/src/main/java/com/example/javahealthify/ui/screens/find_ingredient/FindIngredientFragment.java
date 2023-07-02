@@ -11,8 +11,10 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.data.models.IngredientInfo;
 import com.example.javahealthify.databinding.FragmentFindIngredientBinding;
@@ -41,13 +43,17 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         editMealVM = provider.get(EditMealVM.class);
         binding = FragmentFindIngredientBinding.inflate(inflater, container, false);
         binding.setViewModel(findIngredientVM);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         operation = requireArguments().getString("operation");
 
 
         IngredientNameRecyclerViewAdapter adapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.ingredientInfoArrayList.getValue(), this, this);
+
         binding.ingredientSearchResults.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.ingredientSearchResults.setAdapter(adapter);
+        IngredientNameRecyclerViewAdapter personalIngredientAdapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.personalIngredientInfoArrayList.getValue(), this, this);
+        binding.personalIngredientSearchResults.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.personalIngredientSearchResults.setAdapter(personalIngredientAdapter);
         binding.findIngredientSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -62,23 +68,46 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
                 adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
             }
         });
+        findIngredientVM.getPersonalIngredientInfoArrayList().observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
+            @Override
+            public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
+                personalIngredientAdapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+            }
+        });
         binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
             }
         });
+        binding.addOwnIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addPersonalIngredientFragment);
+            }
+        });
         return binding.getRoot();
     }
 
+
+
     private void showResult(String searchQuery) {
         findIngredientVM.search(searchQuery);
-
     }
 
     @Override
-    public void onViewIngredientInfoClick(int position) {
+    public void onViewIngredientInfoClick(int position, int recyclerViewId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
+        if (recyclerViewId == binding.ingredientSearchResults.getId()) {
+            Log.d("globalId", "onViewIngredientInfoClick: " + recyclerViewId);
+            bundle.putString("type", "global");
+        } else {
+            bundle.putString("type", "personal");
+            Log.d("personalId", "onViewIngredientInfoClick: " + recyclerViewId);
 
+        }
+        NavHostFragment.findNavController(this).navigate(R.id.action_findIngredientFragment_to_ingredientInfoFragment, bundle);
     }
 
     private void addToIngredients(Ingredient tempIngredient) {
@@ -105,7 +134,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     private Ingredient createTempIngredient(IngredientInfo selectedIngredientInfo) {
         Ingredient tempIngredient = new Ingredient();
         tempIngredient.setWeight(100);
-        tempIngredient.setName(selectedIngredientInfo.getShortDescription());
+        tempIngredient.setName(selectedIngredientInfo.getShort_Description());
         tempIngredient.setProtein(selectedIngredientInfo.getProtein() * tempIngredient.getWeight() / 100);
         tempIngredient.setLipid(selectedIngredientInfo.getLipid() * tempIngredient.getWeight() / 100);
         tempIngredient.setCarb(selectedIngredientInfo.getCarbs() * tempIngredient.getWeight() / 100);
@@ -114,13 +143,32 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     }
 
     @Override
-    public void onIngredientInfoNameClick(int position) {
-        IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+    public void onIngredientInfoNameClick(int position, int recyclerViewId) {
+        Log.d("globalID", String.valueOf(binding.ingredientSearchResults.getId()) );
+        Log.d("personalID", String.valueOf(binding.personalIngredientSearchResults.getId()) );
+
+        IngredientInfo selectedIngredientInfo = new IngredientInfo();
+        if(recyclerViewId == binding.ingredientSearchResults.getId()) {
+            Log.d("clickedId", String.valueOf(recyclerViewId));
+
+            selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+        } else {
+            Log.d("clickedId", String.valueOf(recyclerViewId));
+
+            selectedIngredientInfo = findIngredientVM.personalIngredientInfoArrayList.getValue().get(position);
+        }
         Ingredient tempIngredient = createTempIngredient(selectedIngredientInfo);
         addToIngredients(tempIngredient);
         findIngredientVM.ingredientInfoArrayList.setValue(new ArrayList<>());
         GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
+//        Log.d("global results?", "onIngredientInfoNameClick: " + recyclerViewId);
+//        IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+//                    Log.d("position global", "onIngredientInfoNameClick: " +  position);
+//
+//        Ingredient tempIngredient = createTempIngredient(selectedIngredientInfo);
+//        addToIngredients(tempIngredient);
+//        findIngredientVM.ingredientInfoArrayList.setValue(new ArrayList<>());
+//        GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
     }
-
 
 }
