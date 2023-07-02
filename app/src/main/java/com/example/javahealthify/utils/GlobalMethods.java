@@ -3,6 +3,7 @@ package com.example.javahealthify.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
@@ -13,6 +14,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -116,5 +118,27 @@ public class GlobalMethods {
         builder.setIcon(R.drawable.ic_warning);
         AlertDialog warningDialog = builder.create();
         warningDialog.show();
+    }
+
+    public static List<String> generateKeyword(String name) {
+        String nameInLowerCase = name.toLowerCase(Locale.ROOT);
+        String[] words = nameInLowerCase.split(" ");
+        List<String> generatedStrings = new ArrayList<>();
+
+        int startPosition = 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            for (int j = startPosition; j < nameInLowerCase.length(); j++) {
+                    sb.append(nameInLowerCase.charAt(j));
+                    if (sb.charAt(sb.length() - 1) != ' ') { // If the last character is space, no need to add this sub string to list
+                        generatedStrings.add(sb.toString());
+                    }
+            }
+            sb.setLength(0);
+
+            startPosition += words[i].length() + 1;
+        }
+
+        return generatedStrings;
     }
 }

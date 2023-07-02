@@ -18,6 +18,7 @@ public class NormalUser extends User {
     private int dailyCalories;
     private List<String> following;
     private List<String> followers;
+    private List<String> keyword;
 
     private DailyActivity dailyActivity;
 
@@ -31,7 +32,7 @@ public class NormalUser extends User {
 
     public NormalUser() {}
 
-    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity) {
+    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity, List<String> keyword) {
         super(uid, email, name, imageUrl, "NORMAL_USER");
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -45,6 +46,7 @@ public class NormalUser extends User {
         this.following = following;
         this.followers = followers;
         this.dailyActivity = dailyActivity;
+        this.keyword = keyword;
     }
 
     public String getPhone() {
@@ -135,4 +137,12 @@ public class NormalUser extends User {
         this.followers = followers;
     }
 //    private  List<DailyActivity> dailyActivities;
+
+    public List<String> getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(List<String> keyword) {
+        this.keyword = keyword;
+    }
 }
