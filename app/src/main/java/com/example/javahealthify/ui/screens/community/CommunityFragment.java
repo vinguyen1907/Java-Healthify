@@ -2,6 +2,7 @@ package com.example.javahealthify.ui.screens.community;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,14 +31,13 @@ public class CommunityFragment extends Fragment implements ActionOnAchievementMe
     private CommunityVM viewModel;
     private AchievementsListAdapter adapter;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentCommunityBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this).get(CommunityVM.class);
         binding.setCommunityVM(viewModel);
+        viewModel = new ViewModelProvider(requireActivity()).get(CommunityVM.class);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         adapter = new AchievementsListAdapter(requireContext(), new ArrayList<>(), NavHostFragment.findNavController(this), this);
