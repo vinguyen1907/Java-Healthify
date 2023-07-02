@@ -32,10 +32,9 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentSignUpBinding.inflate(inflater, container, false);
-//        viewModel = new SignUpVM();
         viewModel =  new ViewModelProvider(this).get(SignUpVM.class);
         binding.setSignUpVM(viewModel);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         setOnClick();
 
