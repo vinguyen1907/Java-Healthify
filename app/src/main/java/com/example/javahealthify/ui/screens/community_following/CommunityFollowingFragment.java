@@ -38,7 +38,7 @@ public class CommunityFollowingFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-        viewModel.setFollowers(((NormalUser) mainVM.getUser()).getFollowers());
+        viewModel.setFollowers(((NormalUser) mainVM.getUser().getValue()).getFollowers());
 
         adapter = new CommunityFollowingAdapter(requireContext(), new ArrayList<>());
         binding.followingTodayLst.setAdapter(adapter);

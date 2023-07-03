@@ -32,7 +32,7 @@ public class CommunityShareAchievementFragment extends Fragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.achievementLayout.nameTv.setText(mainVM.getUser().getName());
+        binding.achievementLayout.nameTv.setText(mainVM.getUser().getValue().getName());
         binding.achievementLayout.dateTv.setText(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
         binding.achievementLayout.achievementMenuBtn.setVisibility(View.GONE);
 
@@ -72,7 +72,7 @@ public class CommunityShareAchievementFragment extends Fragment {
         binding.submitBtn.setOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.addAchievementToDb(mainVM.getUser());
+                viewModel.addAchievementToDb(mainVM.getUser().getValue());
             }
         });
     }

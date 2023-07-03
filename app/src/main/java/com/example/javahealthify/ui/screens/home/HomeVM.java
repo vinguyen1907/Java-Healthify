@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.data.models.WorkoutCategory;
+import com.example.javahealthify.utils.FirebaseConstants;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,7 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HomeVM extends ViewModel {
-    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
+    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(null);
 
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -75,7 +77,7 @@ public class HomeVM extends ViewModel {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("success","Lưu giá trị thành công");
+                        Log.i("success", "Lưu giá trị thành công");
                         // Lưu giá trị thành công
                         // Thực hiện các tác vụ khác (nếu cần)
                     }
@@ -83,8 +85,8 @@ public class HomeVM extends ViewModel {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("success","Lưu giá trị thất bại");
-                        Log.i("bug",e.toString());
+                        Log.i("success", "Lưu giá trị thất bại");
+                        Log.i("bug", e.toString());
                         // Xử lý khi lưu giá trị thất bại
                     }
                 });
@@ -99,40 +101,39 @@ public class HomeVM extends ViewModel {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Log.i("buggg","vô đúng document rồi");
+                        Log.i("buggg", "vô đúng document rồi");
                         int stepsValue = documentSnapshot.getLong("steps").intValue();
                         if (documentSnapshot.contains("steps")) {
 //                            int stepsValue = documentSnapshot.getLong("steps").intValue();
                             steps.setValue(stepsValue);
                             isLoadingData.setValue(false);
                             Log.i("steps", String.valueOf(stepsValue));
-                        }
-                        else {
+                        } else {
                             Log.i("steps", "không vô được steps");
                         }
                         if (documentSnapshot.contains("exerciseCalories")) {
                             int exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").intValue();
                             isLoadingData.setValue(false);
                             exerciseCalories.setValue(exerciseCaloriesValue);
-                        }else {
+                        } else {
                             Log.i("exercise", "không vô được exercise");
                         }
                         if (documentSnapshot.contains("foodCalories")) {
                             int foodCaloriesValue = documentSnapshot.getLong("foodCalories").intValue();
                             isLoadingData.setValue(false);
                             foodCalories.setValue(foodCaloriesValue);
-                        }else {
+                        } else {
                             Log.i("food", "không vô được food");
                         }
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi","abcdxyz");
+                    Log.i("Lỗi", "abcdxyz");
                     // Xử lý khi không thể tải dữ liệu từ Firestore
                 });
     }
 
-//    public void getDailyActivities(){
+    //    public void getDailyActivities(){
 //        CollectionReference activitiesRef =
 //                firestore
 //                .collection("users")
@@ -163,26 +164,23 @@ public class HomeVM extends ViewModel {
 //    }
     public void getUserLiveData() {
         isLoadingData.setValue(true);
-        firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
-                            isLoadingData.setValue(false);
-
-                        }
-                        else {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                user = document.toObject(NormalUser.class);
+                                isLoadingData.setValue(false);
+                            }
+                        } else {
                             Log.d("Get user data error", "Error getting user documents: ", task.getException());
                             isLoadingData.setValue(false);
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("Error", e.getMessage());
-                    }
                 });
+
 //        if (userLiveData == null) {
 //            userLiveData = new MutableLiveData<>();
 //            loadUser();

@@ -31,7 +31,7 @@ public class CommunityReportFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-        viewModel.setUser(mainVM.getUser());
+        viewModel.setUser(mainVM.getUser().getValue());
         viewModel.setAchievement(CommunityReportFragmentArgs.fromBundle(getArguments()).getAchievement());
 
         handleToast();

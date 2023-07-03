@@ -92,10 +92,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
 
-        // Init today activity
-//        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
-//        workoutVM.initDailyActivity();
-
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel();
@@ -352,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarVisibility() {
-        if (viewModel.getUser().getType().equals("NORMAL_USER"))
+        if (viewModel.getUser().getValue().getType().equals("NORMAL_USER"))
         {
             binding.navBar.setVisibility(View.VISIBLE);
             binding.adminNavBar.setVisibility(View.GONE);
