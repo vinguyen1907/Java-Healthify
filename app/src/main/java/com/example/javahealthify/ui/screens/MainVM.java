@@ -6,9 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.NavController;
 
-import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.utils.FirebaseConstants;
@@ -16,18 +14,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private User user;
+    private MutableLiveData<User> user = new MutableLiveData<>();
 
     public interface UserLoadCallback {
         void onUserLoaded(User user);
     }
 
     public void loadUser(UserLoadCallback callback) {
+        Log.i("Loading user", "");
         FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -35,9 +32,9 @@ public class MainVM extends ViewModel {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                user = document.toObject(NormalUser.class);
+                                user.setValue(document.toObject(NormalUser.class));
                                 if (callback != null) {
-                                    callback.onUserLoaded(user);
+                                    callback.onUserLoaded(user.getValue());
                                 }
                             }
                         } else {
@@ -54,13 +51,15 @@ public class MainVM extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            user.setImageUrl(uri.toString());
+                            User copyUser = user.getValue();
+                            copyUser.setImageUrl(uri.toString());
+                            user.setValue(copyUser);
                         }
                     }
                 });
     }
 
-    public User getUser() {
+    public MutableLiveData<User> getUser() {
         return user;
     }
 }

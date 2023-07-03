@@ -34,6 +34,7 @@ import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.profile.ProfileVM;
+import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -69,6 +70,7 @@ import java.util.Objects;
 public class HomeFragment extends Fragment {
     private User user;
     private HomeVM homeVM;
+    private WorkoutVM workoutVM;
     private FragmentHomeBinding binding;
 
     private PieChart pieChart;
@@ -109,6 +111,11 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
+
+        // Init today activity
+
+        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+        workoutVM.initDailyActivity();
     }
 
     public HomeFragment() {
