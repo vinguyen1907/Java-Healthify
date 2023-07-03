@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Achievement implements Serializable {
+    private String id;
     private int calories;
     private int steps;
     private int exerciseCalories;
@@ -17,17 +18,7 @@ public class Achievement implements Serializable {
     private String date;
     private Date createdTime;
 
-    public Achievement() {
-        this.calories = 0;
-        this.steps = 0;
-        this.exerciseCalories = 0;
-        this.foodCalories = 0;
-        this.userId = "";
-        this.userName = "";
-        this.userImageUrl = "";
-        this.date = GlobalMethods.convertDateToHyphenSplittingFormat(new Date());
-        this.createdTime = new Date();
-    }
+    public Achievement() {}
 
     public Achievement(int calories, int steps, int exerciseCalories, int foodCalories, String userId, String userName, String userImageUrl, String date, Date createdTime) {
         this.calories = calories;
@@ -105,4 +96,11 @@ public class Achievement implements Serializable {
         this.createdTime = createdTime;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
