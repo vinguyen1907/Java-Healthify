@@ -43,7 +43,10 @@ public class CommunityUserProfileVM extends ViewModel {
                         if (task.isSuccessful()) {
                             List<Achievement> newAchievements = new ArrayList<>();
                             for (DocumentSnapshot doc : task.getResult()) {
-                                newAchievements.add(doc.toObject(Achievement.class));
+                                Achievement newAchievement;
+                                newAchievement = doc.toObject(Achievement.class);
+                                newAchievement.setId(doc.getId());
+                                newAchievements.add(newAchievement);
                             }
                             achievements.setValue(newAchievements);
                             numberOfAchievements.setValue(achievements.getValue().size());

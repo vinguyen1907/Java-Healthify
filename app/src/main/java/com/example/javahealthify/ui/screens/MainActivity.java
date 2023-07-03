@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         binding.setMainVM(viewModel);
 
         // Init today activity
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
-        workoutVM.initDailyActivity();
+//        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+//        workoutVM.initDailyActivity();
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
