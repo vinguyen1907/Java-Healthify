@@ -31,7 +31,7 @@ public class SignUpVM extends ViewModel {
     private MutableLiveData<String> confirmPasswordError = new MutableLiveData<>(null);
     private MutableLiveData<String> toastMessage = new MutableLiveData<>(null);
     private MutableLiveData<Boolean> isSuccessful = new MutableLiveData<>(false);
-    private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{0,8}$";
+    private static final String passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d).{6,}$";
     private Pattern pattern = Pattern.compile(passwordRegex);
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
@@ -77,7 +77,7 @@ public class SignUpVM extends ViewModel {
             if (pattern.matcher(password.getValue()).matches()) {
                 passwordError.setValue(null);
             } else {
-                passwordError.setValue("Password must have 0-8 characters, includes char and number");
+                passwordError.setValue("Password must have more than 6 characters, includes char and number");
             }
         }
     }

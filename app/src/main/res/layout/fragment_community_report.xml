@@ -36,11 +36,20 @@
             android:background="@drawable/background_primary"
             android:fontFamily="@font/poppins_regular"
             android:hint="Title of report"
-            android:textColor="@color/primaryTextColor"
-            android:text="@={viewModel.title}"
+            android:maxLength="50"
             android:padding="10dp"
+            android:text="@={viewModel.title}"
+            android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryHintColor"
             android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:text="@{String.valueOf(viewModel.title.length()).concat(`/50`)}"
+            android:textAlignment="textEnd" />
 
         <TextView
             style="@style/fill_in_information_section"
@@ -56,22 +65,32 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/background_primary"
             android:fontFamily="@font/poppins_regular"
-            android:text="@={viewModel.description}"
-            android:textColor="@color/primaryTextColor"
+            android:gravity="start"
             android:hint="What do you want to report about this achievement?"
+            android:maxLength="200"
             android:minLines="5"
             android:padding="10dp"
+            android:text="@={viewModel.description}"
+            android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryHintColor"
             android:textSize="16sp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:text="@{String.valueOf(viewModel.description.length()).concat(`/200`)}"
+            android:textAlignment="textEnd" />
+
         <include
             layout="@layout/primary_button_layout"
+            title="@{@string/send_report_button_title}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_horizontal_margin"
             android:layout_marginTop="20dp"
-            android:onClick="@{() -> viewModel.sendReport()}"
-            title="@{@string/send_report_button_title}" />
+            android:onClick="@{() -> viewModel.sendReport()}" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

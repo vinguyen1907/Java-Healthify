@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.javahealthify.data.models.Achievement;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +31,7 @@ public class CommunityReportVM extends ViewModel {
     public void sendReport() {
         if (user != null && achievement != null) {
             HashMap<String, Object> newReport = new HashMap<>();
+            newReport.put("achievementId", achievement.getId());
             newReport.put("achievementUserId", achievement.getUserId());
             newReport.put("achievementUserName", achievement.getUserName());
             newReport.put("achievementUserImageUrl", achievement.getUserImageUrl());
@@ -41,6 +43,9 @@ public class CommunityReportVM extends ViewModel {
             newReport.put("reportUserId", user.getUid());
             newReport.put("reportUserName", user.getName());
             newReport.put("reportUserImageUrl", user.getImageUrl());
+            newReport.put("title", title.getValue());
+            newReport.put("description", description.getValue());
+            newReport.put("activitiesId", GlobalMethods.convertDateToHyphenSplittingFormat(achievement.getCreatedTime()));
 
             FirebaseConstants.reportsRef.add(newReport)
                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
