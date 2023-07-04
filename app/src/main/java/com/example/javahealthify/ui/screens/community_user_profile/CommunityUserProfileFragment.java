@@ -48,7 +48,7 @@ public class CommunityUserProfileFragment extends Fragment implements ActionOnAc
             @Override
             public void onChanged(NormalUser user) {
                 if (user != null) {
-                    if (user.getImageUrl() == null) {
+                    if (user.getImageUrl() == null || user.getImageUrl().isEmpty()) {
                         binding.userProfileAvatarImg.setImageResource(R.drawable.default_profile_image);
                     } else {
                         Glide.with(requireContext()).load(user.getImageUrl()).into(binding.userProfileAvatarImg);
