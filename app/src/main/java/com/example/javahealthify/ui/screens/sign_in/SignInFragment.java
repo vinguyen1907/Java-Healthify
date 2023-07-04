@@ -1,19 +1,20 @@
 package com.example.javahealthify.ui.screens.sign_in;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentSignInBinding;
+import com.example.javahealthify.ui.screens.MainActivity;
 
 public class SignInFragment extends Fragment {
     private FragmentSignInBinding binding;
@@ -53,7 +54,10 @@ public class SignInFragment extends Fragment {
             @Override
             public void onChanged(Boolean signInSuccess) {
                 if (signInSuccess) {
-                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
+//                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
             }
         });

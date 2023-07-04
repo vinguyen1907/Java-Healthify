@@ -12,9 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.javahealthify.data.models.Achievement;
 import com.example.javahealthify.data.models.Report;
 import com.example.javahealthify.databinding.FragmentAdminCommunityBinding;
 
@@ -60,6 +62,7 @@ public class AdminCommunityFragment extends Fragment implements ReportRecyclerVi
                 }
             }
         });
+        binding.setLifecycleOwner(getViewLifecycleOwner());
         return binding.getRoot();
     }
 
@@ -104,12 +107,13 @@ public class AdminCommunityFragment extends Fragment implements ReportRecyclerVi
 
     @Override
     public void onItemDetailsClick(int position) {
-
-    }
-
-    private void showPostDetails(int position) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("position", position);
-
+        adminCommunityVM.fetchAchievementDetails(position, new AdminCommunityVM.FetchDataCallback() {
+            @Override
+            public void onCallback(Achievement achievement) {
+                AdminCommunityFragmentDirections.ActionAdminCommunityFragmentToAchievementDetailsFragment action =
+                        AdminCommunityFragmentDirections.actionAdminCommunityFragmentToAchievementDetailsFragment(achievement);
+                NavHostFragment.findNavController(AdminCommunityFragment.this).navigate(action);
+            }
+        });
     }
 }

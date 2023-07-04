@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
-//        binding.navBar.setVisibility(View.GONE);
-//        binding.adminNavBar.setVisibility(View.GONE);
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -96,16 +96,18 @@ public class MainActivity extends AppCompatActivity {
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
         if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
+            Log.d("null currentUser", "onCreate: currentUser is null, navigate to signup");
+            navController.navigate(R.id.signInFragment);
         } else {
+            Log.d("not null currentUser", "onCreate: currentUser is not null" + firebaseAuth.getCurrentUser().getUid());
+
             navController.navigate(R.id.splashFragment);
-            hideNavBar();
 
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
-                    setUpNavbar();
                     setUpInitialFragment();
+                    setUpNavbar();
                     navController.navigate(R.id.homeFragment);
                 }
             });
@@ -263,31 +265,26 @@ public class MainActivity extends AppCompatActivity {
                 switch (destination.getId()) {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.menuFragment:
                         setNavbarItem(R.id.nav_menu);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.workoutFragment:
                         setNavbarItem(R.id.nav_workout);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.communityFragment:
                         setNavbarItem(R.id.nav_community);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.profileFragment:
                         setNavbarItem(R.id.nav_profile);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
@@ -355,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNavBarVisibility() {
         boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
-
+        Log.d("normalUser?", "setNavBarVisibility: " + isNormalUser);
         binding.navBar.setVisibility(isNormalUser ? View.VISIBLE : View.GONE);
         binding.adminNavBar.setVisibility(isNormalUser ? View.GONE : View.VISIBLE);
     }

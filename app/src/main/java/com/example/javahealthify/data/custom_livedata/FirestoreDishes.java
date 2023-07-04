@@ -9,6 +9,7 @@ import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private DocumentReference userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-    private CollectionReference dailyActivitiesRef = userRef.collection("daily_activities");
+    private CollectionReference dailyActivitiesRef;
     private DocumentReference dailyActivityRef;
     private ListenerRegistration listenerRegistration;
 
@@ -71,6 +72,12 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     @Override
     protected void onActive() {
         super.onActive();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null) {
+            return;
+        }
+        userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        dailyActivitiesRef = userRef.collection("daily_activities");
         queryDailyActivities();
         if (dailyActivityRef != null) {
             listenerRegistration = dailyActivityRef.addSnapshotListener((documentSnapshot, e) -> {

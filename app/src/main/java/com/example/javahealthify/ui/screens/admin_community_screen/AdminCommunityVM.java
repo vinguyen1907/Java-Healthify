@@ -6,10 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.javahealthify.data.models.Achievement;
 import com.example.javahealthify.data.models.Report;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -153,4 +155,23 @@ public class AdminCommunityVM extends ViewModel {
             }
         });
     }
+
+    public interface FetchDataCallback {
+        void onCallback(Achievement achievement);
+    }
+
+    public void fetchAchievementDetails(int position, FetchDataCallback callback) {
+        String achievementId = pendingReportList.getValue().get(position).getAchievementId();
+        DocumentReference achievementDocumentReference = db.collection("achievements").document(achievementId);
+        achievementDocumentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document != null && document.exists()) {
+                    Achievement achievement = document.toObject(Achievement.class);
+                    callback.onCallback(achievement);
+                }
+            }
+        });
+    }
+
 }
