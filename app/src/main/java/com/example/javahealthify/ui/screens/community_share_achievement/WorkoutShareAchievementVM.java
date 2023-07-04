@@ -1,5 +1,7 @@
 package com.example.javahealthify.ui.screens.community_share_achievement;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -42,7 +44,7 @@ public class WorkoutShareAchievementVM extends ViewModel {
 
     public void addAchievementToDb(User user) {
         // Check if there is any achievement today
-        Date currentDate = todayAchievement.getValue().getCreatedTime();
+        Date currentDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDate);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -54,6 +56,7 @@ public class WorkoutShareAchievementVM extends ViewModel {
         Date startOfNextDate = calendar.getTime();
 
         FirebaseConstants.achievementsRef
+                .whereEqualTo("userId", FirebaseConstants.firebaseAuth.getCurrentUser().getUid())
                 .whereGreaterThanOrEqualTo("createdTime", startOfDate)
                 .whereLessThan("createdTime", startOfNextDate).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -63,14 +66,14 @@ public class WorkoutShareAchievementVM extends ViewModel {
                             if (task.getResult().isEmpty()) {
                                 Achievement achievement = new Achievement(
                                         todayAchievement.getValue().getCalories(),
-                                        0, // TODO: Get steps and replace it
+                                        todayAchievement.getValue().getSteps(), // TODO: Get steps and replace it
                                         todayAchievement.getValue().getExerciseCalories(),
                                         todayAchievement.getValue().getFoodCalories(),
                                         user.getUid(),
                                         user.getName(),
                                         user.getImageUrl(),
                                         GlobalMethods.convertDateToHyphenSplittingFormat(new Date()),
-                                        todayAchievement.getValue().getCreatedTime());
+                                        new Date());
                                 FirebaseConstants.achievementsRef.add(achievement)
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
