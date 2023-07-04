@@ -22,6 +22,7 @@ import java.util.Date;
 public class WorkoutShareAchievementVM extends ViewModel {
     private MutableLiveData<Achievement> todayAchievement = new MutableLiveData<>(null);
     private MutableLiveData<String> warningDialogMessage = new MutableLiveData<>("");
+    private MutableLiveData<Boolean> isAddedSuccessfully = new MutableLiveData<>(false);
 
     public WorkoutShareAchievementVM() {
         loadTodayAchievement();
@@ -78,7 +79,9 @@ public class WorkoutShareAchievementVM extends ViewModel {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentReference> task) {
-
+                                                if (task.isSuccessful()) {
+                                                    isAddedSuccessfully.setValue(true);
+                                                }
                                             }
                                         });
                             } else {
@@ -101,5 +104,9 @@ public class WorkoutShareAchievementVM extends ViewModel {
 
     public MutableLiveData<String> getWarningDialogMessage() {
         return warningDialogMessage;
+    }
+
+    public MutableLiveData<Boolean> getIsAddedSuccessfully() {
+        return isAddedSuccessfully;
     }
 }

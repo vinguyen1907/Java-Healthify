@@ -71,7 +71,7 @@ public class CommunityUserProfileFragment extends Fragment implements ActionOnAc
         viewModel.getAchievements().observe(getViewLifecycleOwner(), new Observer<List<Achievement>>() {
             @Override
             public void onChanged(List<Achievement> achievements) {
-                adapter.addAll(achievements);
+                adapter.setData(achievements);
             }
         });
 
