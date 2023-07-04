@@ -37,15 +37,9 @@ import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
-import com.example.javahealthify.utils.FirebaseConstants;
-import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.util.Calendar;
@@ -91,10 +85,11 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
 
         // Init today activity
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
-        workoutVM.initDailyActivity();
+
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -110,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onUserLoaded(User user) {
                     setUpNavbar();
+                    workoutVM = new ViewModelProvider(MainActivity.this).get(WorkoutVM.class);
+                    workoutVM.initDailyActivity();
                 }
             });
         }
@@ -254,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDestinationChanged(@NonNull NavController controller,
                                              @NonNull NavDestination destination,
                                              @Nullable Bundle arguments) {
+
                 switch (destination.getId()) {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);

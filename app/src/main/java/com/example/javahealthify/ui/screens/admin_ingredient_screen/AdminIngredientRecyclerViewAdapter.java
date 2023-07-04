@@ -72,12 +72,6 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof IngredientViewHolder){
             IngredientViewHolder ingredientHolder = (IngredientViewHolder) holder;
-            ingredientHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
             ingredientHolder.tvIngredientName.setText(ingredientInfoArrayList.get(position).getShort_Description());
             ingredientHolder.tvProteinNumber.setText(GlobalMethods.formatDoubleToString(ingredientInfoArrayList.get(position).getProtein()));
             ingredientHolder.tvCarbsNumber.setText(GlobalMethods.formatDoubleToString(ingredientInfoArrayList.get(position).getCarbs()));

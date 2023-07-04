@@ -1,7 +1,5 @@
 package com.example.javahealthify.ui.screens.community_report;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,10 +9,14 @@ import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.utils.FirebaseConstants;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CommunityReportVM extends ViewModel {
     private MutableLiveData<String> title = new MutableLiveData<>("");
@@ -22,6 +24,8 @@ public class CommunityReportVM extends ViewModel {
     private Achievement achievement;
     private User user;
     private MutableLiveData<String> message = new MutableLiveData<>("");
+
+
 
     public CommunityReportVM() {
         achievement = null;
@@ -55,6 +59,7 @@ public class CommunityReportVM extends ViewModel {
                                 message.setValue("We sent this report to admin. Thanks for your contribution.");
                                 title.setValue("");
                                 description.setValue("");
+                                updatePendingReportCount();
                             } else {
                                 message.setValue("Something went wrong. Please try again");
                             }
@@ -63,6 +68,22 @@ public class CommunityReportVM extends ViewModel {
         } else {
             message.setValue("Something went wrong. Please try again");
         }
+    }
+
+    public void updatePendingReportCount() {
+        DocumentReference countDocumentRef = FirebaseFirestore.getInstance().collection("count").document("reports_count");
+        countDocumentRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    Integer currentValue = documentSnapshot.getLong("count").intValue();
+                    Integer newValue = currentValue + 1;
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("count", newValue);
+                    countDocumentRef.update(updates);
+                }
+            }
+        });
     }
 
     public MutableLiveData<String> getTitle() {
