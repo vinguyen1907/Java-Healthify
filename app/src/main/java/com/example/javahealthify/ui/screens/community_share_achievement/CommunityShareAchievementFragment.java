@@ -9,9 +9,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.javahealthify.databinding.FragmentCommunityShareAchievementBinding;
 import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.community.CommunityVM;
 import com.example.javahealthify.ui.screens.workout_exercise_practicing.PracticingOnBackDialogInterface;
 import com.example.javahealthify.utils.GlobalMethods;
 
@@ -20,6 +22,7 @@ import java.util.Date;
 public class CommunityShareAchievementFragment extends Fragment {
     private FragmentCommunityShareAchievementBinding binding;
     private WorkoutShareAchievementVM viewModel;
+    private CommunityVM communityVM;
     private MainVM mainVM;
 
     @Override
@@ -31,6 +34,8 @@ public class CommunityShareAchievementFragment extends Fragment {
         mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        communityVM = new ViewModelProvider(requireActivity()).get(CommunityVM.class);
 
         binding.achievementLayout.nameTv.setText(mainVM.getUser().getValue().getName());
         binding.achievementLayout.dateTv.setText(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
@@ -52,6 +57,17 @@ public class CommunityShareAchievementFragment extends Fragment {
                         }
                     };
                     GlobalMethods.showWarningDialog(requireContext(), s, action);
+                }
+            }
+        });
+
+        viewModel.getIsAddedSuccessfully().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAdded) {
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Congratulate! You have added an achievement.", Toast.LENGTH_SHORT).show();
+                    communityVM.loadAchievements();
+                    GlobalMethods.backToPreviousFragment(CommunityShareAchievementFragment.this);
                 }
             }
         });

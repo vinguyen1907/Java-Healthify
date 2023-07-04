@@ -2,14 +2,12 @@ package com.example.javahealthify.ui.screens.community;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +19,6 @@ import com.example.javahealthify.data.adapters.AchievementsListAdapter;
 import com.example.javahealthify.data.models.Achievement;
 import com.example.javahealthify.databinding.FragmentCommunityBinding;
 import com.example.javahealthify.ui.interfaces.ActionOnAchievementMenu;
-import com.example.javahealthify.ui.screens.community.CommunityFragmentDirections;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +44,7 @@ public class CommunityFragment extends Fragment implements ActionOnAchievementMe
         viewModel.getAchievements().observe(getViewLifecycleOwner(), new Observer<List<Achievement>>() {
             @Override
             public void onChanged(List<Achievement> achievements) {
-                adapter.addAll(achievements);
+                adapter.setData(achievements);
             }
         });
 
