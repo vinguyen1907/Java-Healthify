@@ -37,9 +37,15 @@ import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
+import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.util.Calendar;
@@ -86,10 +92,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
 
-        // Init today activity
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
-        workoutVM.initDailyActivity();
-
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         createNotificationChannel();
@@ -100,10 +102,14 @@ public class MainActivity extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
         } else {
+            navController.navigate(R.id.splashFragment);
+            hideNavBar();
+
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
                     setUpNavbar();
+                    navController.navigate(R.id.homeFragment);
                 }
             });
         }
@@ -243,13 +249,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpNavbar() {
-        if(viewModel.getUser().getType().equals("NORMAL_USER")){
-            navController.navigate(R.id.homeFragment);
-        } else {
-            navController.navigate(R.id.adminIngredientFragment);
-        }
-
-        setNavBarVisibility();
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller,
@@ -349,15 +348,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarVisibility() {
-        if (viewModel.getUser().getType().equals("NORMAL_USER"))
+        if (viewModel.getUser().getValue().getType().equals("NORMAL_USER"))
         {
             binding.navBar.setVisibility(View.VISIBLE);
             binding.adminNavBar.setVisibility(View.GONE);
-
         } else {
             binding.navBar.setVisibility(View.GONE);
             binding.adminNavBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void hideNavBar() {
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
     }
 
     public static FirebaseFirestore getDb() {

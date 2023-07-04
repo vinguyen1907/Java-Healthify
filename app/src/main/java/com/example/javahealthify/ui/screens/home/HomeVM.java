@@ -12,6 +12,7 @@ import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.data.models.WorkoutCategory;
 import com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightVM;
+import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
@@ -54,7 +55,9 @@ public class HomeVM extends ViewModel {
     ArrayList<CustomEntry> lineEntries;
     List<PieEntry> pieEntries;
 
-    private HomeUpdateWeightVM homeUpdateWeightVM;
+    private WorkoutVM workoutVM;
+
+    private HomeUpdateWeightVM homeUpdateWeightVM = new HomeUpdateWeightVM(100);
 
     public Float getStartWeight() {
         return startWeight;
@@ -161,14 +164,24 @@ public class HomeVM extends ViewModel {
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
     }
+
+    public HomeVM() {
+        this.getUserLiveData();
+        this.loadDocument();
+        this.loadLineData();
+    }
+
     public void saveDailySteps(int stepCount, Date previousDate) {
 
         Map<String, Object> dailyActivities = new HashMap<>();
         dailyActivities.put("steps", stepCount);
+        dailyActivities.put("weight", homeUpdateWeightVM.getWeight());
+//        dailyActivities.put("exerciseCalories", workoutVM.getExerciseCalories());
+//        dailyActivities.put("calories", workoutVM.getSelectedExercises());
 
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
         firestore.collection("users")
-                .document(this.getUser().getUid())
+                .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities").document(dateString)
                 .set(dailyActivities)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -189,7 +202,7 @@ public class HomeVM extends ViewModel {
     public void loadDocument() {
         isLoadingDocument.setValue(true);
         firestore.collection("users")
-                .document(this.getUser().getUid())
+                .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities")
                 .document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
                 .get()
@@ -218,7 +231,7 @@ public class HomeVM extends ViewModel {
     }
     public void loadGoal() {
         firestore.collection("users")
-                .document(this.getUser().getUid())
+                .document(firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -233,9 +246,9 @@ public class HomeVM extends ViewModel {
                             float dailyCalories = documentSnapshot.getLong("dailyCalories").floatValue();
                             setDailyCalories(dailyCalories);
                             float startWeight = documentSnapshot.getLong("startWeight").floatValue();
-                            setDailyCalories(startWeight);
+                            setStartWeight(startWeight);
                             float goalWeight = documentSnapshot.getLong("goalWeight").floatValue();
-                            setDailyCalories(goalWeight);
+                            setGoalWeight(goalWeight);
                             isLoadingDocument.setValue(false);
                     }
                 })
@@ -247,7 +260,7 @@ public class HomeVM extends ViewModel {
 
     public void loadLineData() {
         isLoadingLine.setValue(true);
-        firestore.collection("users").document(this.getUser().getUid()).collection("daily_activities")
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

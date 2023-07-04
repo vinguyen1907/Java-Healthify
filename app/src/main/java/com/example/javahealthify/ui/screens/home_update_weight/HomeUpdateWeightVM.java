@@ -1,6 +1,7 @@
 package com.example.javahealthify.ui.screens.home_update_weight;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -40,10 +41,10 @@ public class HomeUpdateWeightVM extends ViewModel {
     }
     private Integer x = 0;
     private MutableLiveData<Boolean> isAddingValue = null;
-    private Integer weight;
+    private Integer weight = new Integer(0);
     private HomeVM homeVM;
 
-    List<BarEntry> barEntries;
+    List<CustomEntry> barEntries;
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
@@ -60,12 +61,69 @@ public class HomeUpdateWeightVM extends ViewModel {
         this.isAddingValue = isAddingValue;
     }
 
-    public List<BarEntry> getBarEntries() {
+    public HomeUpdateWeightVM(Integer weight) {
+        this.weight = weight;
+    }
+
+    public HomeUpdateWeightVM() {
+//        getUserLiveData();
+        loadDailyWeight();
+        loadBarData();
+    }
+
+    public List<CustomEntry> getBarEntries() {
         return barEntries;
     }
 
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
+    }
+    public void loadBarData() {
+        isLoadingData.setValue(true);
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            barEntries = new ArrayList<>();
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                if (document.contains("weight")) {
+                                    int steps = document.getLong("weight").intValue();
+                                    String date = document.getId();
+                                    Log.i("weight bar", String.valueOf(steps));
+                                    Log.i("date bar", date);
+                                    barEntries.add(new CustomEntry(x, steps, date));
+                                    x++;
+                                }
+                            }
+                            isLoadingData.setValue(false);
+                        } else {
+                            Exception e = task.getException();
+                            Log.i("bugg","Lỗi khi lấy dữ liệu bar");
+                        }
+                    }
+                });
+
+    }
+    public void loadDailyWeight() {
+        firestore.collection("users")
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .collection("daily_activities")
+                .document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        int stepsValue = documentSnapshot.getLong("weight").intValue();
+                        setWeight(stepsValue);
+                        Log.i("steps", String.valueOf(stepsValue));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.i("Lỗi","abcdxyz");
+                    // Xử lý khi không thể tải dữ liệu từ Firestore
+                });
     }
     public void getUserLiveData() {
         isLoadingData.setValue(true);
@@ -112,34 +170,6 @@ public class HomeUpdateWeightVM extends ViewModel {
                         Log.i("bug",e.toString());
                     }
                 });
-    }
-
-    public void loadLineData() {
-        firestore.collection("users").document(this.getUser().getUid()).collection("daily_activities")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            barEntries = new ArrayList<>();
-                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                if (document.contains("weight")) {
-                                    int steps = document.getLong("weight").intValue();
-                                    String date = document.getId();
-                                    Log.i("weight bar", String.valueOf(steps));
-                                    Log.i("date bar", date);
-                                    barEntries.add(new BarEntry(x, steps, date));
-                                    x++;
-                                }
-                            }
-                        } else {
-                            Exception e = task.getException();
-                            Log.i("bugg","Lỗi khi lấy dữ liệu weight");
-                        }
-                    }
-                });
-
     }
 
 }

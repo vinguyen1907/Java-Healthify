@@ -121,12 +121,12 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
-                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
-                    binding.profileNameTv.setText(profileVM.getUser().getName());
-                    if (profileVM.getUser().getImageUrl() == null) {
+//                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
+//                    binding.profileNameTv.setText(profileVM.getUser().getName());
+                    if (profileVM.getUser().getValue().getImageUrl() == null) {
                         binding.profileImage.setImageResource(R.drawable.default_profile_image);
                     } else {
-                        Glide.with(requireContext()).load(profileVM.getUser().getImageUrl()).into(binding.profileImage);
+                        Glide.with(requireContext()).load(profileVM.getUser().getValue().getImageUrl()).into(binding.profileImage);
                     }
                 } else {
                 }
@@ -136,7 +136,7 @@ public class ProfileFragment extends Fragment {
 
     private void uploadImageToFb(Uri uri) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference imageRef = storageRef.child("user_profile_images/"+ profileVM.getUser().getName());
+        StorageReference imageRef = storageRef.child("user_profile_images/"+ profileVM.getUser().getValue().getName());
         imageRef.putFile(uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override

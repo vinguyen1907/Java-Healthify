@@ -13,13 +13,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.databinding.FragmentHomeWeightReportBinding;
+import com.example.javahealthify.ui.screens.home.CustomEntry;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragment;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
@@ -34,7 +38,6 @@ public class HomeUpdateWeightFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeUpdateWeightVM = new ViewModelProvider(requireActivity()).get(HomeUpdateWeightVM.class);
-        homeUpdateWeightVM.getIsLoadingData();
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,39 +60,61 @@ public class HomeUpdateWeightFragment extends Fragment {
         });
 
         barChart = binding.barChart;
-        drawWeightChart();
+        homeUpdateWeightVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingData) {
+                if (isLoadingData != null && !isLoadingData) {
+                    drawWeightChart(homeUpdateWeightVM.getBarEntries());
+                } else {
 
-
-
+                }
+            }
+        });
 
         return binding.getRoot();
     }
 
-    private void drawWeightChart() {
-        // Replace the following code with your Firestore data retrieval logic
-        List<BarEntry> entries = new ArrayList<>();
-//        entries = homeUpdateWeightVM.getBarEntries();
-        entries.add(new BarEntry(0f, 65f)); // Example data for day 1: weight 65kg
-        entries.add(new BarEntry(1f, 67f)); // Example data for day 2: weight 67kg
-        entries.add(new BarEntry(2f, 66f)); // Example data for day 3: weight 66kg
+    private void drawWeightChart(List<CustomEntry> entries) {
+        List<BarEntry> barEntries = new ArrayList<>();
 
-        BarDataSet dataSet = new BarDataSet(entries, "Weight");
+        for (int i = 0; i < entries.size(); i++) {
+            CustomEntry entry = entries.get(i);
+            barEntries.add(new BarEntry(entry.getX(), entry.getY()));
+        }
+
+        BarDataSet dataSet = new BarDataSet(barEntries, "Weight");
+        dataSet.setValueTextColor(Color.WHITE);
         BarData barData = new BarData(dataSet);
 
         barChart.setData(barData);
-        barChart.getDescription().setText("Weight by Day");
-        barChart.getDescription().setTextColor(Color.BLACK); // Set description text color to black
-        barChart.getXAxis().setLabelCount(entries.size());
-        barChart.getXAxis().setTextColor(Color.WHITE); // Set x-axis text color to white
-        barChart.getXAxis().setValueFormatter(new ValueFormatter() {
+        barChart.getDescription().setText("Weight by Date");
+        barChart.getDescription().setTextColor(Color.BLACK);
+
+        // Set up X-axis
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setGranularity(1f); // Display one value per interval
+        xAxis.setDrawGridLines(false); // Hide grid lines
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                int day = (int) value;
-                return "Day " + (day + 1);
+                int index = (int) value;
+                if (index >= 0 && index < entries.size()) {
+                    CustomEntry entry = entries.get(index);
+                    return entry.getXLabel();
+                }
+                return "";
             }
         });
 
-        barChart.getAxisLeft().setTextColor(Color.WHITE); // Set y-axis left text color to white
+        xAxis.setTextColor(Color.WHITE);
+
+        // Set up Y-axis
+        YAxis leftAxis = barChart.getAxisLeft();
+        YAxis rightAxis = barChart.getAxisRight();
+
+        leftAxis.setTextColor(Color.WHITE);
+        rightAxis.setTextColor(Color.WHITE);
 
         // Custom axis value formatter for displaying "kg" next to weight values
         ValueFormatter weightValueFormatter = new ValueFormatter() {
@@ -99,11 +124,9 @@ public class HomeUpdateWeightFragment extends Fragment {
             }
         };
 
-        barChart.getAxisLeft().setValueFormatter(weightValueFormatter); // Set y-axis left value formatter
-        barChart.getAxisRight().setValueFormatter(weightValueFormatter); // Set y-axis right value formatter
+        leftAxis.setValueFormatter(weightValueFormatter);
+        rightAxis.setValueFormatter(weightValueFormatter);
 
-        barChart.invalidate(); // Refresh the chart
+        barChart.invalidate();
     }
-
-
 }

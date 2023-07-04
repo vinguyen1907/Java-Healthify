@@ -7,11 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
-import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,15 +23,7 @@ public class ProfileVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private NormalUser user = new NormalUser();
-
-    public NormalUser getUser() {
-        return user;
-    }
-
-    public void setUser(NormalUser user) {
-        this.user = user;
-    }
+    private MutableLiveData<NormalUser> user = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
@@ -45,7 +35,7 @@ public class ProfileVM extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
+                            user.setValue(task.getResult().getDocuments().get(0).toObject(NormalUser.class));
                             isLoadingData.setValue(false);
 
                         } else {
@@ -60,5 +50,13 @@ public class ProfileVM extends ViewModel {
                         Log.i("Error", e.getMessage());
                     }
                 });
+    }
+
+    public MutableLiveData<NormalUser> getUser() {
+        return user;
+    }
+
+    public void setUser(MutableLiveData<NormalUser> user) {
+        this.user = user;
     }
 }

@@ -35,15 +35,18 @@ public class CommunityUserProfileVM extends ViewModel {
                 });
     }
 
-    public void loadAchievements() {
-        FirebaseConstants.achievementsRef.whereEqualTo("userId", auth.getCurrentUser().getUid()).get()
+    public void loadAchievements(String uid) {
+        FirebaseConstants.achievementsRef.whereEqualTo("userId", uid).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             List<Achievement> newAchievements = new ArrayList<>();
                             for (DocumentSnapshot doc : task.getResult()) {
-                                newAchievements.add(doc.toObject(Achievement.class));
+                                Achievement newAchievement;
+                                newAchievement = doc.toObject(Achievement.class);
+                                newAchievement.setId(doc.getId());
+                                newAchievements.add(newAchievement);
                             }
                             achievements.setValue(newAchievements);
                             numberOfAchievements.setValue(achievements.getValue().size());

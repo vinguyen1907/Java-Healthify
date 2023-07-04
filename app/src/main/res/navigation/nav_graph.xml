@@ -438,6 +438,11 @@
             app:argType="com.example.javahealthify.data.models.Achievement" />
     </fragment>
     <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.javahealthify.ui.screens.splash_screen.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
+    <fragment
         android:id="@+id/homeUpdateWeightFragment"
         android:name="com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightFragment"
         android:label="HomeUpdateWeightFragment" />

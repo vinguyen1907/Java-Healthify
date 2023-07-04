@@ -35,6 +35,7 @@ import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.profile.ProfileFragment;
 import com.example.javahealthify.ui.screens.profile.ProfileVM;
+import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -71,7 +72,7 @@ public class HomeFragment extends Fragment {
     private User user;
     private HomeVM homeVM;
     private FragmentHomeBinding binding;
-
+    private WorkoutVM workoutVM;
     private PieChart pieChart;
     private LinearLayout legendLayout;
     private LineChart lineChart;
@@ -115,8 +116,13 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
-        homeVM.getUserLiveData();
+//        homeVM.getUserLiveData();
 //        homeVM.loadDocument();
+
+        // Init today activity
+
+        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+        workoutVM.initDailyActivity();
     }
 
     public HomeFragment() {
@@ -137,17 +143,17 @@ public class HomeFragment extends Fragment {
         pieChart = binding.pieChart;
         legendLayout = binding.legendLayout;
 
-        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData) {
-                    homeVM.loadDocument();
-                    homeVM.loadLineData();
-                } else {
-
-                }
-            }
-        });
+//        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isLoadingData) {
+//                if (isLoadingData != null && !isLoadingData) {
+//                    homeVM.loadDocument();
+//                    homeVM.loadLineData();
+//                } else {
+//
+//                }
+//            }
+//        });
 
         homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -413,16 +419,9 @@ public class HomeFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData) {
-                    homeVM.saveDailySteps(stepCount, previousDate);
-                } else {
 
-                }
-            }
-        });
+        homeVM.saveDailySteps(stepCount, previousDate);
+
 
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -470,7 +469,8 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < entries.size(); i++) {
             labels[i] = entries.get(i).getXLabel();
         }
-        // cái này để hiển thị ngày ở cột có giá trị thôi
+
+        // cái này để hiển thị ngày ở cột có giá trị
         IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(labels);
 
         XAxis xAxis = lineChart.getXAxis();

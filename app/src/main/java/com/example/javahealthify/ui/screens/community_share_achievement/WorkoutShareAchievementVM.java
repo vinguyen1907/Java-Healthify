@@ -31,7 +31,10 @@ public class WorkoutShareAchievementVM extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            todayAchievement.setValue(task.getResult().toObject(Achievement.class));
+                            Achievement newAchievement;
+                            newAchievement = task.getResult().toObject(Achievement.class);
+                            newAchievement.setId(task.getResult().getId());
+                            todayAchievement.setValue(newAchievement);
                         }
                     }
                 });
