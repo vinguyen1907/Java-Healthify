@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.Exercise;
+import com.example.javahealthify.utils.FirebaseConstants;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,8 +63,7 @@ public class WorkoutVM extends ViewModel {
     }
 
     public void loadExercisesCalories() {
-        firestore.collection("users").document(auth.getCurrentUser().getUid())
-                .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
+        FirebaseConstants.dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -84,10 +84,10 @@ public class WorkoutVM extends ViewModel {
                 });
     }
 
-    public void addExercisesToDb(List<Exercise> exercise) {
+    public void addExercisesToDb(List<Exercise> exercises) {
         WriteBatch batch = firestore.batch();
 
-        for (Exercise newExercise : exercise) {
+        for (Exercise newExercise : exercises) {
             Map<String, Object> data = new HashMap<>();
             data.put("id", newExercise.getId());
             data.put("name", newExercise.getName());
@@ -164,6 +164,7 @@ public class WorkoutVM extends ViewModel {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     loadSelectedExercises();
+                    loadExercisesCalories();
                 } else {
                     Log.d("ERROR", "Error updating fields: ", task.getException());
                 }
@@ -192,6 +193,7 @@ public class WorkoutVM extends ViewModel {
                                 newDailyActivity.put("foodCalories", 0);
                                 newDailyActivity.put("exerciseCalories", 0);
                                 newDailyActivity.put("calories", 0);
+                                newDailyActivity.put("steps", 0);
                                 snapshot.getReference().set(newDailyActivity)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -226,6 +228,8 @@ public class WorkoutVM extends ViewModel {
     private void updateWorkoutListOnDb() {
         CollectionReference collection = firestore.collection("users").document(auth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).collection("workouts");
+
+        final AtomicInteger numberOfAddedItem = new AtomicInteger(0);
         for (Exercise exercise : selectedExercises.getValue()) {
             collection.add(exercise);
         }

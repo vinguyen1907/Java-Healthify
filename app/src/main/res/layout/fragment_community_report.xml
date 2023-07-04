@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.javahealthify.ui.screens.community_report.CommunityReportVM" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.screens.community_report.CommunityReportFragment">
+
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/fragment_custom_app_bar"
+            app:title="@{@string/report_app_bar_title}" />
+
+        <TextView
+            style="@style/fill_in_information_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Title" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_primary"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="Title of report"
+            android:textColor="@color/primaryTextColor"
+            android:text="@={viewModel.title}"
+            android:padding="10dp"
+            android:textColorHint="@color/primaryHintColor"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/fill_in_information_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Description" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background_primary"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@={viewModel.description}"
+            android:textColor="@color/primaryTextColor"
+            android:hint="What do you want to report about this achievement?"
+            android:minLines="5"
+            android:padding="10dp"
+            android:textColorHint="@color/primaryHintColor"
+            android:textSize="16sp" />
+
+        <include
+            layout="@layout/primary_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+            android:layout_marginTop="20dp"
+            android:onClick="@{() -> viewModel.sendReport()}"
+            title="@{@string/send_report_button_title}" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -105,6 +105,12 @@ public class HomeFragment extends Fragment {
     private MainVM mainVM;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private int remaining;
+    private int foodCalories;
+    private int exerciseCalories;
+    private int goal;
+    private String goalMsg = "Goal: ";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,24 +121,62 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeBinding.inflate(inflater,container,false);
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        // ----------------------------------LINECHART----------------------------------------------
+
+        lineChart = binding.lineChart;
+
+        // ----------------------------------PIECHART-----------------------------------------------
+
+        pieChart = binding.pieChart;
+        legendLayout = binding.legendLayout;
+
         homeVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
                     homeVM.loadDocument();
-                }
-                else {
+                    homeVM.loadLineData();
+                } else {
 
                 }
             }
         });
 
-        setLoading();
+        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingDocument) {
+                if (isLoadingDocument != null && !isLoadingDocument) {
+                    setLoading();
+                    drawPie();
+                } else {
+
+                }
+            }
+        });
+
+
+        homeVM.getIsLoadingLine().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingLine) {
+                if (isLoadingLine != null && !isLoadingLine) {
+                    drawLine();
+                }
+            }
+        });
+
+        binding.updateWeightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.action_homeFragment_to_homeUpdateWeightFragment);
+            }
+        });
 
         binding.exerciseDetailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +186,7 @@ public class HomeFragment extends Fragment {
         });
 
         sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER );
+        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (stepSensor != null) {
             sensorManager.registerListener(accelerometerSensorEventListener, stepSensor, SensorManager.SENSOR_DELAY_UI);
         } else {
@@ -158,32 +202,19 @@ public class HomeFragment extends Fragment {
         binding.stepCountTextView.setText(String.valueOf(stepCount));
 
 
-        // ----------------------------------LINECHART----------------------------------------------
-
-        lineChart = binding.lineChart;
-        drawLine();
-
-        // ----------------------------------PIECHART-----------------------------------------------
-
-        pieChart = binding.pieChart;
-        legendLayout = binding.legendLayout;
-
-        drawPie();
-
         return binding.getRoot();
     }
 
     private void drawPie() {
         legendEntries = new ArrayList<>();
-        legendEntries.add("Goal");
+        legendEntries.add("Remaining");
         legendEntries.add("Food");
         legendEntries.add("Exercise");
 
         legendValues = new ArrayList<>();
-        legendValues.add(33);
-        legendValues.add(33);
-        legendValues.add(33);
-
+        legendValues.add(homeVM.getRemaining().intValue());
+        legendValues.add(homeVM.getFoodCalories().intValue());
+        legendValues.add(homeVM.getExerciseCalories().intValue());
 
         List<Integer> iconResources = new ArrayList<>();
         iconResources.add(R.drawable.home_target);
@@ -192,9 +223,12 @@ public class HomeFragment extends Fragment {
 
 
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(33f, "Goal"));
-        entries.add(new PieEntry(33f, "Food"));
-        entries.add(new PieEntry(33f, "Exercise"));
+        entries = homeVM.getPieEntries();
+
+
+//        entries.add(new PieEntry((float)remaining/goal, "Remaining"));
+//        entries.add(new PieEntry((float)foodCalories/goal, "Food"));
+//        entries.add(new PieEntry((float)exerciseCalories/goal, "Exercise"));
 
         List<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor("#0DBBFC"));
@@ -226,52 +260,90 @@ public class HomeFragment extends Fragment {
         pieChart.setEntryLabelColor(android.R.color.black);
 
         pieChart.setDrawCenterText(true);
-        pieChart.setCenterText("700 Left");
+        pieChart.setCenterText(goalMsg.concat(homeVM.getGoal().toString()));
         pieChart.setCenterTextSize(16f);
         pieChart.setCenterTextColor(Color.WHITE);
 
         Legend legend = pieChart.getLegend();
         legend.setEnabled(false);
 
-        for (int i = 0; i < entries.size(); i++) {
-            PieEntry entry = entries.get(i);
-            String legendEntry = legendEntries.get(i);
-            int legendValue = legendValues.get(i);
 
-            View legendItemView = LayoutInflater.from(getContext()).inflate(R.layout.legend_item, null);
-            ImageView legendIconView = legendItemView.findViewById(R.id.legendIcon);
-            TextView legendLabelTextView = legendItemView.findViewById(R.id.legendLabel);
-            TextView legendValueTextView = legendItemView.findViewById(R.id.legendValue);
+        for (int i = 0; i < entries.size() ; i++) {
+            if (entries.size() > 3) {
+                Log.i("if i", String.valueOf(i));
+                String legendEntry = legendEntries.get(2);
+                int legendValue = legendValues.get(2);
 
+                View legendItemView = LayoutInflater.from(getContext()).inflate(R.layout.legend_item, null);
+                ImageView legendIconView = legendItemView.findViewById(R.id.legendIcon);
+                TextView legendLabelTextView = legendItemView.findViewById(R.id.legendLabel);
+                TextView legendValueTextView = legendItemView.findViewById(R.id.legendValue);
 
-            legendIconView.setImageResource(iconResources.get(i));
-            legendLabelTextView.setText(legendEntry);
-            legendValueTextView.setText(String.valueOf(legendValue));
+                legendIconView.setImageResource(iconResources.get(i));
+                legendLabelTextView.setText(legendEntry);
+                legendValueTextView.setText(String.valueOf(legendValue));
 
-            LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            itemParams.setMargins(10, 10, 0, 6);
-            legendItemView.setLayoutParams(itemParams);
+                LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                itemParams.setMargins(10, 10, 0, 6);
+                legendItemView.setLayoutParams(itemParams);
 
-            // Add legend item view to the legend layout
-            legendLayout.addView(legendItemView);
+                // Add legend item view to the legend layout
+                legendLayout.addView(legendItemView);
+            }
+            else {
+                Log.i("else i", String.valueOf(i));
+                String legendEntry = legendEntries.get(i);
+                int legendValue = legendValues.get(i);
+
+                View legendItemView = LayoutInflater.from(getContext()).inflate(R.layout.legend_item, null);
+                ImageView legendIconView = legendItemView.findViewById(R.id.legendIcon);
+                TextView legendLabelTextView = legendItemView.findViewById(R.id.legendLabel);
+                TextView legendValueTextView = legendItemView.findViewById(R.id.legendValue);
+
+                legendIconView.setImageResource(iconResources.get(i));
+                legendLabelTextView.setText(legendEntry);
+                legendValueTextView.setText(String.valueOf(legendValue));
+
+                LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                itemParams.setMargins(10, 10, 0, 6);
+                legendItemView.setLayoutParams(itemParams);
+
+                // Add legend item view to the legend layout
+                legendLayout.addView(legendItemView);
+            }
+            pieChart.invalidate();
+
         }
     }
 
     private void setLoading() {
-        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingDocument) {
-                if (isLoadingDocument != null && !isLoadingDocument)
-                    binding.exerciseTv.setText(homeVM.getExerciseCalories().toString());
-                else {
-                    binding.exerciseTv.setText("");
-                }
-            }
-        });
-    };
+//        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isLoadingDocument) {
+//                if (isLoadingDocument != null && !isLoadingDocument) {
+        binding.exerciseTv.setText(homeVM.getExerciseCalories().toString());
+        binding.startWeight.setText(homeVM.getStartWeight().toString());
+        binding.goalWeight.setText(homeVM.getGoalWeight().toString());
+        binding.dailyCalories.setText(homeVM.getDailyCalories().toString());
+//                    exerciseCalories = homeVM.getExerciseCalories();
+//                    foodCalories = homeVM.getFoodCalories();
+//                    goal = homeVM.getGoal();
+//                    remaining = goal - foodCalories + exerciseCalories;
+//                }
+//                else {
+//                    binding.exerciseTv.setText("");
+//                }
+//            }
+//        });
+    }
+
+    ;
 
     private SensorEventListener accelerometerSensorEventListener = new SensorEventListener() {
         @Override
@@ -346,8 +418,7 @@ public class HomeFragment extends Fragment {
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
                     homeVM.saveDailySteps(stepCount, previousDate);
-                }
-                else {
+                } else {
 
                 }
             }
@@ -367,7 +438,6 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     private boolean isSameDay(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -382,9 +452,10 @@ public class HomeFragment extends Fragment {
     private void drawLine() {
 
         ArrayList<CustomEntry> entries = new ArrayList<>();
-        entries.add(new CustomEntry(0, 65f, "Ngày 1")); // Ví dụ dữ liệu cân nặng, sử dụng số thực và chỉ số của ngày
-        entries.add(new CustomEntry(1, 68f, "Ngày 2"));
-        entries.add(new CustomEntry(2, 70f, "Ngày 3"));
+        entries = homeVM.getLineEntries();
+//        entries.add(new CustomEntry(0, 65f, "Ngày 1"));
+//        entries.add(new CustomEntry(1, 68f, "Ngày 2"));
+//        entries.add(new CustomEntry(2, 70f, "Ngày 3"));
 
 
         List<Entry> entryList = new ArrayList<>();
@@ -409,14 +480,13 @@ public class HomeFragment extends Fragment {
         xAxis.setAxisMaximum(entries.size() - 1);
 
 
-
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
 
         lineChart.setData(lineData);
 
         Description description = new Description();
-        description.setText("Weight per day");
+        description.setText("Steps per day");
         description.setTextColor(Color.WHITE);
         lineChart.setDescription(description);
 

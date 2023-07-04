@@ -18,5 +18,6 @@ public class FirebaseConstants {
                 .collection("today_selected_exercises");
     public static DocumentReference todayActivities = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
     public static CollectionReference achievementsRef = firestore.collection("achievements");
+    public static CollectionReference reportsRef = firestore.collection("reports");
 }
 

@@ -7,9 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
+import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,6 +29,10 @@ public class ProfileVM extends ViewModel {
 
     public NormalUser getUser() {
         return user;
+    }
+
+    public void setUser(NormalUser user) {
+        this.user = user;
     }
 
     public MutableLiveData<Boolean> getIsLoadingData() {
@@ -50,6 +56,7 @@ public class ProfileVM extends ViewModel {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        isLoadingData.setValue(false);
                         Log.i("Error", e.getMessage());
                     }
                 });

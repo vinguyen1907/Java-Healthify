@@ -134,6 +134,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/startWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -152,6 +153,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/goalWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="120dp"
@@ -170,6 +172,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/dailyCalories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="90dp"
@@ -396,11 +399,26 @@
                         android:id="@+id/exerciseDetailBtn"
                         android:layout_width="26dp"
                         android:layout_height="33dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="2dp"
                         android:src="@drawable/ic_add_with_circle"
-                        app:layout_constraintStart_toEndOf="@+id/textView24"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/update_weight_btn"
+                        android:layout_width="145dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/primary_button_background"
+                        android:drawableEnd="@drawable/ic_chevron_forward"
+                        android:drawablePadding="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="Update Wight"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

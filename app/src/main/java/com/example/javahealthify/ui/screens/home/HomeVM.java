@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModel;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.data.models.WorkoutCategory;
+import com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightVM;
 import com.example.javahealthify.utils.GlobalMethods;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,7 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -34,12 +39,88 @@ import java.util.Map;
 public class HomeVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
     private MutableLiveData<Boolean> isLoadingDocument = new MutableLiveData<>( null);
+    private MutableLiveData<Boolean> isLoadingLine = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private NormalUser user = new NormalUser();
     private Integer steps = new Integer(0);
-    private Integer exerciseCalories = new Integer(0);
-    private Integer foodCalories = new Integer(0);
+    private Float exerciseCalories = new Float(0);
+    private Float foodCalories = new Float(0);
+    private Float remaining = new Float(1000);
+    private Float goal = new Float(1000);
+    private Float startWeight = new Float(0);
+    private Float goalWeight = new Float(0);
+    private Float dailyCalories = new Float(0);
+    ArrayList<CustomEntry> lineEntries;
+    List<PieEntry> pieEntries;
+
+    private HomeUpdateWeightVM homeUpdateWeightVM;
+
+    public Float getStartWeight() {
+        return startWeight;
+    }
+
+    public void setStartWeight(Float startWeight) {
+        this.startWeight = startWeight;
+    }
+
+    public Float getGoalWeight() {
+        return goalWeight;
+    }
+
+    public void setGoalWeight(Float goalWeight) {
+        this.goalWeight = goalWeight;
+    }
+
+    public Float getDailyCalories() {
+        return dailyCalories;
+    }
+
+    public void setDailyCalories(Float dailyCalories) {
+        this.dailyCalories = dailyCalories;
+    }
+
+    public void getIsLoadingLine(MutableLiveData<Boolean> isLoadingLine) {
+        this.isLoadingLine = isLoadingLine;
+    }
+
+    public MutableLiveData<Boolean> getIsLoadingLine() {
+        return isLoadingLine;
+    }
+
+    public Float getRemaining() {
+        return remaining;
+    }
+
+    public void setRemaining(Float remaining) {
+        this.remaining = remaining;
+    }
+
+    public List<PieEntry> getPieEntries() {
+        return pieEntries;
+    }
+
+    public void setPieEntries(List<PieEntry> pieEntries) {
+        this.pieEntries = pieEntries;
+    }
+
+    private Integer x = 0;
+
+    public ArrayList<CustomEntry> getLineEntries() {
+        return lineEntries;
+    }
+
+    public void setLineEntries(ArrayList<CustomEntry> entries) {
+        this.lineEntries = entries;
+    }
+
+    public Float getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Float goal) {
+        this.goal = goal;
+    }
 
     public MutableLiveData<Boolean> getIsLoadingDocument() {
         return isLoadingDocument;
@@ -49,19 +130,19 @@ public class HomeVM extends ViewModel {
         this.isLoadingDocument = isLoadingDocument;
     }
 
-    public Integer getExerciseCalories() {
+    public Float getExerciseCalories() {
         return exerciseCalories;
     }
 
-    public Integer getFoodCalories() {
+    public Float getFoodCalories() {
         return foodCalories;
     }
 
-    public void setExerciseCalories(Integer exerciseCalories) {
+    public void setExerciseCalories(Float exerciseCalories) {
         this.exerciseCalories = exerciseCalories;
     }
 
-    public void setFoodCalories(Integer foodCalories) {
+    public void setFoodCalories(Float foodCalories) {
         this.foodCalories = foodCalories;
     }
 
@@ -114,35 +195,84 @@ public class HomeVM extends ViewModel {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        if (documentSnapshot.contains("steps")) {
                             int stepsValue = documentSnapshot.getLong("steps").intValue();
                             setSteps(stepsValue);
-                            isLoadingDocument.setValue(false);
                             Log.i("steps", String.valueOf(stepsValue));
-                        }
-                        else {
-                            Log.i("steps", "không vô được steps");
-                        }
-                        if (documentSnapshot.contains("exerciseCalories")) {
-                            int exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").intValue();
-                            setExerciseCalories(exerciseCaloriesValue);
-                            isLoadingDocument.setValue(false);
-                        }else {
-                            Log.i("exercise", "không vô được exercise");
-                        }
-                        if (documentSnapshot.contains("foodCalories")) {
-                            int foodCaloriesValue = documentSnapshot.getLong("foodCalories").intValue();
-                            setFoodCalories(foodCaloriesValue);
-                            isLoadingDocument.setValue(false);
-                        }else {
-                            Log.i("food", "không vô được food");
-                        }
+                            if(documentSnapshot.contains("exerciseCalories")){
+                                float exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").floatValue();
+                                setExerciseCalories(exerciseCaloriesValue);
+                                Log.i("exerciseCaloriesValue", String.valueOf(exerciseCaloriesValue));
+                            }
+                            if(documentSnapshot.contains("foodCalories")) {
+                                float foodCaloriesValue = documentSnapshot.getLong("foodCalories").floatValue();
+                                setFoodCalories(foodCaloriesValue);
+                                Log.i("foodCaloriesValue", String.valueOf(foodCaloriesValue));
+                            }
+                            loadGoal();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.i("Lỗi","abcdxyz");
                     // Xử lý khi không thể tải dữ liệu từ Firestore
                 });
+    }
+    public void loadGoal() {
+        firestore.collection("users")
+                .document(this.getUser().getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                            float goal = documentSnapshot.getLong("dailyCalories").floatValue();
+                            setGoal(goal);
+                            Log.i("goal", String.valueOf(goal));
+                            setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
+                            pieEntries = new ArrayList<>();
+                            pieEntries.add(new PieEntry(this.getRemaining()/this.getGoal(), "Remaining"));
+                            pieEntries.add(new PieEntry(this.getFoodCalories()/this.getGoal(), "Food"));
+                            pieEntries.add(new PieEntry(this.getExerciseCalories()/this.getGoal(), "Exercise"));
+                            float dailyCalories = documentSnapshot.getLong("dailyCalories").floatValue();
+                            setDailyCalories(dailyCalories);
+                            float startWeight = documentSnapshot.getLong("startWeight").floatValue();
+                            setDailyCalories(startWeight);
+                            float goalWeight = documentSnapshot.getLong("goalWeight").floatValue();
+                            setDailyCalories(goalWeight);
+                            isLoadingDocument.setValue(false);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.i("Lỗi","abcdxyz");
+                    // Xử lý khi không thể tải dữ liệu từ Firestore
+                });
+    }
+
+    public void loadLineData() {
+        isLoadingLine.setValue(true);
+        firestore.collection("users").document(this.getUser().getUid()).collection("daily_activities")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            lineEntries = new ArrayList<>();
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                if (document.contains("steps")) {
+                                    int steps = document.getLong("steps").intValue();
+                                    String date = document.getId();
+                                    Log.i("steps line", String.valueOf(steps));
+                                    Log.i("date line", date);
+                                    lineEntries.add(new CustomEntry(x, steps, date));
+                                    x++;
+                                }
+                            }
+                            isLoadingLine.setValue(false);
+                        } else {
+                            Exception e = task.getException();
+                            Log.i("bugg","Lỗi khi lấy dữ liệu steps");
+                        }
+                    }
+                });
+
     }
     public void getUserLiveData() {
         isLoadingData.setValue(true);

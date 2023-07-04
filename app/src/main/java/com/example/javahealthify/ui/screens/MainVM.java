@@ -1,11 +1,16 @@
 package com.example.javahealthify.ui.screens;
 
+import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
+import com.example.javahealthify.utils.FirebaseConstants;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -30,6 +35,18 @@ public class MainVM extends ViewModel {
                 })
                 .addOnFailureListener(e -> {
                     Log.i("Error", e.getMessage());
+                });
+    }
+
+    public void updateUserProfileImage(Uri uri) {
+        FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).update("imageUrl", uri)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            user.setImageUrl(uri.toString());
+                        }
+                    }
                 });
     }
 
