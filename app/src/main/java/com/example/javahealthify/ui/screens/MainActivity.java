@@ -85,11 +85,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
-        binding.navBar.setVisibility(View.GONE);
-        binding.adminNavBar.setVisibility(View.GONE);
-
-        // Init today activity
-
+//        binding.navBar.setVisibility(View.GONE);
+//        binding.adminNavBar.setVisibility(View.GONE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -101,12 +98,15 @@ public class MainActivity extends AppCompatActivity {
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
         } else {
+            navController.navigate(R.id.splashFragment);
+            hideNavBar();
+
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
                     setUpNavbar();
-                    workoutVM = new ViewModelProvider(MainActivity.this).get(WorkoutVM.class);
-                    workoutVM.initDailyActivity();
+                    setUpInitialFragment();
+                    navController.navigate(R.id.homeFragment);
                 }
             });
         }
@@ -115,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
             requestPermissionNotification();
         } else {
             Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setUpInitialFragment() {
+        boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
+        if(isNormalUser) {
+            navController.navigate(R.id.homeFragment);
+        } else {
+            navController.navigate(R.id.adminIngredientFragment);
         }
     }
 
@@ -251,7 +260,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDestinationChanged(@NonNull NavController controller,
                                              @NonNull NavDestination destination,
                                              @Nullable Bundle arguments) {
-
                 switch (destination.getId()) {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);
@@ -346,10 +354,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarVisibility() {
-        boolean isNormalUser = viewModel.getUser().getType().equals("NORMAL_USER");
+        boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
 
         binding.navBar.setVisibility(isNormalUser ? View.VISIBLE : View.GONE);
         binding.adminNavBar.setVisibility(isNormalUser ? View.GONE : View.VISIBLE);
+    }
+
+    private void hideNavBar() {
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
     }
 
     public static FirebaseFirestore getDb() {

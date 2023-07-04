@@ -35,6 +35,7 @@ public class CommunityReportVM extends ViewModel {
     public void sendReport() {
         if (user != null && achievement != null) {
             HashMap<String, Object> newReport = new HashMap<>();
+            newReport.put("achievementId", achievement.getId());
             newReport.put("achievementUserId", achievement.getUserId());
             newReport.put("achievementUserName", achievement.getUserName());
             newReport.put("achievementUserImageUrl", achievement.getUserImageUrl());
@@ -49,7 +50,6 @@ public class CommunityReportVM extends ViewModel {
             newReport.put("title", title.getValue());
             newReport.put("description", description.getValue());
             newReport.put("activitiesId", GlobalMethods.convertDateToHyphenSplittingFormat(achievement.getCreatedTime()));
-
 
             FirebaseConstants.reportsRef.add(newReport)
                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
