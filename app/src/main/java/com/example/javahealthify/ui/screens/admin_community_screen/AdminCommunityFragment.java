@@ -64,7 +64,7 @@ public class AdminCommunityFragment extends Fragment implements ReportRecyclerVi
         });
         binding.setLifecycleOwner(getViewLifecycleOwner());
         return binding.getRoot();
-    }
+    }                       
 
     private void loadMore() {
         Handler handler = new Handler();

@@ -96,10 +96,8 @@ public class MainActivity extends AppCompatActivity {
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
         if (firebaseAuth.getCurrentUser() == null) {
-            Log.d("null currentUser", "onCreate: currentUser is null, navigate to signup");
             navController.navigate(R.id.signInFragment);
         } else {
-            Log.d("not null currentUser", "onCreate: currentUser is not null" + firebaseAuth.getCurrentUser().getUid());
 
             navController.navigate(R.id.splashFragment);
 
@@ -108,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onUserLoaded(User user) {
                     setUpInitialFragment();
                     setUpNavbar();
-                    navController.navigate(R.id.homeFragment);
                 }
             });
         }
@@ -339,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_ingredient_admin:
                         navController.navigate(R.id.adminIngredientFragment);
                         break;
-                    case R.id.nav_community_admin:
+                       case R.id.nav_community_admin:
                         navController.navigate(R.id.adminCommunityFragment);
                         break;
                     case R.id.nav_workout_admin:
@@ -352,7 +349,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNavBarVisibility() {
         boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
-        Log.d("normalUser?", "setNavBarVisibility: " + isNormalUser);
         binding.navBar.setVisibility(isNormalUser ? View.VISIBLE : View.GONE);
         binding.adminNavBar.setVisibility(isNormalUser ? View.GONE : View.VISIBLE);
     }

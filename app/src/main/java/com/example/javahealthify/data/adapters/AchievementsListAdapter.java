@@ -51,8 +51,8 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
         holder.exercisesCaloriesTv.setText(String.valueOf(achievement.getExerciseCalories()));
         holder.foodCaloriesTv.setText(String.valueOf(achievement.getFoodCalories()));
 
-        if (achievement.getUserImageUrl() == null) {
-            holder.avatarImg.setImageResource(R.drawable.ic_profile);
+        if (achievement.getUserImageUrl() == null || achievement.getUserImageUrl().isEmpty()) {
+            holder.avatarImg.setImageResource(R.drawable.default_profile_image);
         } else {
             Glide.with(context).load(achievement.getUserImageUrl()).into(holder.avatarImg);
         }
@@ -104,7 +104,8 @@ public class AchievementsListAdapter extends RecyclerView.Adapter<AchievementsLi
         }
     }
 
-    public void addAll(List<Achievement> newAchievements) {
+    public void setData(List<Achievement> newAchievements) {
+        achievements.clear();
         achievements.addAll(newAchievements);
         notifyDataSetChanged();
     }
