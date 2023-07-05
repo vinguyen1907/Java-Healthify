@@ -12,8 +12,11 @@ import com.example.javahealthify.utils.FirebaseConstants;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
@@ -29,7 +32,9 @@ public class WorkoutShareAchievementVM extends ViewModel {
     }
 
     public void loadTodayAchievement() {
-        FirebaseConstants.todayActivities.get()
+        CollectionReference dailyActivitiesRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .collection("daily_activities");
+        dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date())).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -37,7 +42,7 @@ public class WorkoutShareAchievementVM extends ViewModel {
                             Achievement newAchievement;
                             newAchievement = task.getResult().toObject(Achievement.class);
                             newAchievement.setId(task.getResult().getId());
-                            todayAchievement.setValue(newAchievement);
+                            todayAchievement.postValue(newAchievement);
                         }
                     }
                 });

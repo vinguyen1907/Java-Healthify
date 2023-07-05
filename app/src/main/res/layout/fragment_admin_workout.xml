@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.admin_workout_screen.AdminWorkoutFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="workout" />
+   <androidx.appcompat.widget.AppCompatButton
+       android:id="@+id/admin_logout"
+       android:background="@drawable/red_button_background"
+       android:text="logout"
+       android:layout_height="wrap_content"
+       android:layout_width="wrap_content"/>
 
 </FrameLayout>

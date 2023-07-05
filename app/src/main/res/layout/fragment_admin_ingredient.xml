@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/default_horizontal_margin"
+
         android:layout_marginTop="40dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -153,6 +154,8 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:clipToPadding="false"
+            android:paddingBottom="200dp"
             android:id="@+id/admin_ingredient_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
