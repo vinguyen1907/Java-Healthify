@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.javahealthify.R;
@@ -21,6 +22,7 @@ import com.example.javahealthify.databinding.FragmentMenuBinding;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.util.concurrent.AtomicDouble;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -37,7 +39,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     MenuVM menuVM;
     private FragmentMenuBinding binding;
-
     DishRecycleViewAdapter adapter;
     DateAdapter dateAdapter;
     List<Date> dates;
@@ -70,12 +71,13 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         // Update the RecyclerView adapter with new data
         dateAdapter = new DateAdapter(dates, this);
         dateAdapter.setSelectedPosition(2);
-        binding.dateSlider.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false) {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 5){
             @Override
             public boolean canScrollHorizontally() {
                 return false;
             }
-        });
+        };
+        binding.dateSlider.setLayoutManager(gridLayoutManager);
         binding.dateSlider.setAdapter(dateAdapter);
 
         updateDatesList(Calendar.getInstance().getTime());
@@ -179,7 +181,8 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
             binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
             binding.meals.setAdapter(adapter);
             binding.meals.requestLayout();
-
+            binding.displayDate.setText("Today");
+            binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
         } else {
             fetchDishes(date);
         }
@@ -189,6 +192,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
     private void fetchDishes(Date date) {
         Log.d("Fetch old dishes", "fetchDishes: is called");
         ArrayList<Dish> dishes = new ArrayList<>();
+        AtomicDouble totalCalories = new AtomicDouble(0.0);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         DocumentReference userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -201,7 +205,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
-                        Log.d("fetch old dishes", "onComplete: document exists");
                         List<Map<String, Object>> dishesMapLists = (List<Map<String,Object>>) document.get("dishes");
                         for(Map<String,Object> dishMap : dishesMapLists) {
                             Dish dish = new Dish();
@@ -236,7 +239,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                             dish.setLipid(dishTotalLipid);
                             dish.setProtein(dishTotalProtein);
                             dishes.add(dish);
-
+                            totalCalories.addAndGet(dishTotalCalories);
                         }
                     }
                 }
@@ -246,6 +249,12 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                 binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
                 binding.meals.setAdapter(adapter);
                 binding.meals.requestLayout();
+                if(GlobalMethods.isToday(date)) {
+                    binding.displayDate.setText("Today");
+                } else {
+                    binding.displayDate.setText(GlobalMethods.convertDateToHyphenSplittingFormat(date));
+                }
+                binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories.doubleValue()));
             }
         });
 

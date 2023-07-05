@@ -44,7 +44,7 @@ public class SearchUsersAdapter extends RecyclerView.Adapter<SearchUsersAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        if (result.get(position).getImageUrl() == null) {
+        if (result.get(position).getImageUrl() == null || result.get(position).getImageUrl().isEmpty()) {
             holder.avatarImg.setImageResource(R.drawable.default_profile_image);
         } else {
             Glide.with(context).load(result.get(position).getImageUrl()).into(holder.avatarImg);

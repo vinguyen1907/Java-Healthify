@@ -24,6 +24,7 @@
         <include
             android:id="@+id/achievement_layout"
             layout="@layout/achievement_item"
+            steps="@{String.valueOf(viewModel.todayAchievement.steps)}"
             foodCalories="@{String.valueOf(viewModel.todayAchievement.foodCalories)}"
             exerciseCalories="@{String.valueOf(viewModel.todayAchievement.exerciseCalories)}"
             totalCalories="@{String.valueOf(viewModel.todayAchievement.calories)}"

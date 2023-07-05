@@ -38,8 +38,10 @@ public class WorkoutVM extends ViewModel {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     public WorkoutVM() {
-        loadSelectedExercises();
-        loadExercisesCalories();
+        if(auth.getCurrentUser() != null) {
+            loadSelectedExercises();
+            loadExercisesCalories();
+        }
     }
 
     // Methods handle data on database
