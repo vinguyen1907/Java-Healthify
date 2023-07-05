@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +18,7 @@ import com.example.javahealthify.ui.screens.home.CustomEntry;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragment;
 import com.example.javahealthify.utils.GlobalMethods;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -33,15 +35,17 @@ public class HomeUpdateWeightFragment extends Fragment {
     private HomeUpdateWeightVM homeUpdateWeightVM;
     private FragmentHomeWeightReportBinding binding;
     private BarChart barChart;
+    private HomeVM homeVM = new HomeVM();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeUpdateWeightVM = new ViewModelProvider(requireActivity()).get(HomeUpdateWeightVM.class);
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentHomeWeightReportBinding.inflate(inflater,container,false);
+        binding = FragmentHomeWeightReportBinding.inflate(inflater, container, false);
         binding.setViewModel(homeUpdateWeightVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
@@ -55,7 +59,14 @@ public class HomeUpdateWeightFragment extends Fragment {
         binding.updateWeightDailyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                homeUpdateWeightVM.saveDailyWeight(binding.addWeightDaily.getText().toString());
+                homeUpdateWeightVM.saveDailyWeight(Integer.valueOf(binding.addWeightDaily.getText().toString()),
+                        homeVM.getSteps(),
+                        homeVM.getExerciseCalories(),
+                        homeVM.getCalories(),
+                        homeVM.getFoodCalories());
+                Toast.makeText(getContext(), "Update today's weight successfully", Toast.LENGTH_LONG).show();
+                binding.addWeightDaily.setText("");
+                barChart.invalidate();
             }
         });
 
@@ -87,8 +98,9 @@ public class HomeUpdateWeightFragment extends Fragment {
         BarData barData = new BarData(dataSet);
 
         barChart.setData(barData);
+        barChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
         barChart.getDescription().setText("Weight by Date");
-        barChart.getDescription().setTextColor(Color.BLACK);
+        barChart.getDescription().setTextColor(Color.WHITE);
 
         // Set up X-axis
         XAxis xAxis = barChart.getXAxis();

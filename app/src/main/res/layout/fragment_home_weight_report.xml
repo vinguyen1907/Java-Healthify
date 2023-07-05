@@ -56,15 +56,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
             android:fontFamily="@font/poppins_semi_bold"
             android:hint="@string/home_update_weight"
             android:maxLines="1"
             android:textColor="@color/primaryTextColor"
             android:textColorHint="@color/primaryHintColor"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/add_weight_daily"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/barChart" />
+            app:layout_constraintBottom_toTopOf="@+id/update_weight_daily_btn"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/update_weight_daily_btn"

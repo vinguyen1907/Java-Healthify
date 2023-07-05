@@ -121,8 +121,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
-//                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
-//                    binding.profileNameTv.setText(profileVM.getUser().getName());
+                    binding.profileEmailTv.setText(profileVM.getUser().getValue().getEmail());
+                    binding.profileNameTv.setText(profileVM.getUser().getValue().getName());
                     if (profileVM.getUser().getValue().getImageUrl() == null) {
                         binding.profileImage.setImageResource(R.drawable.default_profile_image);
                     } else {

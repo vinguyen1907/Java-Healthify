@@ -38,26 +38,37 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HomeVM extends ViewModel {
-    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
-    private MutableLiveData<Boolean> isLoadingDocument = new MutableLiveData<>( null);
-    private MutableLiveData<Boolean> isLoadingLine = new MutableLiveData<>( null);
+    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(null);
+    private MutableLiveData<Boolean> isLoadingDocument = new MutableLiveData<>(null);
+    private MutableLiveData<Boolean> isLoadingLine = new MutableLiveData<>(null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private NormalUser user = new NormalUser();
+    private MutableLiveData<NormalUser> user = new MutableLiveData<>();
     private Integer steps = new Integer(0);
     private Float exerciseCalories = new Float(0);
     private Float foodCalories = new Float(0);
+    private Float calories = new Float(0);
+
     private Float remaining = new Float(1000);
     private Float goal = new Float(1000);
     private Float startWeight = new Float(0);
     private Float goalWeight = new Float(0);
     private Float dailyCalories = new Float(0);
+    private Integer weight = new Integer(0);
     ArrayList<CustomEntry> lineEntries;
     List<PieEntry> pieEntries;
 
     private WorkoutVM workoutVM;
 
     private HomeUpdateWeightVM homeUpdateWeightVM = new HomeUpdateWeightVM(100);
+
+    public Float getCalories() {
+        return calories;
+    }
+
+    public void setCalories(Float calories) {
+        this.calories = calories;
+    }
 
     public Float getStartWeight() {
         return startWeight;
@@ -82,7 +93,13 @@ public class HomeVM extends ViewModel {
     public void setDailyCalories(Float dailyCalories) {
         this.dailyCalories = dailyCalories;
     }
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
 
+    public Integer getWeight() {
+        return weight;
+    }
     public void getIsLoadingLine(MutableLiveData<Boolean> isLoadingLine) {
         this.isLoadingLine = isLoadingLine;
     }
@@ -149,6 +166,7 @@ public class HomeVM extends ViewModel {
         this.foodCalories = foodCalories;
     }
 
+
     public Integer getSteps() {
         return steps;
     }
@@ -157,16 +175,13 @@ public class HomeVM extends ViewModel {
         this.steps = steps;
     }
 
-    public NormalUser getUser() {
-        return user;
-    }
+
 
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
     }
 
     public HomeVM() {
-        this.getUserLiveData();
         this.loadDocument();
         this.loadLineData();
     }
@@ -175,9 +190,10 @@ public class HomeVM extends ViewModel {
 
         Map<String, Object> dailyActivities = new HashMap<>();
         dailyActivities.put("steps", stepCount);
-        dailyActivities.put("weight", homeUpdateWeightVM.getWeight());
-//        dailyActivities.put("exerciseCalories", workoutVM.getExerciseCalories());
-//        dailyActivities.put("calories", workoutVM.getSelectedExercises());
+        dailyActivities.put("weight", this.getWeight());
+        dailyActivities.put("exerciseCalories", this.getExerciseCalories());
+        dailyActivities.put("calories", this.getCalories());
+        dailyActivities.put("foodCalories", this.getFoodCalories());
 
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
         firestore.collection("users")
@@ -187,18 +203,20 @@ public class HomeVM extends ViewModel {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("success","Lưu giá trị thành công");
+                        Log.i("success", "Lưu giá trị thành công");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("success","Lưu giá trị thất bại");
-                        Log.i("bug",e.toString());
+                        Log.i("success", "Lưu giá trị thất bại");
+                        Log.i("bug", e.toString());
                     }
                 });
     }
-
+    public MutableLiveData<NormalUser> getUser() {
+        return user;
+    }
     public void loadDocument() {
         isLoadingDocument.setValue(true);
         firestore.collection("users")
@@ -208,53 +226,59 @@ public class HomeVM extends ViewModel {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+                        if (documentSnapshot.contains("steps")) {
                             int stepsValue = documentSnapshot.getLong("steps").intValue();
                             setSteps(stepsValue);
-                            Log.i("steps", String.valueOf(stepsValue));
-                            if(documentSnapshot.contains("exerciseCalories")){
-                                float exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").floatValue();
-                                setExerciseCalories(exerciseCaloriesValue);
-                                Log.i("exerciseCaloriesValue", String.valueOf(exerciseCaloriesValue));
-                            }
-                            if(documentSnapshot.contains("foodCalories")) {
-                                float foodCaloriesValue = documentSnapshot.getLong("foodCalories").floatValue();
-                                setFoodCalories(foodCaloriesValue);
-                                Log.i("foodCaloriesValue", String.valueOf(foodCaloriesValue));
-                            }
-                            loadGoal();
+                        }
+                        if (documentSnapshot.contains("weight")) {
+                            int weightValue = documentSnapshot.getLong("steps").intValue();
+                            setWeight(weightValue);
+                        }
+                        if (documentSnapshot.contains("calories")) {
+                            float caloriesValue = documentSnapshot.getLong("calories").floatValue();
+                            setCalories(caloriesValue);
+                        }
+                        if (documentSnapshot.contains("exerciseCalories")) {
+                            float exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").floatValue();
+                            setExerciseCalories(exerciseCaloriesValue);
+                        }
+                        if (documentSnapshot.contains("foodCalories")) {
+                            float foodCaloriesValue = documentSnapshot.getLong("foodCalories").floatValue();
+                            setFoodCalories(foodCaloriesValue);
+                        }
+                        loadGoal();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi","abcdxyz");
-                    // Xử lý khi không thể tải dữ liệu từ Firestore
+                    Log.i("Lỗi", "abcdxyz");
                 });
     }
+
     public void loadGoal() {
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                            float goal = documentSnapshot.getLong("dailyCalories").floatValue();
-                            setGoal(goal);
-                            Log.i("goal", String.valueOf(goal));
-                            setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
-                            pieEntries = new ArrayList<>();
-                            pieEntries.add(new PieEntry(this.getRemaining()/this.getGoal(), "Remaining"));
-                            pieEntries.add(new PieEntry(this.getFoodCalories()/this.getGoal(), "Food"));
-                            pieEntries.add(new PieEntry(this.getExerciseCalories()/this.getGoal(), "Exercise"));
-                            float dailyCalories = documentSnapshot.getLong("dailyCalories").floatValue();
-                            setDailyCalories(dailyCalories);
-                            float startWeight = documentSnapshot.getLong("startWeight").floatValue();
-                            setStartWeight(startWeight);
-                            float goalWeight = documentSnapshot.getLong("goalWeight").floatValue();
-                            setGoalWeight(goalWeight);
-                            isLoadingDocument.setValue(false);
+                        float goal = documentSnapshot.getLong("dailyCalories").floatValue();
+                        setGoal(goal);
+                        Log.i("goal", String.valueOf(goal));
+                        setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
+                        pieEntries = new ArrayList<>();
+                        pieEntries.add(new PieEntry(this.getRemaining() / this.getGoal(), "Remaining"));
+                        pieEntries.add(new PieEntry(this.getFoodCalories() / this.getGoal(), "Food"));
+                        pieEntries.add(new PieEntry(this.getExerciseCalories() / this.getGoal(), "Exercise"));
+                        float dailyCalories = documentSnapshot.getLong("dailyCalories").floatValue();
+                        setDailyCalories(dailyCalories);
+                        float startWeight = documentSnapshot.getLong("startWeight").floatValue();
+                        setStartWeight(startWeight);
+                        float goalWeight = documentSnapshot.getLong("goalWeight").floatValue();
+                        setGoalWeight(goalWeight);
+                        isLoadingDocument.setValue(false);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi","abcdxyz");
-                    // Xử lý khi không thể tải dữ liệu từ Firestore
+                    Log.i("Lỗi", "abcdxyz");
                 });
     }
 
@@ -274,6 +298,16 @@ public class HomeVM extends ViewModel {
                                     String date = document.getId();
                                     Log.i("steps line", String.valueOf(steps));
                                     Log.i("date line", date);
+
+                                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM");
+                                    try {
+                                        Date parsedDate = inputFormat.parse(date);
+                                        date = outputFormat.format(parsedDate);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                     lineEntries.add(new CustomEntry(x, steps, date));
                                     x++;
                                 }
@@ -281,12 +315,13 @@ public class HomeVM extends ViewModel {
                             isLoadingLine.setValue(false);
                         } else {
                             Exception e = task.getException();
-                            Log.i("bugg","Lỗi khi lấy dữ liệu steps");
+                            Log.i("bugg", "Lỗi khi lấy dữ liệu steps");
                         }
                     }
                 });
 
     }
+
     public void getUserLiveData() {
         isLoadingData.setValue(true);
         firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
@@ -294,11 +329,10 @@ public class HomeVM extends ViewModel {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            user = task.getResult().getDocuments().get(0).toObject(NormalUser.class);
+                            user.setValue(task.getResult().getDocuments().get(0).toObject(NormalUser.class));
                             isLoadingData.setValue(false);
 
-                        }
-                        else {
+                        } else {
                             Log.d("Get user data error", "Error getting user documents: ", task.getException());
                             isLoadingData.setValue(false);
                         }
@@ -314,14 +348,4 @@ public class HomeVM extends ViewModel {
 //            loadUser();
 //        }
     }
-
-//    private void loadUser() {
-//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (firebaseUser != null) {
-//            User user = new User();
-//            user.setName(firebaseUser.getDisplayName());
-//            user.setEmail(firebaseUser.getEmail());
-//            userLiveData.setValue(user);
-//        }
-//    }
 }

@@ -108,6 +108,7 @@ public class HomeUpdateWeightVM extends ViewModel {
 
     }
     public void loadDailyWeight() {
+
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities")
@@ -117,7 +118,6 @@ public class HomeUpdateWeightVM extends ViewModel {
                     if (documentSnapshot.exists()) {
                         int stepsValue = documentSnapshot.getLong("weight").intValue();
                         setWeight(stepsValue);
-                        Log.i("steps", String.valueOf(stepsValue));
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -148,10 +148,13 @@ public class HomeUpdateWeightVM extends ViewModel {
                 });
     }
 
-    public void saveDailyWeight(String weight) {
+    public void saveDailyWeight(Integer weight, Integer steps, Float exerciseCalories, Float calories, Float foodCalories) {
         Map<String, Object> dailyActivities = new HashMap<>();
+        dailyActivities.put("steps", steps);
         dailyActivities.put("weight", weight);
-        dailyActivities.put("steps", homeVM.getSteps());
+        dailyActivities.put("exerciseCalories", exerciseCalories);
+        dailyActivities.put("calories", calories);
+        dailyActivities.put("foodCalories", foodCalories);
 
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())

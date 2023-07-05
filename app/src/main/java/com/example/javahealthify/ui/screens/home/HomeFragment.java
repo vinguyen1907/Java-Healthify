@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.adapters.WorkoutCategoriesAdapter;
 import com.example.javahealthify.data.models.NormalUser;
@@ -37,6 +38,7 @@ import com.example.javahealthify.ui.screens.profile.ProfileFragment;
 import com.example.javahealthify.ui.screens.profile.ProfileVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -69,8 +71,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
-    private User user;
     private HomeVM homeVM;
+    private MutableLiveData<NormalUser> user = new MutableLiveData<>();
     private FragmentHomeBinding binding;
     private WorkoutVM workoutVM;
     private PieChart pieChart;
@@ -116,7 +118,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
-//        homeVM.getUserLiveData();
+        homeVM.getUserLiveData();
 //        homeVM.loadDocument();
 
         // Init today activity
@@ -269,6 +271,7 @@ public class HomeFragment extends Fragment {
         pieChart.setCenterText(goalMsg.concat(homeVM.getGoal().toString()));
         pieChart.setCenterTextSize(16f);
         pieChart.setCenterTextColor(Color.WHITE);
+        pieChart.animateXY(1000, 1000, Easing.EaseInOutBounce); // 1000 milliseconds for both X and Y axes
 
         Legend legend = pieChart.getLegend();
         legend.setEnabled(false);
@@ -333,10 +336,16 @@ public class HomeFragment extends Fragment {
 //            @Override
 //            public void onChanged(Boolean isLoadingDocument) {
 //                if (isLoadingDocument != null && !isLoadingDocument) {
+        binding.userNameTv.setText(homeVM.getUser().getValue().getName());
         binding.exerciseTv.setText(homeVM.getExerciseCalories().toString());
         binding.startWeight.setText(homeVM.getStartWeight().toString());
         binding.goalWeight.setText(homeVM.getGoalWeight().toString());
         binding.dailyCalories.setText(homeVM.getDailyCalories().toString());
+        if (homeVM.getUser().getValue().getImageUrl() == null) {
+            binding.userAvatar.setImageResource(R.drawable.default_profile_image);
+        } else {
+            Glide.with(requireContext()).load(homeVM.getUser().getValue().getImageUrl()).into(binding.userAvatar);
+        }
 //                    exerciseCalories = homeVM.getExerciseCalories();
 //                    foodCalories = homeVM.getFoodCalories();
 //                    goal = homeVM.getGoal();
@@ -418,9 +427,19 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isLoadingDocument) {
+                if (isLoadingDocument != null && !isLoadingDocument) {
+                    if (!isSameDay(currentDate, previousDate)) {
+                        homeVM.saveDailySteps(stepCount, previousDate);
+                    }
+                } else {
 
+                }
+            }
+        });
 
-        homeVM.saveDailySteps(stepCount, previousDate);
 
 
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
@@ -462,7 +481,8 @@ public class HomeFragment extends Fragment {
             entryList.add(customEntry);
         }
 
-        LineDataSet dataSet = new LineDataSet(entryList, "Weight");
+        LineDataSet dataSet = new LineDataSet(entryList, "Steps");
+        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         LineData lineData = new LineData(dataSet);
 
         String[] labels = new String[entries.size()];
@@ -484,6 +504,7 @@ public class HomeFragment extends Fragment {
         dataSets.add(dataSet);
 
         lineChart.setData(lineData);
+        lineChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
 
         Description description = new Description();
         description.setText("Steps per day");
