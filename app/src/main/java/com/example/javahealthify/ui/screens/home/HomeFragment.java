@@ -496,6 +496,7 @@ public class HomeFragment extends Fragment {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setValueFormatter(xAxisFormatter);
         xAxis.setGranularity(1);
+        xAxis.setDrawGridLines(false); // Hide grid lines
 
         xAxis.setAxisMaximum(entries.size() - 1);
 

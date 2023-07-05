@@ -20,6 +20,7 @@ import com.example.javahealthify.ui.screens.workout_history.WorkoutHistoryFragme
 import com.example.javahealthify.utils.GlobalMethods;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -104,8 +105,11 @@ public class HomeUpdateWeightFragment extends Fragment {
 
         // Set up X-axis
         XAxis xAxis = barChart.getXAxis();
-        xAxis.setGranularity(1f); // Display one value per interval
-        xAxis.setDrawGridLines(false); // Hide grid lines
+        xAxis.setGranularity(1f); // hiển thị 1 giá trị mỗi lần
+        xAxis.setDrawGridLines(false); // cái này để xóa grid
+
+        Legend legend = barChart.getLegend();
+        legend.setTextColor(Color.WHITE);
 
         xAxis.setValueFormatter(new IndexAxisValueFormatter() {
             @Override
