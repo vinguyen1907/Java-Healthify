@@ -1,5 +1,7 @@
 package com.example.javahealthify.ui.screens.community_share_achievement;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
