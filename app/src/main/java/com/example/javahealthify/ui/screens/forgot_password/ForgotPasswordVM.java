@@ -11,22 +11,25 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ForgotPasswordVM extends ViewModel {
-    private MutableLiveData<String> email = new MutableLiveData<>();
+    private MutableLiveData<String> email = new MutableLiveData<>("");
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private MutableLiveData<Boolean> isSent = new MutableLiveData<>(false);
 
     public void sendResetPasswordEmail() {
-        firebaseAuth.sendPasswordResetEmail(email.getValue())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            isSent.setValue(true);
-                        } else {
-                            Log.i("NOTI", "Fail");
+        Log.i("forgot password email", email.getValue());
+        if (!email.getValue().isEmpty()) {
+            firebaseAuth.sendPasswordResetEmail(email.getValue())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                isSent.setValue(true);
+                            } else {
+                                Log.i("NOTI", "Fail");
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
     public MutableLiveData<String> getEmail() {
