@@ -95,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
         scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
+        hideNavBar();
         if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signInFragment);
+            navController.navigate(R.id.onboardingFragment);
         } else {
-
             navController.navigate(R.id.splashFragment);
 
             viewModel.loadUser(new MainVM.UserLoadCallback() {
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_ingredient_admin:
                         navController.navigate(R.id.adminIngredientFragment);
                         break;
-                       case R.id.nav_community_admin:
+                    case R.id.nav_community_admin:
                         navController.navigate(R.id.adminCommunityFragment);
                         break;
                     case R.id.nav_workout_admin:
