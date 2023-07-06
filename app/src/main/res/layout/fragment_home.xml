@@ -9,65 +9,81 @@
             type="com.example.javahealthify.ui.screens.home.HomeVM" />
     </data>
 
-
-    
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bind:context=".ui.screens.home.HomeFragment">
-
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="77dp"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textView20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="78dp"
-                    android:layout_marginTop="33dp"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/poppins_semi_bold"
                     android:text="@string/Home_Hello"
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/user_avatar"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
+                    android:id="@+id/user_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="120dp"
-                    android:layout_marginTop="-27dp"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/poppins_semi_bold"
                     android:text="@string/Home_Name"
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView20"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="78dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="0dp"
+                    android:layout_marginStart="16dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Noti"
                     android:textColor="#E5E5E5"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/user_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
-            </LinearLayout>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_avatar"
+                    android:layout_width="53dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/default_avatar"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
                 android:layout_width="370dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="20dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
@@ -92,266 +108,342 @@
                     android:layout_marginEnd="0dp"
                     android:layout_marginBottom="0dp"
                     android:layout_toEndOf="@+id/pieChart"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                 </LinearLayout>
             </RelativeLayout>
 
 
-
-
             <LinearLayout
                 android:layout_width="370dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="20dp"
+                android:layout_height="220dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="62dp"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/startWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/Home_weight_Start"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/textView27"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/Home_Weight"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/startWeight"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/goalWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="120dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/home_weight_target"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/textView26"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/Home_Weight"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/goalWeight"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/dailyCalories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="90dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/Home_Daily_Calories"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/textView25"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/Home_Cal"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:orientation="horizontal"
-                bind:ignore="TextSizeCheck">
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/dailyCalories"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/textView28"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Start"
                     android:textColor="#CCCCCC"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/startWeight" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="130dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="132dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Target"
                     android:textColor="#CCCCCC"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView28"
+                    app:layout_constraintTop_toBottomOf="@+id/goalWeight" />
 
                 <TextView
+                    android:id="@+id/textView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="90dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="8dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Text_CaloDaily"
                     android:textColor="#CCCCCC"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dailyCalories" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/step_statistics"
-                android:layout_width="165dp"
-                android:layout_height="160dp"
-                android:orientation="vertical"
-                android:background="@drawable/onboarding_radius_panel"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Home_Steps_Text"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="23sp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"/>
-                <TextView
-                    android:id="@+id/stepCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="@string/Home_Steps"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="92dp"
-                    android:layout_marginTop="-24dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:text="@string/Home_Steps_Text"
-                    android:textSize="12sp" />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/home_runningshoes"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-30dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/Home_Goal_Text"
-                    android:textSize="10sp"
-                    android:textColor="#E5E5E5"
-                    bind:ignore="SmallSp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="-16.5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/Home_Goal_Steps"
-                    android:textSize="10sp"
-                    bind:ignore="SmallSp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="76dp"
-                    android:layout_marginTop="-16.5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/Home_Steps_Text"
-                    android:textSize="10sp"
-                    bind:ignore="SmallSp" />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/home_retangle"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/excercise_detail"
-                android:layout_width="165dp"
-                android:layout_height="160dp"
-                android:orientation="vertical"
-                android:background="@drawable/onboarding_radius_panel"
-                android:layout_marginStart="225dp"
-                android:layout_marginTop="-160dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Home_Excercise_Text"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:textSize="23sp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"/>
-                <TextView
-                    android:id="@+id/exercise_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="@string/Home_Calo"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="55dp"
-                    android:layout_marginTop="-24dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:text="@string/Home_Cal"
-                    android:textSize="12sp" />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/home_calories"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-25dp"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="35dp"
-                    android:layout_marginTop="25dp"
-                    android:fontFamily="@font/poppins_bold"
-                    android:text="@string/Home_Time"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="87dp"
-                    android:layout_marginTop="-22.5dp"
-                    android:fontFamily="@font/poppins_semi_bold"
-                    android:text="@string/Home_Hours_Text"
-                    android:textSize="12sp" />
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/home_time"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="-23dp"/>
-            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:ignore="TextSizeCheck">
+
+
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/step_statistics"
+                    android:layout_width="165dp"
+                    android:layout_height="160dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/onboarding_radius_panel"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:text="@string/Home_Steps_Text"
+                        android:textSize="23sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/stepCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/Home_Steps"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/imageView5"
+                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="22dp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:text="@string/Home_Steps_Text"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toEndOf="@+id/stepCountTextView"
+                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/home_runningshoes"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/Home_Goal_Text"
+                        android:textColor="#E5E5E5"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+                        bind:ignore="SmallSp" />
+
+                    <TextView
+                        android:id="@+id/textView23"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/Home_Goal_Steps"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/textView22"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+                        bind:ignore="SmallSp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/Home_Steps_Text"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/textView23"
+                        app:layout_constraintTop_toBottomOf="@+id/imageView5"
+                        bind:ignore="SmallSp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/home_retangle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/excercise_detail"
+                    android:layout_width="165dp"
+                    android:layout_height="160dp"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/onboarding_radius_panel"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/step_statistics"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:text="@string/Home_Excercise_Text"
+                        android:textSize="23sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/exercise_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/Home_Calo"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/imageView6"
+                        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_semi_bold"
+                        android:text="@string/Home_Cal"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@+id/exercise_tv"
+                        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/home_calories"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+                    <ImageView
+                        android:id="@+id/exerciseDetailBtn"
+                        android:layout_width="26dp"
+                        android:layout_height="33dp"
+                        android:src="@drawable/ic_add_with_circle"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/update_weight_btn"
+                        android:layout_width="145dp"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/primary_button_background"
+                        android:drawableEnd="@drawable/ic_chevron_forward"
+                        android:drawablePadding="8dp"
+                        android:paddingLeft="12dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="4dp"
+                        android:text="Update Wight"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </LinearLayout>
-
-
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

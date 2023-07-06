@@ -45,7 +45,9 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         binding.setViewModel(findIngredientVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         operation = requireArguments().getString("operation");
-
+        binding.ingredientSearchResults.setVisibility(View.GONE);
+        binding.personalIngredientSearchResults.setVisibility(View.GONE);
+        binding.personalIngredientTv.setVisibility(View.GONE);
 
         IngredientNameRecyclerViewAdapter adapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.ingredientInfoArrayList.getValue(), this, this);
 
@@ -65,13 +67,28 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         findIngredientVM.getIngredientInfoArrayList().observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
             @Override
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
-                adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                if (ingredientInfoArrayList.isEmpty()) {
+                    binding.ingredientSearchResults.setVisibility(View.GONE);
+                } else {
+                    binding.ingredientSearchResults.setVisibility(View.VISIBLE);
+
+                    adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+
+                }
             }
         });
         findIngredientVM.getPersonalIngredientInfoArrayList().observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
             @Override
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
-                personalIngredientAdapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                if (ingredientInfoArrayList.isEmpty()) {
+                    binding.personalIngredientTv.setVisibility(View.GONE);
+                    binding.personalIngredientSearchResults.setVisibility(View.GONE);
+                } else {
+                    binding.personalIngredientTv.setVisibility(View.VISIBLE);
+
+                    binding.personalIngredientSearchResults.setVisibility(View.VISIBLE);
+                    personalIngredientAdapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                }
             }
         });
         binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +107,6 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     }
 
 
-
     private void showResult(String searchQuery) {
         findIngredientVM.search(searchQuery);
     }
@@ -98,7 +114,7 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     @Override
     public void onViewIngredientInfoClick(int position, int recyclerViewId) {
         Bundle bundle = new Bundle();
-        bundle.putInt("position",position);
+        bundle.putInt("position", position);
         if (recyclerViewId == binding.ingredientSearchResults.getId()) {
             Log.d("globalId", "onViewIngredientInfoClick: " + recyclerViewId);
             bundle.putString("type", "global");
@@ -144,11 +160,11 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
 
     @Override
     public void onIngredientInfoNameClick(int position, int recyclerViewId) {
-        Log.d("globalID", String.valueOf(binding.ingredientSearchResults.getId()) );
-        Log.d("personalID", String.valueOf(binding.personalIngredientSearchResults.getId()) );
+        Log.d("globalID", String.valueOf(binding.ingredientSearchResults.getId()));
+        Log.d("personalID", String.valueOf(binding.personalIngredientSearchResults.getId()));
 
         IngredientInfo selectedIngredientInfo = new IngredientInfo();
-        if(recyclerViewId == binding.ingredientSearchResults.getId()) {
+        if (recyclerViewId == binding.ingredientSearchResults.getId()) {
             Log.d("clickedId", String.valueOf(recyclerViewId));
 
             selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);

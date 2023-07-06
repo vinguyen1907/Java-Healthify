@@ -6,9 +6,7 @@ import com.google.firebase.firestore.Exclude;
 
 public class IngredientInfo {
 
-    public void setId(String id) {
-        this.id = id;
-    }
+
 
     private String id;
     private String Short_Description;
@@ -25,6 +23,10 @@ public class IngredientInfo {
         this.Carbs = Carbs;
         this.Lipid = Lipid;
         this.Protein = Protein;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Exclude

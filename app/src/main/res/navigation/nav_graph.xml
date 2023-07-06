@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_homeFragment_to_excerciseDetail"
             app:destination="@id/excerciseDetail" />
+        <action
+            android:id="@+id/action_homeFragment_to_homeUpdateWeightFragment"
+            app:destination="@id/homeUpdateWeightFragment" />
     </fragment>
     <fragment
         android:id="@+id/communityFragment"
@@ -360,7 +363,11 @@
         android:id="@+id/adminCommunityFragment"
         android:name="com.example.javahealthify.ui.screens.admin_community_screen.AdminCommunityFragment"
         android:label="fragment_admin_community"
-        tools:layout="@layout/fragment_admin_community" />
+        tools:layout="@layout/fragment_admin_community" >
+        <action
+            android:id="@+id/action_adminCommunityFragment_to_achievementDetailsFragment"
+            app:destination="@id/achievementDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/adminIngredientFragment"
         android:name="com.example.javahealthify.ui.screens.admin_ingredient_screen.AdminIngredientFragment"
@@ -439,5 +446,9 @@
         android:name="com.example.javahealthify.ui.screens.splash_screen.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/homeUpdateWeightFragment"
+        android:name="com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightFragment"
+        android:label="HomeUpdateWeightFragment" />
 
 </navigation>
