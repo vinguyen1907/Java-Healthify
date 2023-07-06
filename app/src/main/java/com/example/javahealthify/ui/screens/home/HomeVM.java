@@ -183,7 +183,7 @@ public class HomeVM extends ViewModel {
 
     public HomeVM() {
 //        this.loadDocument();
-        this.loadLineData();
+//        this.loadLineData();
     }
 
     public void saveDailySteps(int stepCount, Date previousDate) {
@@ -234,7 +234,7 @@ public class HomeVM extends ViewModel {
                             setSteps(0);
                         }
                         if (documentSnapshot.contains("weight")) {
-                            int weightValue = documentSnapshot.getLong("steps").intValue();
+                            int weightValue = documentSnapshot.getLong("weight").intValue();
                             setWeight(weightValue);
                         }
                         else {
@@ -299,7 +299,8 @@ public class HomeVM extends ViewModel {
 
     public void loadLineData() {
         isLoadingLine.setValue(true);
-        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid())
+                .collection("daily_activities")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -307,12 +308,11 @@ public class HomeVM extends ViewModel {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             lineEntries = new ArrayList<>();
+                            x = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 if (document.contains("steps")) {
                                     int steps = document.getLong("steps").intValue();
                                     String date = document.getId();
-                                    Log.i("steps line", String.valueOf(steps));
-                                    Log.i("date line", date);
 
                                     SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                                     SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM");
