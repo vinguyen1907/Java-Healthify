@@ -120,6 +120,7 @@ public class HomeFragment extends Fragment {
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
         homeVM.loadDocument();
+        homeVM.loadLineData();
 
         // Init today activity
 
@@ -412,8 +413,6 @@ public class HomeFragment extends Fragment {
 
         if (!isSameDay(currentDate, previousDate)) {
 
-            homeVM.saveDailySteps(stepCount, previousDate);
-
             stepCount = 0;
             binding.stepCountTextView.setText(String.valueOf(stepCount));
 
@@ -452,7 +451,7 @@ public class HomeFragment extends Fragment {
             sensorManager.unregisterListener(accelerometerSensorEventListener);
         }
 
-
+        homeVM.saveDailySteps(stepCount, previousDate);
     }
 
 
