@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         homeVM.getUserLiveData();
-//        homeVM.loadDocument();
+        homeVM.loadDocument();
 
         // Init today activity
 
@@ -277,7 +277,7 @@ public class HomeFragment extends Fragment {
         legend.setEnabled(false);
 
 
-        for (int i = 0; i < entries.size() ; i++) {
+        for (int i = 0; i < entries.size(); i++) {
             if (entries.size() > 3) {
                 Log.i("if i", String.valueOf(i));
                 String legendEntry = legendEntries.get(2);
@@ -301,8 +301,7 @@ public class HomeFragment extends Fragment {
 
                 // Add legend item view to the legend layout
                 legendLayout.addView(legendItemView);
-            }
-            else {
+            } else {
                 Log.i("else i", String.valueOf(i));
                 String legendEntry = legendEntries.get(i);
                 int legendValue = legendValues.get(i);
@@ -413,6 +412,8 @@ public class HomeFragment extends Fragment {
 
         if (!isSameDay(currentDate, previousDate)) {
 
+            homeVM.saveDailySteps(stepCount, previousDate);
+
             stepCount = 0;
             binding.stepCountTextView.setText(String.valueOf(stepCount));
 
@@ -427,19 +428,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingDocument) {
-                if (isLoadingDocument != null && !isLoadingDocument) {
-                    if (!isSameDay(currentDate, previousDate)) {
-                        homeVM.saveDailySteps(stepCount, previousDate);
-                    }
-                } else {
-
-                }
-            }
-        });
-
+//        homeVM.getIsLoadingDocument().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isLoadingDocument) {
+//                if (isLoadingDocument != null && !isLoadingDocument) {
+//                    if (!isSameDay(currentDate, previousDate)) {
+//                        homeVM.saveDailySteps(stepCount, previousDate);
+//                    }
+//                } else {
+//
+//                }
+//            }
+//        });
 
 
         SharedPreferences sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
