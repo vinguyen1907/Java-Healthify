@@ -54,7 +54,7 @@ public class HomeVM extends ViewModel {
     private Float startWeight = new Float(0);
     private Float goalWeight = new Float(0);
     private Float dailyCalories = new Float(0);
-    private Integer weight = new Integer(0);
+    private Integer weight = 0;
     ArrayList<CustomEntry> lineEntries;
     List<PieEntry> pieEntries;
 
@@ -182,7 +182,7 @@ public class HomeVM extends ViewModel {
     }
 
     public HomeVM() {
-        this.loadDocument();
+//        this.loadDocument();
         this.loadLineData();
     }
 
@@ -230,21 +230,36 @@ public class HomeVM extends ViewModel {
                             int stepsValue = documentSnapshot.getLong("steps").intValue();
                             setSteps(stepsValue);
                         }
+                        else {
+                            setSteps(0);
+                        }
                         if (documentSnapshot.contains("weight")) {
                             int weightValue = documentSnapshot.getLong("steps").intValue();
                             setWeight(weightValue);
+                        }
+                        else {
+                            setWeight(0);
                         }
                         if (documentSnapshot.contains("calories")) {
                             float caloriesValue = documentSnapshot.getLong("calories").floatValue();
                             setCalories(caloriesValue);
                         }
+                        else {
+                            setCalories((float) 0);
+                        }
                         if (documentSnapshot.contains("exerciseCalories")) {
                             float exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").floatValue();
                             setExerciseCalories(exerciseCaloriesValue);
                         }
+                        else {
+                            setExerciseCalories((float) 0);
+                        }
                         if (documentSnapshot.contains("foodCalories")) {
                             float foodCaloriesValue = documentSnapshot.getLong("foodCalories").floatValue();
                             setFoodCalories(foodCaloriesValue);
+                        }
+                        else {
+                            setFoodCalories((float) 0);
                         }
                         loadGoal();
                     }
@@ -261,7 +276,7 @@ public class HomeVM extends ViewModel {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         float goal = documentSnapshot.getLong("dailyCalories").floatValue();
-                        setGoal(goal);
+                        setGoal((float) this.getUser().getValue().getDailyCalories());
                         Log.i("goal", String.valueOf(goal));
                         setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
                         pieEntries = new ArrayList<>();
