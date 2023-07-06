@@ -99,17 +99,17 @@ public class MainActivity extends AppCompatActivity {
         scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
+        hideNavBar();
         if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
+            navController.navigate(R.id.onboardingFragment);
         } else {
             navController.navigate(R.id.splashFragment);
-            hideNavBar();
 
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
-                    setUpNavbar();
                     navController.navigate(R.id.homeFragment);
+                    setUpNavbar();
                 }
             });
         }
