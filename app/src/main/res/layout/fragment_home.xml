@@ -9,23 +9,20 @@
             type="com.example.javahealthify.ui.screens.home.HomeVM" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
                 android:layout_width="match_parent"
                 android:layout_height="77dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/textView20"
@@ -71,19 +68,23 @@
                     android:layout_height="48dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
+                    android:src="@drawable/default_avatar"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/default_avatar"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
-                android:layout_width="370dp"
+                android:id="@+id/relativeLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout4">
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
@@ -115,25 +116,33 @@
 
 
             <LinearLayout
-                android:layout_width="370dp"
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/onboarding_radius_panel"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+                bind:layout_editor_absoluteX="10dp">
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/lineChart"
-                    android:padding="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:padding="10dp" />
 
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout5"
                 android:layout_width="match_parent"
                 android:layout_height="62dp"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                 <TextView
                     android:id="@+id/startWeight"
@@ -186,7 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="32dp"
+                    android:layout_marginEnd="48dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/Home_Daily_Calories"
                     android:textSize="16sp"
@@ -208,7 +217,7 @@
                     android:id="@+id/textView28"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="24dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Start"
                     android:textColor="#CCCCCC"
@@ -219,19 +228,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="132dp"
+                    android:layout_marginStart="8dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Target"
                     android:textColor="#CCCCCC"
                     android:textSize="12sp"
-                    app:layout_constraintStart_toEndOf="@+id/textView28"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/goalWeight" />
 
                 <TextView
                     android:id="@+id/textView29"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:fontFamily="@font/poppins_regular"
                     android:text="@string/Home_Text_CaloDaily"
                     android:textColor="#CCCCCC"
@@ -241,8 +251,12 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/constraintLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -257,10 +271,10 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/step_statistics"
-                    android:layout_width="165dp"
+                    android:layout_width="160dp"
                     android:layout_height="160dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
                     android:background="@drawable/onboarding_radius_panel"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -363,13 +377,14 @@
                     android:id="@+id/excercise_detail"
                     android:layout_width="165dp"
                     android:layout_height="160dp"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/onboarding_radius_panel"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/step_statistics"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.506">
 
                     <TextView
                         android:id="@+id/textView24"
@@ -434,7 +449,8 @@
                         android:paddingLeft="12dp"
                         android:paddingTop="8dp"
                         android:paddingBottom="4dp"
-                        android:text="Update Wight"
+                        android:text="Update Weight"
+                        android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -444,6 +460,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </layout>
