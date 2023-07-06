@@ -1,6 +1,5 @@
 package com.example.javahealthify.ui.screens.admin_workout_screen;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.example.javahealthify.databinding.FragmentAdminWorkoutBinding;
-import com.example.javahealthify.ui.screens.MainActivity;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class AdminWorkoutFragment extends Fragment {
 
@@ -23,17 +20,17 @@ public class AdminWorkoutFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentAdminWorkoutBinding.inflate(inflater,container,false);
-        binding.adminLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
-//                NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.signUpFragment);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
+//        binding.adminLogout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//                mAuth.signOut();
+////                NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.signUpFragment);
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//            }
+//        });
         return binding.getRoot();
     }
 }
