@@ -62,4 +62,14 @@ public class MainVM extends ViewModel {
     public MutableLiveData<User> getUser() {
         return user;
     }
+
+    public String getUserImageUrl() {
+        if (user.getValue() == null) {
+            return null;
+        } else if (user.getValue().getImageUrl().isEmpty()) {
+            return null;
+        } else {
+            return user.getValue().getImageUrl();
+        }
+    }
 }

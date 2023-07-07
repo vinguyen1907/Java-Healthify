@@ -54,7 +54,7 @@ public class HomeVM extends ViewModel {
     private Float startWeight = new Float(0);
     private Float goalWeight = new Float(0);
     private Float dailyCalories = new Float(0);
-    private Integer weight = new Integer(0);
+    private Integer weight = 0;
     ArrayList<CustomEntry> lineEntries;
     List<PieEntry> pieEntries;
 
@@ -182,8 +182,8 @@ public class HomeVM extends ViewModel {
     }
 
     public HomeVM() {
-        this.loadDocument();
-        this.loadLineData();
+//        this.loadDocument();
+//        this.loadLineData();
     }
 
     public void saveDailySteps(int stepCount, Date previousDate) {
@@ -230,21 +230,36 @@ public class HomeVM extends ViewModel {
                             int stepsValue = documentSnapshot.getLong("steps").intValue();
                             setSteps(stepsValue);
                         }
+                        else {
+                            setSteps(0);
+                        }
                         if (documentSnapshot.contains("weight")) {
-                            int weightValue = documentSnapshot.getLong("steps").intValue();
+                            int weightValue = documentSnapshot.getLong("weight").intValue();
                             setWeight(weightValue);
+                        }
+                        else {
+                            setWeight(0);
                         }
                         if (documentSnapshot.contains("calories")) {
                             float caloriesValue = documentSnapshot.getLong("calories").floatValue();
                             setCalories(caloriesValue);
                         }
+                        else {
+                            setCalories((float) 0);
+                        }
                         if (documentSnapshot.contains("exerciseCalories")) {
                             float exerciseCaloriesValue = documentSnapshot.getLong("exerciseCalories").floatValue();
                             setExerciseCalories(exerciseCaloriesValue);
                         }
+                        else {
+                            setExerciseCalories((float) 0);
+                        }
                         if (documentSnapshot.contains("foodCalories")) {
                             float foodCaloriesValue = documentSnapshot.getLong("foodCalories").floatValue();
                             setFoodCalories(foodCaloriesValue);
+                        }
+                        else {
+                            setFoodCalories((float) 0);
                         }
                         loadGoal();
                     }
@@ -261,7 +276,7 @@ public class HomeVM extends ViewModel {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         float goal = documentSnapshot.getLong("dailyCalories").floatValue();
-                        setGoal(goal);
+                        setGoal((float) this.getUser().getValue().getDailyCalories());
                         Log.i("goal", String.valueOf(goal));
                         setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
                         pieEntries = new ArrayList<>();
@@ -284,7 +299,8 @@ public class HomeVM extends ViewModel {
 
     public void loadLineData() {
         isLoadingLine.setValue(true);
-        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid())
+                .collection("daily_activities")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -292,12 +308,11 @@ public class HomeVM extends ViewModel {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             lineEntries = new ArrayList<>();
+                            x = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 if (document.contains("steps")) {
                                     int steps = document.getLong("steps").intValue();
                                     String date = document.getId();
-                                    Log.i("steps line", String.valueOf(steps));
-                                    Log.i("date line", date);
 
                                     SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
                                     SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM");

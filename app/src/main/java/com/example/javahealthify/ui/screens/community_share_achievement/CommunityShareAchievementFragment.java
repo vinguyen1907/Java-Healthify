@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentCommunityShareAchievementBinding;
 import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.community.CommunityVM;
@@ -44,6 +46,11 @@ public class CommunityShareAchievementFragment extends Fragment {
         binding.achievementLayout.nameTv.setText(mainVM.getUser().getValue().getName());
         binding.achievementLayout.dateTv.setText(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
         binding.achievementLayout.achievementMenuBtn.setVisibility(View.GONE);
+        if (mainVM.getUserImageUrl() == null) {
+            binding.achievementLayout.avatarImg.setImageResource(R.drawable.default_profile_image);
+        } else {
+            Glide.with(requireContext()).load(mainVM.getUser().getValue().getImageUrl()).into(binding.achievementLayout.avatarImg);
+        }
 
         viewModel.getWarningDialogMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
