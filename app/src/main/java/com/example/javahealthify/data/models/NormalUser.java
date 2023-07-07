@@ -164,6 +164,10 @@ public class NormalUser extends User {
         this.dailyActivity = dailyActivity;
     }
 
+    public int getDailySteps() {
+        return dailySteps;
+    }
+
     public int getAge() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dateOfBirth);
