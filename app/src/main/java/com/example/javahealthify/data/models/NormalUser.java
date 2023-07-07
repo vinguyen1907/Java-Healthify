@@ -1,21 +1,29 @@
 package com.example.javahealthify.data.models;
 
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 public class NormalUser extends User {
-
-
-
     private String phone;
     private Date dateOfBirth;
     private String address;
     private String gender; // { "MALE", "FEMALE" }
     private int startWeight;
     private int goalWeight;
+    private int height = 160;
     private Date startTime;
     private Date goalTime;
-    private int dailyCalories;
+    private double dailyCalories;
     private List<String> following;
     private List<String> followers;
     private List<String> keyword;
@@ -32,7 +40,7 @@ public class NormalUser extends User {
 
     public NormalUser() {}
 
-    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity, List<String> keyword) {
+    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, double dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity, List<String> keyword) {
         super(uid, email, name, imageUrl, "NORMAL_USER");
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -47,6 +55,14 @@ public class NormalUser extends User {
         this.followers = followers;
         this.dailyActivity = dailyActivity;
         this.keyword = keyword;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public String getPhone() {
@@ -113,7 +129,7 @@ public class NormalUser extends User {
         this.goalTime = goalTime;
     }
 
-    public int getDailyCalories() {
+    public double getDailyCalories() {
         return dailyCalories;
     }
 
@@ -144,5 +160,29 @@ public class NormalUser extends User {
 
     public void setKeyword(List<String> keyword) {
         this.keyword = keyword;
+    }
+
+    public int getAge() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateOfBirth);
+        int yearOfBirth = calendar.get(Calendar.YEAR);
+        calendar.setTime(new Date());
+        int currentYear = calendar.get(Calendar.YEAR);
+        return currentYear - yearOfBirth;
+    }
+
+
+    private void updateDailyCaloriesOnDb() {
+        FirebaseConstants.usersRef.document(this.uid).update("dailyCalories", GlobalMethods.calculateDailyCalories(this.getGender(), this.getStartWeight(), this.getHeight(), this.getAge(), this.getGoalWeight(), this.getStartTime(), this.getGoalTime()))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+
+                        } else {
+                            Log.e("Update daily calories error", "", task.getException());
+                        }
+                    }
+                });
     }
 }
