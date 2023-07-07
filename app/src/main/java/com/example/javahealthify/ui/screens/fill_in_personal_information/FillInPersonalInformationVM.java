@@ -67,7 +67,8 @@ public class FillInPersonalInformationVM extends ViewModel {
                     Integer.valueOf(goalWeight.getValue()),
                     new Date(),
                     goalDate,
-                    GlobalMethods.calculateDailyCalories(gender.getValue(), Integer.valueOf(currentWeight.getValue()), Double.valueOf(currentHeight.getValue()), Integer.valueOf(age.getValue()), Integer.valueOf(goalWeight.getValue()),new Date(), goalDate), // TODO: Calculate daily calories
+                    GlobalMethods.calculateDailyCalories(gender.getValue(), Integer.valueOf(currentWeight.getValue()), Double.valueOf(currentHeight.getValue()), Integer.valueOf(age.getValue()), Integer.valueOf(goalWeight.getValue()),new Date(), goalDate),
+                    10000, // default as specialist recommend
                     new ArrayList<String>(),
                     new ArrayList<String>(),
                     new DailyActivity(),
