@@ -1,6 +1,10 @@
 package com.example.javahealthify.ui.screens.community_share_achievement;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -9,9 +13,13 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentCommunityShareAchievementBinding;
 import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.community.CommunityVM;
 import com.example.javahealthify.ui.screens.workout_exercise_practicing.PracticingOnBackDialogInterface;
 import com.example.javahealthify.utils.GlobalMethods;
 
@@ -20,6 +28,7 @@ import java.util.Date;
 public class CommunityShareAchievementFragment extends Fragment {
     private FragmentCommunityShareAchievementBinding binding;
     private WorkoutShareAchievementVM viewModel;
+    private CommunityVM communityVM;
     private MainVM mainVM;
 
     @Override
@@ -32,9 +41,16 @@ public class CommunityShareAchievementFragment extends Fragment {
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
-        binding.achievementLayout.nameTv.setText(mainVM.getUser().getName());
+        communityVM = new ViewModelProvider(requireActivity()).get(CommunityVM.class);
+
+        binding.achievementLayout.nameTv.setText(mainVM.getUser().getValue().getName());
         binding.achievementLayout.dateTv.setText(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()));
         binding.achievementLayout.achievementMenuBtn.setVisibility(View.GONE);
+        if (mainVM.getUserImageUrl() == null) {
+            binding.achievementLayout.avatarImg.setImageResource(R.drawable.default_profile_image);
+        } else {
+            Glide.with(requireContext()).load(mainVM.getUser().getValue().getImageUrl()).into(binding.achievementLayout.avatarImg);
+        }
 
         viewModel.getWarningDialogMessage().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -56,6 +72,17 @@ public class CommunityShareAchievementFragment extends Fragment {
             }
         });
 
+        viewModel.getIsAddedSuccessfully().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAdded) {
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Congratulate! You have added an achievement.", Toast.LENGTH_SHORT).show();
+                    communityVM.loadAchievements();
+                    GlobalMethods.backToPreviousFragment(CommunityShareAchievementFragment.this);
+                }
+            }
+        });
+
         setOnClick();
 
         return binding.getRoot();
@@ -72,7 +99,7 @@ public class CommunityShareAchievementFragment extends Fragment {
         binding.submitBtn.setOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.addAchievementToDb(mainVM.getUser());
+                viewModel.addAchievementToDb(mainVM.getUser().getValue());
             }
         });
     }

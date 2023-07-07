@@ -13,7 +13,7 @@
     <color name="secondaryColor">#162D51</color>
     <color name="primaryBackgroundColor">#091528</color>
     <color name="dateGreyTextColor">#99FFFFFF</color>
-
+    <color name="redColor">#D94040</color>
     <color name="primaryTextColor">#E5E5E5</color>
     <color name="primaryHintColor">#99E5E5E5</color>
     <color name="indicatorActiveColor">@color/primaryColor</color>

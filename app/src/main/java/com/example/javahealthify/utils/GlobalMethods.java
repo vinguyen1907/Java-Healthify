@@ -14,6 +14,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -140,5 +141,38 @@ public class GlobalMethods {
         }
 
         return generatedStrings;
+    }
+
+    public static double calculateDailyCalories(String gender, int weight, double height, int age, int goalWeight, Date startDate, Date goalDate) {
+//        BMR
+//        Men: (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) + 5
+//        Women: (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) - 161
+        double bmr = (10 * weight) + (6.25 * height) - (5 * age);
+        if (gender.equals("Male")) {
+            bmr += 5;
+        } else {
+            bmr -= 161;
+        }
+
+//        AMR
+//        Sedentary (little or no exercise): AMR = BMR x 1.2
+//        Lightly active (exercise 1–3 days/week): AMR = BMR x 1.375
+//        Moderately active (exercise 3–5 days/week): AMR = BMR x 1.55
+//        Active (exercise 6–7 days/week): AMR = BMR x 1.725
+//        Very active (hard exercise 6–7 days/week): AMR = BMR x 1.9
+        double amr = bmr * 1.55;
+
+//        1kg of fat = 7700 kcals
+//        AMR + ((goal - current) * 7700)/number of days
+        LocalDate localDateA = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDateB = goalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Log.i("starttime", localDateA.toString());
+        Log.i("goaltime", localDateB.toString());
+
+        long daysBetween = ChronoUnit.DAYS.between(localDateA, localDateB);
+        if (daysBetween == 0) {
+            return 0;
+        }
+        return amr + ((goalWeight - weight) * 7700) / daysBetween;
     }
 }

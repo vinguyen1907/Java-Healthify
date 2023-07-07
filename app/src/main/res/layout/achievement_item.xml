@@ -6,12 +6,15 @@
         <variable
             name="totalCalories"
             type="String" />
+
         <variable
             name="steps"
             type="String" />
+
         <variable
             name="foodCalories"
             type="String" />
+
         <variable
             name="exerciseCalories"
             type="String" />
@@ -22,6 +25,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/background_primary"
         android:padding="16dp">
 
@@ -61,10 +65,10 @@
             android:id="@+id/avatar_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:foregroundGravity="center"
             android:paddingTop="17dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            android:foregroundGravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView18">
 
@@ -72,13 +76,13 @@
                 android:id="@+id/imageView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_frame"
-                 />
+                android:src="@drawable/ic_frame" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avatar_img"
-                android:layout_gravity="center"
                 android:layout_width="75dp"
-                android:layout_height="75dp" />
+                android:layout_height="75dp"
+                android:layout_gravity="center" />
         </FrameLayout>
 
 
@@ -87,8 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Name"
             android:fontFamily="@font/poppins_medium"
+            android:text="Name"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -100,10 +104,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="@string/community_calories"
-            android:textSize="12sp"
             android:fontFamily="@font/poppins_medium"
+            android:text="@string/community_calories"
             android:textColor="@color/dateGreyTextColor"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

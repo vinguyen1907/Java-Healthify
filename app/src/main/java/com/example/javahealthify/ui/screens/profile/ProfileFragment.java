@@ -19,6 +19,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentProfileBinding;
 import com.example.javahealthify.ui.screens.MainVM;
@@ -45,8 +46,8 @@ public class ProfileFragment extends Fragment {
 
         profileVM = new ViewModelProvider(requireActivity()).get(ProfileVM.class);
         mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-
-        profileVM.getUserLiveData();
+//        profileVM.getUserLiveData();
+        profileVM.setUser(mainVM.getUser());
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,8 +123,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onChanged(Boolean isLoadingData) {
                 if (isLoadingData != null && !isLoadingData) {
-//                    binding.profileEmailTv.setText(profileVM.getUser().getEmail());
-//                    binding.profileNameTv.setText(profileVM.getUser().getName());
+                    binding.profileEmailTv.setText(profileVM.getUser().getValue().getEmail());
+                    binding.profileNameTv.setText(profileVM.getUser().getValue().getName());
                     if (profileVM.getUser().getValue().getImageUrl() == null) {
                         binding.profileImage.setImageResource(R.drawable.default_profile_image);
                     } else {

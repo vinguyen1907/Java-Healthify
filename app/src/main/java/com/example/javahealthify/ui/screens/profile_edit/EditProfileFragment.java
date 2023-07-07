@@ -55,6 +55,7 @@ public class EditProfileFragment extends Fragment {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private EditProfileVM editProfileVM;
+    private MainVM mainVM;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -68,6 +69,7 @@ public class EditProfileFragment extends Fragment {
 
         editProfileVM = new ViewModelProvider(this).get(EditProfileVM.class);
         editProfileVM.getUserLiveData();
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
     }
 
     @Override
@@ -312,7 +314,18 @@ public class EditProfileFragment extends Fragment {
 //                        binding.tickIcon2.setVisibility(View.GONE);
                         binding.tickIcon3.setVisibility(View.GONE);
                         binding.tickIcon4.setVisibility(View.GONE);
-                        binding.tickIcon5.setVisibility(View.GONE);                         
+                        binding.tickIcon5.setVisibility(View.GONE);
+
+                        mainVM.loadUser(new MainVM.UserLoadCallback() {
+                            @Override
+                            public void onUserLoaded(User user) {
+
+                            }
+                        });
+
+                        if (!name.equals(mainVM.getUser().getValue().getName())) {
+                            mainVM.updateKeyword(name);
+                        }
 
 //                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 //                        FirebaseUser user = mAuth.getCurrentUser();

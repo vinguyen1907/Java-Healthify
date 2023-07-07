@@ -45,7 +45,7 @@
     <string name="Home_Hello">Hello</string>
     <string name="Home_Noti">Remember to update your weight today</string>
     <string name="Home_Weight">kg</string>
-    <string name="Home_Cal">cal</string>
+    <string name="Home_Cal">Cal</string>
     <string name="Home_Start">Start</string>
     <string name="Home_Target">Target</string>
     <string name="Home_Text_CaloDaily">Daily Calories</string>
@@ -54,6 +54,7 @@
     <string name="Home_Excercise_Text">Exercise</string>
     <string name="Home_Hours_Text">hours</string>
     <string name="Home_ExcerciseDetail_Title">Exercise Detail</string>
+    <string name="Home_WeightReport_Back">Weight Report</string>
     <string name="Home_DetailExcercise_Total">22</string>
     <string name="home_total_excercise_text">Total exercise</string>
     <string name="Home_TotalCalories">109</string>
@@ -68,6 +69,7 @@
     <string name="home_detail_abs_text">Abs exercise</string>
     <string name="home_weight_report_text">Weight Report</string>
     <string name="home_icon_back">TODO</string>
+    <string name="home_update_weight">Update your weight today</string>
     <string name="update_weight_text">Update Weight</string>
     <string name="total_weight_text">Total Weight</string>
     <string name="kg_binding">34Kg</string>
@@ -139,4 +141,5 @@
     <string name="report_app_bar_title">Report</string>
     <string name="send_report_button_title">Send report</string>
     <string name="pending_ingredients_string">Pending Ingredients</string>
+    <string name="details">Details</string>
 </resources>

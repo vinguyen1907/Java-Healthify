@@ -65,9 +65,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginHorizontal="20dp"
                 android:id="@+id/date_slider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +76,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:clipToPadding="false"
             android:id="@+id/meals"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/menu_info_banner" />
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/menu_info_banner"
+            android:paddingBottom="200dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

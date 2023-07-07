@@ -32,6 +32,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
@@ -91,10 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
-
-        // Init today activity
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
-        workoutVM.initDailyActivity();
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
 
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -103,12 +102,16 @@ public class MainActivity extends AppCompatActivity {
         scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
+        hideNavBar();
         if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.signUpFragment);
+            navController.navigate(R.id.onboardingFragment);
         } else {
+            navController.navigate(R.id.splashFragment);
+
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
+                    setUpInitialFragment();
                     setUpNavbar();
                 }
             });
@@ -118,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
             requestPermissionNotification();
         } else {
             Toast.makeText(this, "Notification Permission Granted", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setUpInitialFragment() {
+        boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
+        if(isNormalUser) {
+            navController.navigate(R.id.homeFragment);
+        } else {
+            navController.navigate(R.id.adminIngredientFragment);
         }
     }
 
@@ -257,31 +269,26 @@ public class MainActivity extends AppCompatActivity {
                 switch (destination.getId()) {
                     case R.id.homeFragment:
                         setNavbarItem(R.id.nav_home);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.menuFragment:
                         setNavbarItem(R.id.nav_menu);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.workoutFragment:
                         setNavbarItem(R.id.nav_workout);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.communityFragment:
                         setNavbarItem(R.id.nav_community);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
                     case R.id.profileFragment:
                         setNavbarItem(R.id.nav_profile);
-//                        binding.navBar.setVisibility(View.VISIBLE);
                         setNavBarVisibility();
 
                         break;
@@ -348,15 +355,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNavBarVisibility() {
-        if (viewModel.getUser().getType().equals("NORMAL_USER"))
-        {
-            binding.navBar.setVisibility(View.VISIBLE);
-            binding.adminNavBar.setVisibility(View.GONE);
+        boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
+        binding.navBar.setVisibility(isNormalUser ? View.VISIBLE : View.GONE);
+        binding.adminNavBar.setVisibility(isNormalUser ? View.GONE : View.VISIBLE);
+    }
 
-        } else {
-            binding.navBar.setVisibility(View.GONE);
-            binding.adminNavBar.setVisibility(View.VISIBLE);
-        }
+    private void hideNavBar() {
+        binding.navBar.setVisibility(View.GONE);
+        binding.adminNavBar.setVisibility(View.GONE);
     }
 
     public static FirebaseFirestore getDb() {

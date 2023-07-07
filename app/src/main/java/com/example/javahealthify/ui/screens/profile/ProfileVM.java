@@ -23,7 +23,7 @@ public class ProfileVM extends ViewModel {
     private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private MutableLiveData<NormalUser> user = new MutableLiveData<>();
+    private MutableLiveData<User> user = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
@@ -52,11 +52,11 @@ public class ProfileVM extends ViewModel {
                 });
     }
 
-    public MutableLiveData<NormalUser> getUser() {
+    public MutableLiveData<User> getUser() {
         return user;
     }
 
-    public void setUser(MutableLiveData<NormalUser> user) {
+    public void setUser(MutableLiveData<User> user) {
         this.user = user;
     }
 }
