@@ -316,6 +316,13 @@ public class EditProfileFragment extends Fragment {
                         binding.tickIcon4.setVisibility(View.GONE);
                         binding.tickIcon5.setVisibility(View.GONE);
 
+                        mainVM.loadUser(new MainVM.UserLoadCallback() {
+                            @Override
+                            public void onUserLoaded(User user) {
+
+                            }
+                        });
+
                         if (!name.equals(mainVM.getUser().getValue().getName())) {
                             mainVM.updateKeyword(name);
                         }
