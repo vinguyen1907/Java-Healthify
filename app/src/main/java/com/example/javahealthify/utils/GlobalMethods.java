@@ -3,12 +3,13 @@ package com.example.javahealthify.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
+import com.example.javahealthify.ui.screens.workout_exercise_practicing.PracticingOnBackDialogInterface;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -21,14 +22,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.example.javahealthify.R;
-import com.example.javahealthify.data.models.Exercise;
-import com.example.javahealthify.ui.screens.workout_exercise_practicing.PracticingOnBackDialogInterface;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 public class GlobalMethods {
     public static void backToPreviousFragment(Fragment fragment) {
