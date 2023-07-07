@@ -32,14 +32,21 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
+import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 import java.util.Calendar;
