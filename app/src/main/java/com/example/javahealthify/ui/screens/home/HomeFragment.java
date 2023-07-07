@@ -210,7 +210,6 @@ public class HomeFragment extends Fragment {
 
         binding.stepCountTextView.setText(String.valueOf(stepCount));
 
-
         return binding.getRoot();
     }
 
@@ -280,7 +279,6 @@ public class HomeFragment extends Fragment {
 
         for (int i = 0; i < entries.size(); i++) {
             if (entries.size() > 3) {
-                Log.i("if i", String.valueOf(i));
                 String legendEntry = legendEntries.get(2);
                 int legendValue = legendValues.get(2);
 
@@ -303,7 +301,6 @@ public class HomeFragment extends Fragment {
                 // Add legend item view to the legend layout
                 legendLayout.addView(legendItemView);
             } else {
-                Log.i("else i", String.valueOf(i));
                 String legendEntry = legendEntries.get(i);
                 int legendValue = legendValues.get(i);
 
@@ -419,7 +416,7 @@ public class HomeFragment extends Fragment {
             // Lưu ngày hiện tại vào SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong("previousDate", currentDate.getTime());
-            editor.putInt("stepCount", stepCount); // lưu giá trị mới nhất của stepCount
+            editor.putInt("stepCount", stepCount);
             editor.apply();
         }
     }
@@ -468,16 +465,17 @@ public class HomeFragment extends Fragment {
 
     private void drawLine() {
 
-        ArrayList<CustomEntry> entries = new ArrayList<>();
-        entries = homeVM.getLineEntries();
-//        entries.add(new CustomEntry(0, 65f, "Ngày 1"));
-//        entries.add(new CustomEntry(1, 68f, "Ngày 2"));
-//        entries.add(new CustomEntry(2, 70f, "Ngày 3"));
+        ArrayList<CustomEntryLineChart> entries = new ArrayList<>();
+        entries = homeVM.getLineEntries1();
 
 
         List<Entry> entryList = new ArrayList<>();
-        for (CustomEntry customEntry : entries) {
-            entryList.add(customEntry);
+        for (CustomEntryLineChart customEntry : entries) {
+//            String a = String.valueOf(customEntry.getX());
+//            String b = String.valueOf(customEntry.getSteps());
+//            Log.i("entries", a);
+//            Log.i("steps", b);
+            entryList.add(new Entry(customEntry.getX(), customEntry.getSteps()));
         }
 
         LineDataSet dataSet = new LineDataSet(entryList, "Steps");
@@ -486,7 +484,7 @@ public class HomeFragment extends Fragment {
 
         String[] labels = new String[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
-            labels[i] = entries.get(i).getXLabel();
+            labels[i] = entries.get(i).getDate();
         }
 
         // cái này để hiển thị ngày ở cột có giá trị
