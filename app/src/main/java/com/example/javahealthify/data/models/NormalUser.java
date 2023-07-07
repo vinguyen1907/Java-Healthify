@@ -16,23 +16,16 @@ public class NormalUser extends User {
     private Date startTime;
     private Date goalTime;
     private int dailyCalories;
+    private int dailySteps;
     private List<String> following;
     private List<String> followers;
     private List<String> keyword;
-
     private DailyActivity dailyActivity;
 
-    public DailyActivity getDailyActivity() {
-        return dailyActivity;
-    }
-
-    public void setDailyActivity(DailyActivity dailyActivity) {
-        this.dailyActivity = dailyActivity;
-    }
 
     public NormalUser() {}
 
-    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, List<String> following, List<String> followers, DailyActivity dailyActivity, List<String> keyword) {
+    public NormalUser(String uid, String email, String name, String imageUrl, String phone, Date dateOfBirth, String address, String gender, int startWeight, int goalWeight, Date startTime, Date goalTime, int dailyCalories, int dailySteps, List<String> following, List<String> followers, DailyActivity dailyActivity, List<String> keyword) {
         super(uid, email, name, imageUrl, "NORMAL_USER");
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
@@ -43,6 +36,7 @@ public class NormalUser extends User {
         this.startTime = startTime;
         this.goalTime = goalTime;
         this.dailyCalories = dailyCalories;
+        this.dailySteps = dailySteps;
         this.following = following;
         this.followers = followers;
         this.dailyActivity = dailyActivity;
@@ -144,5 +138,13 @@ public class NormalUser extends User {
 
     public void setKeyword(List<String> keyword) {
         this.keyword = keyword;
+    }
+
+    public DailyActivity getDailyActivity() {
+        return dailyActivity;
+    }
+
+    public void setDailyActivity(DailyActivity dailyActivity) {
+        this.dailyActivity = dailyActivity;
     }
 }

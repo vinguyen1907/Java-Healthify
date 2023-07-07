@@ -68,6 +68,7 @@ public class FillInPersonalInformationVM extends ViewModel {
                     new Date(),
                     goalDate,
                     0, // TODO: Calculate daily calories
+                    10000, // default as specialist recommend
                     new ArrayList<String>(),
                     new ArrayList<String>(),
                     new DailyActivity(),
