@@ -97,11 +97,8 @@ public class Exercise implements Serializable {
         this.unit = unit;
     }
 
-    public int getCount() {
-        return count;
-    }
 
-    public int getCountNumber() {
+    public int getCount() {
         return count;
     }
 

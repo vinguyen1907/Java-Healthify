@@ -159,8 +159,6 @@ public class GlobalMethods {
 //        AMR + ((goal - current) * 7700)/number of days
         LocalDate localDateA = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate localDateB = goalDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        Log.i("starttime", localDateA.toString());
-        Log.i("goaltime", localDateB.toString());
 
         long daysBetween = ChronoUnit.DAYS.between(localDateA, localDateB);
         if (daysBetween == 0) {

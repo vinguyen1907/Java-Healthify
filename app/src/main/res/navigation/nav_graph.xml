@@ -473,5 +473,9 @@
         android:id="@+id/addExerciseFragment"
         android:name="com.example.javahealthify.ui.screens.add_exercise_screen.AddExerciseFragment"
         android:label="AddExerciseFragment" />
+    <fragment
+        android:id="@+id/adminSettingFragment"
+        android:name="com.example.javahealthify.ui.screens.admin_setting_screen.AdminSettingFragment"
+        android:label="AdminSettingFragment" />
 
 </navigation>

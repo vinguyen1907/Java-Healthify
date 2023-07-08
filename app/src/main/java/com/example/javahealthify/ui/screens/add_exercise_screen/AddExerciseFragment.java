@@ -134,6 +134,27 @@ public class AddExerciseFragment extends Fragment {
             binding.startingPointEt.setText(temp.getStartingPosition());
             binding.executionEt.setText(temp.getExecution());
             binding.addExerciseBtn.setText("Edit");
+
+            binding.addExerciseBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Exercise newExercise = new Exercise();
+                    newExercise.setName(binding.exerciseNameEt.getText().toString());
+                    RadioButton selectedMuscleGroupButton = (RadioButton) binding.getRoot().findViewById(binding.muscleRadioGroup.getCheckedRadioButtonId());
+                    newExercise.setMuscleGroup(selectedMuscleGroupButton.getText().toString());
+                    newExercise.setImageUrl(temp.getImageUrl());
+                    newExercise.setId(temp.getId());
+                    newExercise.setCategoryId(temp.getCategoryId());
+                    RadioButton selectedUnitGroupButton = (RadioButton) binding.getRoot().findViewById(binding.unitRadioGroup.getCheckedRadioButtonId());
+                    newExercise.setUnit(selectedUnitGroupButton.getText().toString().toLowerCase());
+                    newExercise.setCount(Integer.parseInt(binding.countEt.getText().toString()));
+                    newExercise.setCaloriesPerUnit(Double.parseDouble(binding.caloriesEt.getText().toString()));
+                    newExercise.setStartingPosition(binding.startingPointEt.getText().toString());
+                    newExercise.setExecution(binding.executionEt.getText().toString());
+                    adminWorkoutVM.updateExercise(newExercise, imageUri);
+                    GlobalMethods.backToPreviousFragment(AddExerciseFragment.this);
+                }
+            });
         }
 
     }

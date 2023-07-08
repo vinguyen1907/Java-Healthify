@@ -1,5 +1,7 @@
 package com.example.javahealthify.ui.screens.admin_edit_exercises_screen;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,9 +80,28 @@ public class AdminEditExercisesFragment extends Fragment implements AdminExercis
 
     @Override
     public void onDelete(int position) {
-//        adminWorkoutVM.deleteExercise(adminWorkoutVM.getExercises().getValue().get(position).getId(), position);
-    }
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext()); // 'this' refers to Context (your Activity or Application)
+        builder.setTitle("Confirmation");
+        builder.setMessage("Are you sure you want to delete this exercise?");
 
+        // If user says, YES
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Call your ViewModel to delete
+                adminWorkoutVM.deleteExercise(adminWorkoutVM.getExercises().getValue().get(position).getId(), position);
+            }
+        });
+
+        // If user says, NO
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     @Override
     public void onInfo(int position) {
 

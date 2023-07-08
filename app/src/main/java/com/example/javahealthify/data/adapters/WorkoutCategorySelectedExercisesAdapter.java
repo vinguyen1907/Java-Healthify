@@ -2,7 +2,6 @@ package com.example.javahealthify.data.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.ui.interfaces.ActionOnExerciseItem;
-import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.List;
@@ -71,7 +68,7 @@ public class WorkoutCategorySelectedExercisesAdapter extends RecyclerView.Adapte
 
         Glide.with(context).load(exercise.getImageUrl()).into(holder.image);
         holder.name.setText(exercise.getName().toUpperCase());
-        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCountNumber(), exercise.getUnit()));
+        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCount(), exercise.getUnit()));
         holder.calories.setText(String.valueOf(exercise.getCaloriesPerUnit()) + " cal");
         holder.informationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
