@@ -1,7 +1,6 @@
 package com.example.javahealthify.ui.screens.admin_edit_exercises_screen;
 
 import android.content.Context;
-import android.security.keystore.StrongBoxUnavailableException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,9 +74,9 @@ public class AdminExerciseRecyclerViewAdapter extends RecyclerView.Adapter {
         viewHolder.exerciseNameTv.setText(temp.getName());
         String tempString;
         if(temp.getUnit().equals("reps")) {
-            tempString = "x" + temp.getCountNumber();
+            tempString = "x" + temp.getCount();
         } else {
-            tempString = temp.getCountNumber() + " seconds";
+            tempString = temp.getCount() + " seconds";
         }
         viewHolder.exerciseNumberTv.setText(tempString);
         viewHolder.exerciseCaloriesTv.setText(GlobalMethods.formatDoubleToString(temp.getCaloriesPerUnit()));

@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentWorkoutExerciseDetailsBinding;
-import com.example.javahealthify.utils.GlideAppModule;
 import com.example.javahealthify.utils.GlobalMethods;
 
 public class WorkoutExerciseDetailsFragment extends Fragment {
@@ -33,7 +32,7 @@ public class WorkoutExerciseDetailsFragment extends Fragment {
         Exercise exercise = WorkoutExerciseDetailsFragmentArgs.fromBundle(getArguments()).getExercise();
         viewModel.setExercise(exercise);
         Glide.with(requireContext()).load(exercise.getImageUrl()).into(binding.exercisePracticingImage);
-        binding.exerciseDetailsTimeOrRepTv.setText(GlobalMethods.formatTimeOrRep(exercise.getCountNumber(), exercise.getUnit()));
+        binding.exerciseDetailsTimeOrRepTv.setText(GlobalMethods.formatTimeOrRep(exercise.getCount(), exercise.getUnit()));
 
         setOnClick();
 

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.Exercise;
-import com.example.javahealthify.ui.screens.workout_categories_exercises.WorkoutCategoryExercisesFragmentDirections;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.List;
@@ -49,7 +48,7 @@ public class WorkoutHistoryExercisesAdapter extends RecyclerView.Adapter<Workout
         Exercise exercise = todayExercises.get(position);
         Glide.with(context).load(exercise.getImageUrl()).into(holder.image);
         holder.name.setText(exercise.getName().toUpperCase());
-        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCountNumber(), exercise.getUnit()));
+        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCount(), exercise.getUnit()));
         holder.calories.setText(String.valueOf(exercise.getCaloriesPerUnit()) + " cal");
         holder.informationBtn.setOnClickListener(new View.OnClickListener() {
             @Override

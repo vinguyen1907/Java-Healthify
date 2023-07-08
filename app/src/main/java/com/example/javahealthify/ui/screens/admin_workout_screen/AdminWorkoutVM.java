@@ -113,6 +113,7 @@ public class AdminWorkoutVM extends ViewModel {
         DocumentReference categoryDoc = db.collection("workout_categories").document(currentCategoryId);
         categoryDoc.collection("exercises").document(id).delete();
         exercises.getValue().remove(position);
+        exercises.postValue(exercises.getValue());
     }
 
     public void addNewExercise(Exercise exercise, Uri imageUri) {
@@ -145,11 +146,15 @@ public class AdminWorkoutVM extends ViewModel {
     }
 
     public void updateExercise(Exercise exercise, Uri newImageUri) {
+        Log.d("Category id", "updateExercise: " + exercise.getCategoryId());
+        Log.d("exercise id", "updateExercise: " + exercise.getId());
+        Log.d("Exercise name", "updateExercise: " + exercise.getName());
         DocumentReference categoryDoc = db.collection("workout_categories").document(exercise.getCategoryId());
         DocumentReference exerciseDoc = categoryDoc.collection("exercises").document(exercise.getId());
-
+        Log.d("imageUri", "updateExercise: " + newImageUri.toString());
         if (newImageUri.toString().equals(exercise.getImageUrl())) {
             // If the new image URI is the same as the old one, skip the image upload and just update the exercise document
+            Log.d("Skiop image", "updateExercise: skip image");
             updateExerciseDocument(exercise, exerciseDoc);
         } else {
             // If the new image URI is different, upload the new image and then update the exercise document
@@ -172,20 +177,30 @@ public class AdminWorkoutVM extends ViewModel {
     }
 
     private void updateExerciseDocument(Exercise exercise, DocumentReference exerciseDoc) {
-        exerciseDoc.update("name", exercise.getName(),
-                        "muscleGroup", exercise.getMuscleGroup(),
-                        "unit", exercise.getUnit(),
-                        "count", exercise.getCount(),
-                        "caloriesPerUnit", exercise.getCaloriesPerUnit(),
-                        "startingPosition", exercise.getStartingPosition(),
-                        "execution", exercise.getExecution(),
-                        "imageUrl", exercise.getImageUrl())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
+        Log.d("update", "updateExerciseDocument: update is called");
+        DocumentReference categoryRef = db.collection("workout_categories").document(currentCategoryId);
+        categoryRef.collection("exercises").document(exercise.getId()).set(exercise).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("update success", "onSuccess: update scucess");
                         fetchExercisesInCategory(exercise.getCategoryId());
-                    }
-                });
+            }
+        });
+//        exerciseDoc.update("name", exercise.getName(),
+//                        "muscleGroup", exercise.getMuscleGroup(),
+//                        "unit", exercise.getUnit(),
+//                        "count", exercise.getCount(),
+//                        "caloriesPerUnit", exercise.getCaloriesPerUnit(),
+//                        "startingPosition", exercise.getStartingPosition(),
+//                        "execution", exercise.getExecution(),
+//                        "imageUrl", exercise.getImageUrl())
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void unused) {
+//                        Log.d("update success", "onSuccess: update scucess");
+//                        fetchExercisesInCategory(exercise.getCategoryId());
+//                    }
+//                });
     }
 
 
