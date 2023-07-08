@@ -170,6 +170,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     }
 
     public void deleteDish(Dish dishToDelete) {
+        Log.d("delete dish", "deleteDish: is called");
         if (dailyActivityRef != null) {
             dailyActivityRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -188,6 +189,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     }
 
     public void updateDishes(List<Dish> newDishes) {
+        Log.d("update dish", "updateDishes: is called");
         if (dailyActivityRef != null) {
             double totalCalories = 0;
             List<Map<String, Object>> newDishesKeyValuePairs = new ArrayList<>();

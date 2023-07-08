@@ -2,7 +2,6 @@ package com.example.javahealthify.ui.screens.admin_workout_screen;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.WorkoutCategory;
 import com.example.javahealthify.databinding.FragmentAdminWorkoutBinding;
 import com.example.javahealthify.ui.screens.MainActivity;
@@ -42,6 +43,13 @@ public class AdminWorkoutFragment extends Fragment implements AdminWorkoutCatego
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
         binding.adminWorkoutMuscleCategory.setLayoutManager(linearLayoutManager);
 
+        binding.adminWorkoutAddCategoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.action_adminWorkoutFragment_to_adminAddWorkoutCategoryFragment);
+            }
+        });
+
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +76,8 @@ public class AdminWorkoutFragment extends Fragment implements AdminWorkoutCatego
 
     @Override
     public void onCategoryDetailsClick(int position) {
-        //TODO: navigate to the according exercises screen
-        Log.d("clickyclick", "onCategoryDetailsClick: clicked");
+        viewModel.fetchExercisesInCategory(viewModel.getWorkoutCategories().getValue().get(position).getId());
+        NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.action_adminWorkoutFragment_to_adminEditExercisesFragment);
+
     }
 }

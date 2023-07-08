@@ -13,6 +13,16 @@ public class Exercise implements Serializable {
     private double caloriesPerUnit;
     private String categoryId;
 
+    public String getMuscleGroup() {
+        return muscleGroup;
+    }
+
+    public void setMuscleGroup(String muscleGroup) {
+        this.muscleGroup = muscleGroup;
+    }
+
+    private String muscleGroup;
+
     public Exercise() {}
 
     public Exercise(String id, String name, String imageUrl, String startingPosition, String execution, String unit, int count, int caloriesPerUnit, String categoryId) {

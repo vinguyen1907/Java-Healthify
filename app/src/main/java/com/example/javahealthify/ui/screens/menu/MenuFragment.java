@@ -106,8 +106,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                     totalCalories += dish.getCalories();
                     binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
                 }
-
-
             }
         });
     }
@@ -176,9 +174,10 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         dateAdapter.notifyDataSetChanged();
         binding.dateSlider.scrollToPosition(centerPosition);
         if (GlobalMethods.isToday(date)) {
+            Log.d("today", "onDateClick: today");
             adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), true, this);
-            adapter.notifyDataSetChanged();
             binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+            adapter.notifyDataSetChanged();
             binding.meals.setAdapter(adapter);
             binding.meals.requestLayout();
             binding.displayDate.setText("Today");

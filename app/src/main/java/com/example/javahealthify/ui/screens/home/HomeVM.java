@@ -1,32 +1,23 @@
 package com.example.javahealthify.ui.screens.home;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
-import com.example.javahealthify.data.models.User;
-import com.example.javahealthify.data.models.WorkoutCategory;
 import com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.utils.GlobalMethods;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -199,7 +190,7 @@ public class HomeVM extends ViewModel {
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities").document(dateString)
-                .set(dailyActivities)
+                .update(dailyActivities)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
