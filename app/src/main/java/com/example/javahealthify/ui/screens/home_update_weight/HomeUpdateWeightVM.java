@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HomeUpdateWeightVM extends ViewModel {
-    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
+    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private NormalUser user = new NormalUser();
@@ -34,12 +34,14 @@ public class HomeUpdateWeightVM extends ViewModel {
     public NormalUser getUser() {
         return user;
     }
+
     private Integer x = 0;
     private MutableLiveData<Boolean> isAddingValue = null;
     private Integer weight = new Integer(0);
     private HomeVM homeVM;
 
     List<CustomEntry> barEntries;
+
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
@@ -73,9 +75,11 @@ public class HomeUpdateWeightVM extends ViewModel {
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
     }
+
     public void loadBarData() {
         isLoadingData.setValue(true);
         firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
+                .limit(7)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -83,12 +87,19 @@ public class HomeUpdateWeightVM extends ViewModel {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             barEntries = new ArrayList<>();
+                            x = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 if (document.contains("weight")) {
                                     int steps = document.getLong("weight").intValue();
                                     String date = document.getId();
-                                    Log.i("weight bar", String.valueOf(steps));
-                                    Log.i("date bar", date);
+                                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM");
+                                    try {
+                                        Date parsedDate = inputFormat.parse(date);
+                                        date = outputFormat.format(parsedDate);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     barEntries.add(new CustomEntry(x, steps, date));
                                     x++;
                                 }
@@ -96,12 +107,13 @@ public class HomeUpdateWeightVM extends ViewModel {
                             isLoadingData.setValue(false);
                         } else {
                             Exception e = task.getException();
-                            Log.i("bugg","Lỗi khi lấy dữ liệu bar");
+                            Log.i("bugg", "Lỗi khi lấy dữ liệu bar");
                         }
                     }
                 });
 
     }
+
     public void loadDailyWeight() {
 
         firestore.collection("users")
@@ -116,10 +128,11 @@ public class HomeUpdateWeightVM extends ViewModel {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi","abcdxyz");
+                    Log.i("Lỗi", "abcdxyz");
                     // Xử lý khi không thể tải dữ liệu từ Firestore
                 });
     }
+
     public void getUserLiveData() {
         isLoadingData.setValue(true);
         firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
@@ -158,14 +171,14 @@ public class HomeUpdateWeightVM extends ViewModel {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("success","Lưu giá trị thành công");
+                        Log.i("success", "Lưu giá trị thành công");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("success","Lưu giá trị thất bại");
-                        Log.i("bug",e.toString());
+                        Log.i("success", "Lưu giá trị thất bại");
+                        Log.i("bug", e.toString());
                     }
                 });
     }

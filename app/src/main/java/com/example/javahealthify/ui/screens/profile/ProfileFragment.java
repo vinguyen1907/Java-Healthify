@@ -15,6 +15,8 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.NormalUser;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentProfileBinding;
 import com.example.javahealthify.ui.screens.MainVM;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,7 +40,8 @@ public class ProfileFragment extends Fragment {
 
         profileVM = new ViewModelProvider(requireActivity()).get(ProfileVM.class);
         mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-        profileVM.getUserLiveData();
+//        profileVM.getUserLiveData();
+        profileVM.setUser(mainVM.getUser());
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
