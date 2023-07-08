@@ -24,7 +24,7 @@ public class WorkoutCategoryExercisesAdapter extends RecyclerView.Adapter<Workou
     private Context context;
     private List<Exercise> exercises;
     private NavController navController;
-    private MoveTempListToSelectedExerciseList addSelectedExercise;
+private MoveTempListToSelectedExerciseList addSelectedExercise;
 
     public WorkoutCategoryExercisesAdapter(Context context, List<Exercise> exercises, NavController navController, MoveTempListToSelectedExerciseList addSelectedExercise) {
         this.context = context;

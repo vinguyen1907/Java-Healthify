@@ -1,10 +1,8 @@
 package com.example.javahealthify.ui.screens.home_update_weight;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,7 +10,6 @@ import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.ui.screens.home.CustomEntry;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.utils.GlobalMethods;
-import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,12 +19,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class HomeUpdateWeightVM extends ViewModel {
@@ -172,7 +167,7 @@ public class HomeUpdateWeightVM extends ViewModel {
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
-                .set(dailyActivities)
+                .update(dailyActivities)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

@@ -26,6 +26,7 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
     Context context;
 
     private MealOptionDialogListener mealOptionDialogListener;
+    private boolean allowOperation;
 
     public void setMealOptionDialogListener(MealOptionDialogListener listener) {
         this.mealOptionDialogListener = listener;
@@ -41,9 +42,10 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
     private MealOptionsClickListener mealOptionsClickListener;
     private AddIngredientClickListener addIngredientClickListener;
 
-    public DishRecycleViewAdapter(Context context, ArrayList<Dish> dishArrayList, MealOptionDialogListener mealOptionDialogListener) {
+    public DishRecycleViewAdapter(Context context, ArrayList<Dish> dishArrayList,boolean allowOperation, MealOptionDialogListener mealOptionDialogListener ) {
         this.context = context;
         this.dishes = dishArrayList;
+        this.allowOperation = allowOperation;
         this.mealOptionDialogListener = mealOptionDialogListener;
     }
 
@@ -63,6 +65,9 @@ public class DishRecycleViewAdapter extends RecyclerView.Adapter<DishRecycleView
         IngredientRowRecyclerViewAdapter ingredientRowRecyclerViewAdapter = new IngredientRowRecyclerViewAdapter(context, dishes.get(position).getIngredients());
         holder.rvIngredients.setLayoutManager(new LinearLayoutManager(context));
         holder.rvIngredients.setAdapter(ingredientRowRecyclerViewAdapter);
+        if(!allowOperation) {
+            holder.btnMealOption.setVisibility(View.GONE);
+        }
         holder.btnMealOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

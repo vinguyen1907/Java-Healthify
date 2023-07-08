@@ -6,34 +6,78 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.WorkoutCategory;
 import com.example.javahealthify.databinding.FragmentAdminWorkoutBinding;
 import com.example.javahealthify.ui.screens.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class AdminWorkoutFragment extends Fragment {
+import java.util.ArrayList;
+
+public class AdminWorkoutFragment extends Fragment implements AdminWorkoutCategoriesAdapter.OnCategoryDetailsClick {
 
     FragmentAdminWorkoutBinding binding;
+    AdminWorkoutCategoriesAdapter adapter;
+    AdminWorkoutVM viewModel;
     public AdminWorkoutFragment() {
         // Required empty public constructor
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
+        viewModel = viewModelProvider.get(AdminWorkoutVM.class);
         binding = FragmentAdminWorkoutBinding.inflate(inflater,container,false);
-        binding.adminLogout.setOnClickListener(new View.OnClickListener() {
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        binding.setViewModel(viewModel);
+        adapter = new AdminWorkoutCategoriesAdapter(this.getContext(), viewModel.workoutCategories.getValue(), this);
+        binding.adminWorkoutMuscleCategory.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+        binding.adminWorkoutMuscleCategory.setLayoutManager(linearLayoutManager);
+
+        binding.adminWorkoutAddCategoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.action_adminWorkoutFragment_to_adminAddWorkoutCategoryFragment);
+            }
+        });
+
+        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
-//                NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.signUpFragment);
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
         });
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel.workoutCategories.observe(getViewLifecycleOwner(), new Observer<ArrayList<WorkoutCategory>>() {
+            @Override
+            public void onChanged(ArrayList<WorkoutCategory> workoutCategories) {
+                adapter.setWorkoutCategories(workoutCategories);
+            }
+        });
+    }
+
+    @Override
+    public void onCategoryDetailsClick(int position) {
+        viewModel.fetchExercisesInCategory(viewModel.getWorkoutCategories().getValue().get(position).getId());
+        NavHostFragment.findNavController(AdminWorkoutFragment.this).navigate(R.id.action_adminWorkoutFragment_to_adminEditExercisesFragment);
+
     }
 }
