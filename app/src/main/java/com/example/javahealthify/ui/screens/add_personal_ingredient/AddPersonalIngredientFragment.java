@@ -63,6 +63,12 @@ public class AddPersonalIngredientFragment extends Fragment {
             }
 
         });
+        binding.appBar.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalMethods.backToPreviousFragment(AddPersonalIngredientFragment.this);
+            }
+        });
         return binding.getRoot();
     }
 }

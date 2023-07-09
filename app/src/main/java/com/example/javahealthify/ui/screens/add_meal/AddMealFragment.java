@@ -78,7 +78,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     }
 
     private void setOnClick() {
-        binding.addMealToolbar.setOnClickListener(new View.OnClickListener() {
+        binding.appBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GlobalMethods.backToPreviousFragment(AddMealFragment.this);
