@@ -196,10 +196,10 @@ public class HomeVM extends ViewModel {
 
         Map<String, Object> dailyActivities = new HashMap<>();
         dailyActivities.put("steps", stepCount);
-        dailyActivities.put("weight", this.getWeight());
-        dailyActivities.put("exerciseCalories", this.getExerciseCalories());
-        dailyActivities.put("calories", this.getCalories());
-        dailyActivities.put("foodCalories", this.getFoodCalories());
+//        dailyActivities.put("weight", this.getWeight());
+//        dailyActivities.put("exerciseCalories", this.getExerciseCalories());
+//        dailyActivities.put("calories", this.getCalories());
+//        dailyActivities.put("foodCalories", this.getFoodCalories());
 
         String dateString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(previousDate);
         firestore.collection("users")

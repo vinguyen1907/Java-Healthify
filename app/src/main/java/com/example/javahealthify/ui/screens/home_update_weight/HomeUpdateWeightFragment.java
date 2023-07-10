@@ -60,16 +60,25 @@ public class HomeUpdateWeightFragment extends Fragment {
         binding.updateWeightDailyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                homeUpdateWeightVM.saveDailyWeight(Integer.valueOf(binding.addWeightDaily.getText().toString()),
-                        homeVM.getSteps(),
-                        homeVM.getExerciseCalories(),
-                        homeVM.getCalories(),
-                        homeVM.getFoodCalories());
-                Toast.makeText(getContext(), "Update today's weight successfully", Toast.LENGTH_LONG).show();
-                binding.addWeightDaily.setText("");
-                barChart.invalidate();
+                String addWeightValue = binding.addWeightDaily.getText().toString();
+                if (!addWeightValue.isEmpty()) {
+                    int weight = Integer.valueOf(addWeightValue);
+                    homeUpdateWeightVM.saveDailyWeight(weight,
+                            homeVM.getSteps(),
+                            homeVM.getExerciseCalories(),
+                            homeVM.getCalories(),
+                            homeVM.getFoodCalories());
+                    Toast.makeText(getContext(), "Update today's weight successfully", Toast.LENGTH_LONG).show();
+                    binding.addWeightDaily.setText("");
+
+                    // Gọi phương thức loadBarData để tải lại dữ liệu cho biểu đồ
+                    homeUpdateWeightVM.loadBarData();
+                } else {
+                    Toast.makeText(getContext(), "Please enter a weight value", Toast.LENGTH_LONG).show();
+                }
             }
         });
+
 
         barChart = binding.barChart;
         homeUpdateWeightVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
@@ -87,62 +96,64 @@ public class HomeUpdateWeightFragment extends Fragment {
     }
 
     private void drawWeightChart(List<CustomEntry> entries) {
-        List<BarEntry> barEntries = new ArrayList<>();
+        if (!entries.isEmpty()) {
+            List<BarEntry> barEntries = new ArrayList<>();
 
-        for (int i = 0; i < entries.size(); i++) {
-            CustomEntry entry = entries.get(i);
-            barEntries.add(new BarEntry(entry.getX(), entry.getY()));
-        }
+            for (int i = 0; i < entries.size(); i++) {
+                CustomEntry entry = entries.get(i);
+                barEntries.add(new BarEntry(entry.getX(), entry.getY()));
+            }
 
-        BarDataSet dataSet = new BarDataSet(barEntries, "Weight");
-        dataSet.setValueTextColor(Color.WHITE);
-        BarData barData = new BarData(dataSet);
+            BarDataSet dataSet = new BarDataSet(barEntries, "Weight");
+            dataSet.setValueTextColor(Color.WHITE);
+            BarData barData = new BarData(dataSet);
 
-        barChart.setData(barData);
-        barChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
-        barChart.getDescription().setText("Weight by Date");
-        barChart.getDescription().setTextColor(Color.WHITE);
+            barChart.setData(barData);
+            barChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
+            barChart.getDescription().setText("Weight by Date");
+            barChart.getDescription().setTextColor(Color.WHITE);
 
-        // Set up X-axis
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setGranularity(1f); // hiển thị 1 giá trị mỗi lần
-        xAxis.setDrawGridLines(false); // cái này để xóa grid
+            // Set up X-axis
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setGranularity(1f); // hiển thị 1 giá trị mỗi lần
+            xAxis.setDrawGridLines(false); // cái này để xóa grid
 
-        Legend legend = barChart.getLegend();
-        legend.setTextColor(Color.WHITE);
+            Legend legend = barChart.getLegend();
+            legend.setTextColor(Color.WHITE);
 
-        xAxis.setValueFormatter(new IndexAxisValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                int index = (int) value;
-                if (index >= 0 && index < entries.size()) {
-                    CustomEntry entry = entries.get(index);
-                    return entry.getXLabel();
+            xAxis.setValueFormatter(new IndexAxisValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    int index = (int) value;
+                    if (index >= 0 && index < entries.size()) {
+                        CustomEntry entry = entries.get(index);
+                        return entry.getXLabel();
+                    }
+                    return "";
                 }
-                return "";
-            }
-        });
+            });
 
-        xAxis.setTextColor(Color.WHITE);
+            xAxis.setTextColor(Color.WHITE);
 
-        // Set up Y-axis
-        YAxis leftAxis = barChart.getAxisLeft();
-        YAxis rightAxis = barChart.getAxisRight();
+            // Set up Y-axis
+            YAxis leftAxis = barChart.getAxisLeft();
+            YAxis rightAxis = barChart.getAxisRight();
 
-        leftAxis.setTextColor(Color.WHITE);
-        rightAxis.setTextColor(Color.WHITE);
+            leftAxis.setTextColor(Color.WHITE);
+            rightAxis.setTextColor(Color.WHITE);
 
-        // Custom axis value formatter for displaying "kg" next to weight values
-        ValueFormatter weightValueFormatter = new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return value + "kg";
-            }
-        };
+            // Custom axis value formatter for displaying "kg" next to weight values
+            ValueFormatter weightValueFormatter = new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return value + "kg";
+                }
+            };
 
-        leftAxis.setValueFormatter(weightValueFormatter);
-        rightAxis.setValueFormatter(weightValueFormatter);
+            leftAxis.setValueFormatter(weightValueFormatter);
+            rightAxis.setValueFormatter(weightValueFormatter);
 
-        barChart.invalidate();
+            barChart.invalidate();
+        }
     }
 }

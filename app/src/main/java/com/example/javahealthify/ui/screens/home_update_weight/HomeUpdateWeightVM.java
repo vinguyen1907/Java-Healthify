@@ -159,11 +159,11 @@ public class HomeUpdateWeightVM extends ViewModel {
 
     public void saveDailyWeight(Integer weight, Integer steps, Float exerciseCalories, Float calories, Float foodCalories) {
         Map<String, Object> dailyActivities = new HashMap<>();
-        dailyActivities.put("steps", steps);
+//        dailyActivities.put("steps", steps);
         dailyActivities.put("weight", weight);
-        dailyActivities.put("exerciseCalories", exerciseCalories);
-        dailyActivities.put("calories", calories);
-        dailyActivities.put("foodCalories", foodCalories);
+//        dailyActivities.put("exerciseCalories", exerciseCalories);
+//        dailyActivities.put("calories", calories);
+//        dailyActivities.put("foodCalories", foodCalories);
 
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
