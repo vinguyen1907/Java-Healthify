@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -71,5 +72,13 @@ public class AddPersonalIngredientVM extends ViewModel {
         data.put("Protein", temp.getProtein());
         data.put("Short_Description", temp.getShort_Description());
         user_ingredients.add(data);
+        FirebaseFirestore.getInstance().collection("count").document("pending_ingredients_count").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                int count = documentSnapshot.getLong("count").intValue();
+                int newCount = count + 1;
+                FirebaseFirestore.getInstance().collection("count").document("pending_ingredients_count").update("count", newCount);
+            }
+        });
     }
 }

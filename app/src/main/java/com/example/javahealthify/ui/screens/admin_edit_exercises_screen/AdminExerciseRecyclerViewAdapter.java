@@ -47,14 +47,7 @@ public class AdminExerciseRecyclerViewAdapter extends RecyclerView.Adapter {
         AdminExerciseRecyclerViewAdapterViewHolder viewHolder = (AdminExerciseRecyclerViewAdapterViewHolder) holder;
         Exercise temp = exerciseArrayList.get(position);
         Glide.with(context).load(temp.getImageUrl()).into(viewHolder.exerciseImg);
-        viewHolder.informationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(onInfoClick != null) {
-                    onInfoClick.onInfo(position);
-                }
-            }
-        });
+
         viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,13 +87,12 @@ public class AdminExerciseRecyclerViewAdapter extends RecyclerView.Adapter {
 
     public static class AdminExerciseRecyclerViewAdapterViewHolder extends RecyclerView.ViewHolder {
         ImageView exerciseImg;
-        ImageButton informationBtn, deleteBtn, editBtn;
+        ImageButton deleteBtn, editBtn;
         TextView exerciseNameTv, exerciseNumberTv, exerciseCaloriesTv;
 
         public AdminExerciseRecyclerViewAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseImg = itemView.findViewById(R.id.exercise_image);
-            informationBtn = itemView.findViewById(R.id.exercise_information_btn);
             deleteBtn = itemView.findViewById(R.id.delete_btn);
             editBtn = itemView.findViewById(R.id.edit_exercise_btn);
             exerciseNameTv = itemView.findViewById(R.id.exercise_name_tv);

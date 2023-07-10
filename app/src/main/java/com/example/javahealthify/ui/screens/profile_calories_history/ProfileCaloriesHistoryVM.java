@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.ui.screens.home.CustomEntry;
+import com.example.javahealthify.ui.screens.home.CustomEntryLineChart;
 import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ProfileCaloriesHistoryVM extends ViewModel {
@@ -39,14 +41,25 @@ public class ProfileCaloriesHistoryVM extends ViewModel {
     public void setIsLoadingLine(MutableLiveData<Boolean> isLoadingLine) {
         this.isLoadingLine = isLoadingLine;
     }
-    ArrayList<CustomEntry> lineEntries;
-    private Integer x = 0;
+    ArrayList<CustomEntryLineChart> lineEntries;
+    ArrayList<CustomEntryLineChart> lineEntries1;
 
-    public ArrayList<CustomEntry> getLineEntries() {
+    public ArrayList<CustomEntryLineChart> getLineEntries1() {
+        return lineEntries1;
+    }
+
+    public void setLineEntries1(ArrayList<CustomEntryLineChart> lineEntries1) {
+        this.lineEntries1 = lineEntries1;
+    }
+
+    private Integer x = 0;
+    private Integer x1 = 0;
+
+    public ArrayList<CustomEntryLineChart> getLineEntries() {
         return lineEntries;
     }
 
-    public void setLineEntries(ArrayList<CustomEntry> lineEntries) {
+    public void setLineEntries(ArrayList<CustomEntryLineChart> lineEntries) {
         this.lineEntries = lineEntries;
     }
 
@@ -68,6 +81,9 @@ public class ProfileCaloriesHistoryVM extends ViewModel {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             lineEntries = new ArrayList<>();
+                            lineEntries1 = new ArrayList<>();
+                            x = 0;
+                            x1 = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 if (document.contains("calories")) {
                                     int steps = document.getLong("calories").intValue();
@@ -84,10 +100,20 @@ public class ProfileCaloriesHistoryVM extends ViewModel {
                                         e.printStackTrace();
                                     }
 
-                                    lineEntries.add(new CustomEntry(x, steps, date));
+                                    lineEntries.add(new CustomEntryLineChart(x, steps, date));
                                     x++;
                                 }
                             }
+                            Collections.sort(lineEntries);
+
+                            for (CustomEntryLineChart customEntryLineChart : lineEntries) {
+                                lineEntries1.add(new CustomEntryLineChart(
+                                        x1,
+                                        customEntryLineChart.getSteps(),
+                                        customEntryLineChart.getDate()));
+                                x1++;
+                            }
+
                             isLoadingLine.setValue(false);
                         } else {
                             Exception e = task.getException();

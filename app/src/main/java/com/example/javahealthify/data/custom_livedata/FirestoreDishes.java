@@ -219,7 +219,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                             .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
                             .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
                     dailyActivityRef.update("foodCalories", finalTotalCalories);
-                    dailyActivityRef.update("calories", initialCalories + initialFoodCalories - finalTotalCalories);
+                    dailyActivityRef.update("calories", initialCalories + (finalTotalCalories - initialCalories));
 
                 } else {
                     Log.d("ERROR", "updateDishes: " + task.getException());
