@@ -189,6 +189,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <com.airbnb.lottie.LottieAnimationView
+            app:layout_constraintTop_toBottomOf="@+id/carbs_info"
+            android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/submit_checkbox"
             app:lottie_rawRes="@raw/ingredient"
