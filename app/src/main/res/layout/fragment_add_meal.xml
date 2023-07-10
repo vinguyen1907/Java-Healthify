@@ -34,6 +34,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <include
+                        android:id="@+id/app_bar"
                         layout="@layout/fragment_custom_app_bar"
                         app:title="Add meal" />
                 </RelativeLayout>
