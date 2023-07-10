@@ -81,7 +81,11 @@ public class Achievement implements Serializable {
     }
 
     public String getUserImageUrl() {
-        return userImageUrl;
+        if (this.userImageUrl == null || this.userImageUrl.isEmpty()) {
+            return null;
+        } else {
+            return this.userImageUrl;
+        }
     }
 
     public void setUserImageUrl(String userImageUrl) {
