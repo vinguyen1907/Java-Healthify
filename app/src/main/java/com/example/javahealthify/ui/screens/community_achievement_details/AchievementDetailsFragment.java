@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.javahealthify.R;
 import com.example.javahealthify.data.adapters.AchievementExercisesAdapter;
 import com.example.javahealthify.data.adapters.AchievementFoodsAdapter;
 import com.example.javahealthify.data.models.Dish;
