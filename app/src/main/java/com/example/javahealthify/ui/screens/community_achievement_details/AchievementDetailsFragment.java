@@ -40,7 +40,12 @@ public class AchievementDetailsFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
 
         viewModel.setAchievement(AchievementDetailsFragmentArgs.fromBundle(getArguments()).getAchievement());
-        Glide.with(requireContext()).load(viewModel.getAchievement().getValue().getUserImageUrl()).into(binding.achievementDetailUserAvatarImg);
+
+        if (viewModel.getAchievement().getValue().getUserImageUrl() == null) {
+            binding.achievementDetailUserAvatarImg.setImageResource(R.drawable.default_profile_image);
+        } else {
+            Glide.with(requireContext()).load(viewModel.getAchievement().getValue().getUserImageUrl()).into(binding.achievementDetailUserAvatarImg);
+        }
 
         setUpFoodList();
 
