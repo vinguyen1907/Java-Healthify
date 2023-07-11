@@ -40,6 +40,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -153,21 +154,28 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 String dateStr = binding.editdateEdt.getText().toString().trim();
+                String userDate = formatter.format(editProfileVM.getUser().getDateOfBirth()).toString();
+                if(!userDate.equals(dateStr)) {
+                    if (!isValidDateFormat(dateStr)) {
+                        binding.tickIcon3.setVisibility(View.GONE);
+                        isValidDay = false;
+                        return;
+                    }
 
-                if (!isValidDateFormat(dateStr)) {
+                    if (!isValidDate(dateStr)) {
+                        binding.tickIcon3.setVisibility(View.GONE);
+                        isValidDay = false;
+                        return;
+                    }
+
+                    binding.tickIcon3.setVisibility(View.VISIBLE);
+                    isValidDay = true;
+                }
+                else {
                     binding.tickIcon3.setVisibility(View.GONE);
                     isValidDay = false;
-                    return;
                 }
 
-                if (!isValidDate(dateStr)) {
-                    binding.tickIcon3.setVisibility(View.GONE);
-                    isValidDay = false;
-                    return;
-                }
-
-                binding.tickIcon3.setVisibility(View.VISIBLE);
-                isValidDay = true;
             }
         });
         binding.editphoneEdt.addTextChangedListener(new TextWatcher() {
@@ -392,6 +400,13 @@ public class EditProfileFragment extends Fragment {
         try {
             Date currentDate = new Date();
             Date inputDate = format.parse(dateStr);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(inputDate);
+            int year = calendar.get(Calendar.YEAR);
+            if (year < 1900) {
+                return false;
+            }
 
             return !inputDate.after(currentDate);
         } catch (ParseException e) {
