@@ -33,7 +33,7 @@ public class User {
     }
 
     public String getImageUrl() {
-        if (imageUrl.isEmpty()) {
+        if (imageUrl.isEmpty() || imageUrl == null) {
             return null;
         }
         return imageUrl;
