@@ -193,7 +193,7 @@ public class EditProfileFragment extends Fragment {
                 String newPhone = binding.editphoneEdt.getText().toString();
                 if (!newPhone.equals(editProfileVM.getUser().getPhone())) {
                     String phone = binding.editphoneEdt.getText().toString();
-                    if (!Pattern.matches("[0-9]+", phone) || phone.length() < 10) {
+                    if (!Pattern.matches("[0-9]+", phone) || phone.length() != 10) {
                         binding.tickIcon4.setVisibility(View.GONE);
                         isValidPhone = false;
                     } else {
@@ -246,7 +246,7 @@ public class EditProfileFragment extends Fragment {
                     return;
                 }
 
-                if (isValidName && isValidDay && isValidPhone && isValidAddress) {
+                if (isValidName || isValidDay || isValidPhone || isValidAddress) {
                     String dateString = binding.editdateEdt.getText().toString().trim();
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
                     Date date;
