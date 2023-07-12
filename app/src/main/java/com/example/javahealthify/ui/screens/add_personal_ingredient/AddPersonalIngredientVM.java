@@ -50,7 +50,6 @@ public class AddPersonalIngredientVM extends ViewModel {
         personalIngredientRef.add(this.newIngredient.getValue()).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("ADDED NEW INGREDIENT", "DocumentSnapshot added with ID: " + documentReference.getId());
 
                     }
                 })

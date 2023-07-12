@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,6 +36,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
+import com.example.javahealthify.ui.screens.home.HomeFragment;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
@@ -78,6 +80,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences(HomeFragment.PREF_FILE_NAME, MODE_PRIVATE);
+        boolean isDarkTheme = sharedPreferences.getBoolean(HomeFragment.THEME_KEY, false);
+        if(isDarkTheme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            Log.d("mode", "onCreate: mode 1");
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            Log.d("mode", "onCreate: mode 2");
+
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -135,23 +147,19 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(UserState userState) {
                 switch (userState) {
                     case loaded:
-                        Log.i("User state", "Loaded");
                         navController.navigate(R.id.homeFragment);
                         setUpNavbar();
                         setUpInitialFragment();
                         break;
                     case loading:
-                        Log.i("User state", "Loading");
                         navController.navigate(R.id.splashFragment);
 //                        hideNavBar();
 
                         break;
                     case notHaveInformation:
-                        Log.i("User state", "Not have inf");
                         navController.navigate(R.id.fillInPersonalInformationFragment);
                         break;
                     default:
-                        Log.i("User state", "Failed");
                         navController.navigate(R.id.signUpFragment);
                 }
             }
@@ -254,9 +262,7 @@ public class MainActivity extends AppCompatActivity {
             permission_post_notification = true;
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                Log.d("Permission ", "inside else 1 time don't allow");
             } else {
-                Log.d("Permission ", "inside else 2 time don't allow");
             }
             requestPermissiongLauncherNotification.launch(permissions[0]);
         }

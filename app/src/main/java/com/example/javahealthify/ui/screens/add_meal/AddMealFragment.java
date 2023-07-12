@@ -142,7 +142,6 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     @Override
     public void onWeightChanged(int position, double newValue) {
         if (position >= 0 && position < addMealVM.getIngredients().getValue().size()) {
-            Log.d("THe code is working", "onWeightChanged: ");
             // Get the updated ingredient and set the new weight
             Ingredient updatedIngredient = addMealVM.getIngredients().getValue().get(position);
             if(newValue == 0) {

@@ -2,7 +2,6 @@ package com.example.javahealthify.ui.screens.menu;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,8 +69,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), true, this);
         binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.meals.setAdapter(adapter);
-        Log.d("OBSERVING DISHES", "onCreateView: " + menuVM.getFirestoreDishes().getValue());
-        // Update the RecyclerView adapter with new data
         dateAdapter = new DateAdapter(dates, this);
         dateAdapter.setSelectedPosition(2);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 5) {
@@ -112,7 +109,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
                                 dateAdapter.notifyDataSetChanged();
                                 binding.dateSlider.scrollToPosition(centerPosition);
                                 if (GlobalMethods.isToday(date)) {
-                                    Log.d("today", "onDateClick: today");
                                     adapter = new DishRecycleViewAdapter(requireContext(), menuVM.getFirestoreDishes().getValue(), true, MenuFragment.this);
                                     binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
                                     adapter.notifyDataSetChanged();
@@ -169,7 +165,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
 
     @Override
     public void onDeleteMealClick(int position) {
-        Log.d("DELETION CALLED", "onDeleteMealClick: at " + position);
         menuVM.getFirestoreDishes().deleteDish(menuVM.getFirestoreDishes().getValue().get(position));
     }
 
@@ -215,7 +210,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         dateAdapter.notifyDataSetChanged();
         binding.dateSlider.scrollToPosition(centerPosition);
         if (GlobalMethods.isToday(date)) {
-            Log.d("today", "onDateClick: today");
             adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), true, this);
             binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
             adapter.notifyDataSetChanged();
@@ -230,7 +224,6 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
     }
 
     private void fetchDishes(Date date) {
-        Log.d("Fetch old dishes", "fetchDishes: is called");
         ArrayList<Dish> dishes = new ArrayList<>();
         AtomicDouble totalCalories = new AtomicDouble(0.0);
         FirebaseFirestore db = FirebaseFirestore.getInstance();

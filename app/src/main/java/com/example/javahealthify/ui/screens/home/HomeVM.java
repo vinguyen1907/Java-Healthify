@@ -21,11 +21,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -266,10 +264,8 @@ public class HomeVM extends ViewModel {
                         }
                         loadGoal();
                     }
-                    Log.i("Loaded document", "success");
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi", "abcdxyz");
                 });
     }
 
@@ -295,7 +291,6 @@ public class HomeVM extends ViewModel {
                         setGoalWeight(goalWeight);
                         isLoadingDocument.setValue(false);
                     }
-                    Log.i("Loaded goal", "success");
 
                 })
                 .addOnFailureListener(e -> {

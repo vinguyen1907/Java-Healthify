@@ -37,15 +37,12 @@ public class AchievementDetailsVM extends ViewModel {
         DocumentReference dailyActivityRef = dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(achievement.getValue().getCreatedTime()));
         ArrayList<Dish> temp = new ArrayList<>();
         isLoadingFoods.setValue(true);
-        Log.d("load food", "loadFoods: is called");
-        Log.d("userid", "loadExercises:" + achievement.getValue().getUserId());
 
         dailyActivityRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    Log.d("task is successfuflt", "onComplete: task is successful" + documentSnapshot.getId());
 
                     if (documentSnapshot.exists()) {
 
@@ -100,8 +97,6 @@ public class AchievementDetailsVM extends ViewModel {
     private void loadExercises() {
         isLoadingExercises.setValue(true);
         CollectionReference dailyActivitiesRef = FirebaseFirestore.getInstance().collection("users").document(achievement.getValue().getUserId()).collection("daily_activities");
-        Log.d("userid", "loadExercises:" + achievement.getValue().getUserId());
-        Log.d("id", "loadExercises: " + GlobalMethods.convertDateToHyphenSplittingFormat(achievement.getValue().getCreatedTime()));
         dailyActivitiesRef.document(GlobalMethods.convertDateToHyphenSplittingFormat(achievement.getValue().getCreatedTime()))
                 .collection("workouts").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

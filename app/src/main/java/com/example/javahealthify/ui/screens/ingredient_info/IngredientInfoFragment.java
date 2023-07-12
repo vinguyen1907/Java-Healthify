@@ -45,7 +45,6 @@ public class IngredientInfoFragment extends Fragment {
         } else {
             ingredientInfoVM.setIngredientInfo(findIngredientVM.getPersonalIngredientInfoArrayList().getValue().get(position));
         }
-        Log.d("INGREDIENT NAME", "onCreateView: " + ingredientInfoVM.ingredientInfo.getId());
         binding.setViewModel(ingredientInfoVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.appBar.backBtn.setOnClickListener(new View.OnClickListener() {

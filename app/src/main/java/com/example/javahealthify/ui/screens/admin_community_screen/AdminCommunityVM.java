@@ -65,9 +65,7 @@ public class AdminCommunityVM extends ViewModel {
                 if (task.isSuccessful()) {
                     ArrayList<Report> tempList = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Log.d("number of reports", "onComplete: " + task.getResult().size());
                         Report report = doc.toObject(Report.class).withId(doc.getId());
-                        Log.d("report id", "onComplete: " + report.getId());
                         tempList.add(report);
                     }
                     if (!tempList.isEmpty()) {

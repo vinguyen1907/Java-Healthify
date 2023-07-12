@@ -55,7 +55,6 @@ public class FindIngredientVM extends ViewModel {
     }
 
     public void search(String query) {
-        Log.d("search string", "search: " + query);
         query = query.toUpperCase();
         if(query.isEmpty()) {
             ingredientInfoArrayList.postValue(new ArrayList<>());
@@ -68,10 +67,8 @@ public class FindIngredientVM extends ViewModel {
         searchQuery.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                Log.d("FOOOOD", "onComplete: hello");
 
                 if (task.isSuccessful()) {
-                    Log.d("SUCCESS", "Task is successful");
                     ArrayList<IngredientInfo> tempList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
 //                        Integer calories = document.get("Calories", int.class);
@@ -81,7 +78,6 @@ public class FindIngredientVM extends ViewModel {
 //                        IngredientInfo temp = new IngredientInfo(document.get("Short_Description", String.class), calories, carbs, lipid, protein);
 //                        temp.setId(document.getId());
                         IngredientInfo temp2 = document.toObject(IngredientInfo.class).withId(document.getId());
-                        Log.d("ids", "onComplete: " + temp2.getId());
                         tempList.add(temp2);
                     }
                     ingredientInfoArrayList.setValue(tempList);
@@ -99,7 +95,6 @@ public class FindIngredientVM extends ViewModel {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    Log.d("personal ingredient found", "onComplete: personalIngredient found");
                     ArrayList<IngredientInfo> tempList = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Integer calories = document.get("calories", int.class);
