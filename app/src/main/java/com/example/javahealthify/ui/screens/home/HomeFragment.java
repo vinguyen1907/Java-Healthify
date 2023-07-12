@@ -476,6 +476,8 @@ public class HomeFragment extends Fragment {
         LineDataSet dataSet = new LineDataSet(entryList, "Steps");
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSet.setColors(getResources().getColor(R.color.primaryColor, null));
+        dataSet.setValueTextSize(10);
+        dataSet.setValueTextColor(getResources().getColor(R.color.primaryTextColor, null));
         LineData lineData = new LineData(dataSet);
 
         String[] labels = new String[entries.size()];
