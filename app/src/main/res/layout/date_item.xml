@@ -20,8 +20,8 @@
 
         <TextView
             app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/primaryTextColor"
             android:fontFamily="@font/poppins_semi_bold"
+            android:textColor="#091528"
             android:textSize="20sp"
             android:id="@+id/day"
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:id="@+id/month"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/primaryTextColor"
+            android:textColor="#091528"
             android:textSize="14sp"
             android:fontFamily="@font/poppins_regular"
             android:text="March"
