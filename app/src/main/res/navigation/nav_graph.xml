@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_fillInPersonalInformationFragment"
+            app:destination="@id/fillInPersonalInformationFragment" />
     </fragment>
     <fragment
         android:id="@+id/excerciseDetail"

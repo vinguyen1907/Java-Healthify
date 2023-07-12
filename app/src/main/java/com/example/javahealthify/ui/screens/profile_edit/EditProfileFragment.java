@@ -329,6 +329,11 @@ public class EditProfileFragment extends Fragment {
                             public void onUserLoaded(User user) {
 
                             }
+
+                            @Override
+                            public void onUserNotHaveInformation() {
+
+                            }
                         });
 
                         if (!name.equals(mainVM.getUser().getValue().getName())) {

@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -95,20 +96,64 @@ public class MainActivity extends AppCompatActivity {
         scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
-        hideNavBar();
-        if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.onboardingFragment);
-        } else {
-            navController.navigate(R.id.splashFragment);
+//        if (firebaseAuth.getCurrentUser() == null) {
+//            navController.navigate(R.id.signUpFragment);
+//        } else {
+//            navController.navigate(R.id.splashFragment);
+//            hideNavBar();
+//
+//            viewModel.loadUser(new MainVM.UserLoadCallback() {
+//                @Override
+//                public void onUserLoaded(User user) {
+//                    setUpNavbar();
+//                    navController.navigate(R.id.homeFragment);
+//                }
+//
+//                @Override
+//                public void onUserNotHaveInformation() {
+//                    navController.navigate(R.id.fillInPersonalInformationFragment);
+//                }
+//            });
+//        }
 
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
-                    setUpInitialFragment();
-                    setUpNavbar();
+                }
+
+                @Override
+                public void onUserNotHaveInformation() {
                 }
             });
         }
+
+            viewModel.getState().observe(this, new Observer<UserState>() {
+            @Override
+            public void onChanged(UserState userState) {
+                switch (userState) {
+                    case loaded:
+                        Log.i("User state", "Loaded");
+                        navController.navigate(R.id.homeFragment);
+                        setUpNavbar();
+                        break;
+                    case loading:
+                        Log.i("User state", "Loading");
+                        navController.navigate(R.id.splashFragment);
+//                        hideNavBar();
+                        break;
+                    case notHaveInformation:
+                        Log.i("User state", "Not have inf");
+                        navController.navigate(R.id.fillInPersonalInformationFragment);
+                        break;
+                    default:
+                        Log.i("User state", "Failed");
+                        navController.navigate(R.id.signUpFragment);
+                }
+            }
+        });
 
         if (!permission_post_notification) {
             requestPermissionNotification();

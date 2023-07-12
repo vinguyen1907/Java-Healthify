@@ -105,6 +105,11 @@ public class ProfileChangeGoalsFragment extends Fragment {
                                     public void onUserLoaded(User user) {
 
                                     }
+
+                                    @Override
+                                    public void onUserNotHaveInformation() {
+
+                                    }
                                 });
                             }
                         })

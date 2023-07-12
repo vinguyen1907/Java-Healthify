@@ -13,24 +13,24 @@ import com.example.javahealthify.utils.FirebaseConstants;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+enum UserState { initial, loading, loaded, notHaveInformation, loadFailed }
 
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<UserState> state = new MutableLiveData<>(UserState.initial);
 
     public interface UserLoadCallback {
         void onUserLoaded(User user);
+        void onUserNotHaveInformation();
     }
 
     public void loadUser(UserLoadCallback callback) {
-        Log.i("Loading user", "");
+        state.setValue(UserState.loading);
+
         FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -39,11 +39,16 @@ public class MainVM extends ViewModel {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 user.setValue(document.toObject(NormalUser.class));
-                                if (callback != null) {
-                                    callback.onUserLoaded(user. getValue());
-                                }
+//                                if (callback != null) {
+//                                    callback.onUserLoaded(user. getValue());
+//                                }
+                                state.setValue(UserState.loaded);
+                            } else {
+                                state.setValue(UserState.notHaveInformation);
+//                                callback.onUserNotHaveInformation();
                             }
                         } else {
+                            state.setValue(UserState.loadFailed);
                             Log.e("Load user failed", "", task.getException());
                         }
                     }
@@ -72,13 +77,11 @@ public class MainVM extends ViewModel {
         return user;
     }
 
+    public MutableLiveData<UserState> getState() {
+        return state;
+    }
+
     public String getUserImageUrl() {
-        if (user.getValue() == null) {
-            return null;
-        } else if (user.getValue().getImageUrl().isEmpty()) {
-            return null;
-        } else {
-            return user.getValue().getImageUrl();
-        }
+        return user.getValue().getImageUrl();
     }
 }
