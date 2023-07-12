@@ -23,9 +23,38 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <include
+                android:id="@+id/app_bar"
                 layout="@layout/fragment_custom_app_bar"
                 app:title="Add meal" />
         </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mark_as_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/ingredient_info_toolbar">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:includeFontPadding="false"
+                android:text="Mark as favorite"
+                android:textColor="@color/primaryColor"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/favorite_btn"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/favorite_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_favorite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/ingredient_header"
@@ -36,7 +65,7 @@
             android:text="@{String.valueOf(viewModel.ingredientInfo.getShort_Description)}"
             android:textSize="30sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredient_info_toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/mark_as_favorite" />
 
         <TextView
             android:id="@+id/nutrient_facts_header"
