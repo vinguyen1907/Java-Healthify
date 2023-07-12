@@ -27,8 +27,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentSignInBinding;
 import com.example.javahealthify.ui.screens.MainActivity;
+import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.sign_up.SignUpFragment;
 import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -49,6 +52,7 @@ public class SignInFragment extends Fragment {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private GoogleSignInClient mGoogleSignInClient;
     private NavController navController;
+    private MainVM mainVM;
     private ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -80,6 +84,8 @@ public class SignInFragment extends Fragment {
         viewModel = new ViewModelProvider(SignInFragment.this).get(SignInVM.class);
         binding.setSignInVM(viewModel);
         binding.setLifecycleOwner(this);
+
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
         // Configure Google sign-in options
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -173,7 +179,22 @@ public class SignInFragment extends Fragment {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 if (task.getResult().exists()) {
-                                                    navController.navigate(R.id.action_signInFragment_to_homeFragment);
+                                                    mainVM.loadUser(new MainVM.UserLoadCallback() {
+                                                        @Override
+                                                        public void onUserLoaded(User user) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onUserNotHaveInformation() {
+
+                                                        }
+                                                    });
+//                                                    navController.navigate(R.id.action_signInFragment_to_homeFragment);
+//                                                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
+//                                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                                    startActivity(intent);
                                                 } else {
                                                     // not have information -> Navigate to fill in information screen
                                                     navController.navigate(R.id.action_signInFragment_to_fillInPersonalInformationFragment);

@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         SharedPreferences sharedPreferences = getSharedPreferences(HomeFragment.PREF_FILE_NAME, MODE_PRIVATE);
         boolean isDarkTheme = sharedPreferences.getBoolean(HomeFragment.THEME_KEY, false);
         if(isDarkTheme) {
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             Log.d("mode", "onCreate: mode 2");
-
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -98,35 +98,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainVM.class);
         binding.setMainVM(viewModel);
+
+        // Hide navbar
         binding.navBar.setVisibility(View.GONE);
         binding.adminNavBar.setVisibility(View.GONE);
-
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        createNotificationChannel();
-
-        scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
-        scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
-
-//        if (firebaseAuth.getCurrentUser() == null) {
-//            navController.navigate(R.id.signUpFragment);
-//        } else {
-//            navController.navigate(R.id.splashFragment);
-//            hideNavBar();
-//
-//            viewModel.loadUser(new MainVM.UserLoadCallback() {
-//                @Override
-//                public void onUserLoaded(User user) {
-//                    setUpNavbar();
-//                    navController.navigate(R.id.homeFragment);
-//                }
-//
-//                @Override
-//                public void onUserNotHaveInformation() {
-//                    navController.navigate(R.id.fillInPersonalInformationFragment);
-//                }
-//            });
-//        }
 
         if (firebaseAuth.getCurrentUser() == null) {
             navController.navigate(R.id.signUpFragment);
@@ -142,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-            viewModel.getState().observe(this, new Observer<UserState>() {
+        viewModel.getState().observe(this, new Observer<UserState>() {
             @Override
             public void onChanged(UserState userState) {
                 switch (userState) {
@@ -154,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                     case loading:
                         navController.navigate(R.id.splashFragment);
 //                        hideNavBar();
-
                         break;
                     case notHaveInformation:
                         navController.navigate(R.id.fillInPersonalInformationFragment);
@@ -165,6 +139,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        createNotificationChannel();
+
+        scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
+        scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
+
         if (!permission_post_notification) {
             requestPermissionNotification();
         } else {
@@ -173,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpInitialFragment() {
+        Log.i("Call home fragment", "CALL");
         boolean isNormalUser = viewModel.getUser().getValue().getType().equals("NORMAL_USER");
         if(isNormalUser) {
             navController.navigate(R.id.homeFragment);
@@ -229,12 +211,12 @@ public class MainActivity extends AppCompatActivity {
 
     private int getNotificationWorkoutHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_workout_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_workout_hour", 17); // 17 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationWorkoutMinute() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_workout_minute", 9); // 0 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_workout_minute", 10); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationWorkoutSecond() {
@@ -244,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int getNotificationMealHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_meal_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_meal_hour", 7); // 17 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationMealMinute() {

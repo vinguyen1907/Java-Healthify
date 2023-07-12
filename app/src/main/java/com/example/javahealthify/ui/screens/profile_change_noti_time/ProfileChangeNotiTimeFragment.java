@@ -54,7 +54,7 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
 
     private int getNotificationWorkoutMinute() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        return sharedPreferences.getInt("notification_workout_minute", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_workout_minute", 10); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
     private int getNotificationMealHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -63,7 +63,7 @@ public class ProfileChangeNotiTimeFragment extends Fragment {
 
     private int getNotificationMealMinute() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        return sharedPreferences.getInt("notification_meal_minute", 00); // 0 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_meal_minute", 10); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private void saveWorkoutSelectedTime(int hourOfDay, int minute) {
