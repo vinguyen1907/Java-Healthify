@@ -37,6 +37,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Calories History"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp" />
 
 
@@ -62,6 +63,7 @@
             android:layout_marginBottom="16dp"
             android:text="Calories Everyday"
             android:textSize="24dp"
+            android:textColor="@color/primaryTextColor"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/lineChart"
             app:layout_constraintEnd_toEndOf="parent"
