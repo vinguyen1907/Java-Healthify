@@ -64,10 +64,9 @@
 
                     <TextView
                         android:id="@+id/profile_name_tv"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="@dimen/default_horizontal_margin"
                         android:fontFamily="@font/poppins_bold"
                         android:text="@{viewModel.user.name}"
                         android:textSize="28sp"
