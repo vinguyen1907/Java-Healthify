@@ -43,6 +43,7 @@
         app:layout_constraintTop_toTopOf="@+id/category_image_background" />
 
     <ImageView
+        android:id="@+id/category_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_chevron_forward"

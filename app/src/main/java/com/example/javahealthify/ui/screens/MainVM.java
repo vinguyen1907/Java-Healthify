@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+
 enum UserState { initial, loading, loaded, notHaveInformation, loadFailed }
 
 public class MainVM extends ViewModel {
@@ -37,9 +39,9 @@ public class MainVM extends ViewModel {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 user.setValue(document.toObject(NormalUser.class));
-                                if (callback != null) {
-                                    callback.onUserLoaded(user.getValue());
-                                }
+//                                if (callback != null) {
+//                                    callback.onUserLoaded(user. getValue());
+//                                }
                                 state.setValue(UserState.loaded);
                             } else {
                                 state.setValue(UserState.notHaveInformation);
@@ -51,7 +53,6 @@ public class MainVM extends ViewModel {
                         }
                     }
                 });
-
     }
 
     public void updateUserProfileImage(Uri uri) {
@@ -68,11 +69,25 @@ public class MainVM extends ViewModel {
                 });
     }
 
+    public void updateKeyword(String newName) {
+        FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).update("keyword", GlobalMethods.generateKeyword(newName));
+    }
+
     public MutableLiveData<User> getUser() {
         return user;
     }
 
     public MutableLiveData<UserState> getState() {
         return state;
+    }
+
+    public String getUserImageUrl() {
+        if (user.getValue() == null) {
+            return null;
+        } else if (user.getValue().getImageUrl().isEmpty()) {
+            return null;
+        } else {
+            return user.getValue().getImageUrl();
+        }
     }
 }

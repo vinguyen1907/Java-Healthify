@@ -24,7 +24,7 @@ public class WorkoutCategoryExercisesAdapter extends RecyclerView.Adapter<Workou
     private Context context;
     private List<Exercise> exercises;
     private NavController navController;
-    private MoveTempListToSelectedExerciseList addSelectedExercise;
+private MoveTempListToSelectedExerciseList addSelectedExercise;
 
     public WorkoutCategoryExercisesAdapter(Context context, List<Exercise> exercises, NavController navController, MoveTempListToSelectedExerciseList addSelectedExercise) {
         this.context = context;
@@ -66,7 +66,7 @@ public class WorkoutCategoryExercisesAdapter extends RecyclerView.Adapter<Workou
 
         Glide.with(context).load(exercise.getImageUrl()).into(holder.image);
         holder.name.setText(exercise.getName().toUpperCase());
-        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCountNumber(), exercise.getUnit()));
+        holder.timeOrRep.setText(GlobalMethods.formatTimeOrRep(exercise.getCount(), exercise.getUnit()));
         holder.calories.setText(String.valueOf(exercise.getCaloriesPerUnit()) + " cal");
         holder.informationBtn.setOnClickListener(new View.OnClickListener() {
             @Override

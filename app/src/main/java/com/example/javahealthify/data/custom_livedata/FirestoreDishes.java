@@ -9,6 +9,7 @@ import com.example.javahealthify.data.models.Ingredient;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -22,12 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private DocumentReference userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
-    private CollectionReference dailyActivitiesRef = userRef.collection("daily_activities");
+    private CollectionReference dailyActivitiesRef;
     private DocumentReference dailyActivityRef;
     private ListenerRegistration listenerRegistration;
 
@@ -72,6 +72,12 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
     @Override
     protected void onActive() {
         super.onActive();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(currentUser == null) {
+            return;
+        }
+        userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        dailyActivitiesRef = userRef.collection("daily_activities");
         queryDailyActivities();
         if (dailyActivityRef != null) {
             listenerRegistration = dailyActivityRef.addSnapshotListener((documentSnapshot, e) -> {
@@ -152,59 +158,75 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                     }
                     dailyActivityRef.update("calories", initialCalories + newDish.getCalories());
                     dailyActivityRef.update("foodCalories", initialCalories + newDish.getCalories());
+
+                    dailyActivityRef.update("dishes", FieldValue.arrayUnion(GlobalMethods.toKeyValuePairs(newDish)))
+                            .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "addDish: Dish added successfully"))
+                            .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "addDish: Error adding dish", e));
                 } else {
                     Log.d("ERROR", "addDish: " + task.getException());
                 }
             });
-
-            dailyActivityRef.update("dishes", FieldValue.arrayUnion(GlobalMethods.toKeyValuePairs(newDish)))
-                    .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "addDish: Dish added successfully"))
-                    .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "addDish: Error adding dish", e));
         }
     }
 
     public void deleteDish(Dish dishToDelete) {
-        AtomicReference<Double> initialCalories = new AtomicReference<>((double) 0);
-
-        Log.d("DELETE DISH NAME", "deleteDish: " + dishToDelete.getIngredients());
+        Log.d("delete dish", "deleteDish: is called");
         if (dailyActivityRef != null) {
-            dailyActivityRef.get().addOnCompleteListener(
-                    task -> {
-                        initialCalories.set((Double) task.getResult().get("foodCalories"));
-                    }
-            );
-            dailyActivityRef.update("dishes", FieldValue.arrayRemove(GlobalMethods.toKeyValuePairs(dishToDelete)))
-                    .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "deleteDish: Dish deleted successfully"))
-                    .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "deleteDish: Error deleting dish", e));
-            dailyActivityRef.update("calories", initialCalories.get() - dishToDelete.getCalories());
-            dailyActivityRef.update("foodCalories", initialCalories.get() - dishToDelete.getCalories());
+            dailyActivityRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    double initialCalories = (Double) task.getResult().get("foodCalories");
+                    dailyActivityRef.update("calories", initialCalories - dishToDelete.getCalories());
+                    dailyActivityRef.update("foodCalories", initialCalories - dishToDelete.getCalories());
 
+                    dailyActivityRef.update("dishes", FieldValue.arrayRemove(GlobalMethods.toKeyValuePairs(dishToDelete)))
+                            .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "deleteDish: Dish deleted successfully"))
+                            .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "deleteDish: Error deleting dish", e));
+                } else {
+                    Log.d("ERROR", "deleteDish: " + task.getException());
+                }
+            });
         }
     }
 
     public void updateDishes(List<Dish> newDishes) {
-        double totalCalories = 0;
+        Log.d("update dish", "updateDishes: is called");
         if (dailyActivityRef != null) {
+            double totalCalories = 0;
             List<Map<String, Object>> newDishesKeyValuePairs = new ArrayList<>();
             for (Dish dish : newDishes) {
                 newDishesKeyValuePairs.add(GlobalMethods.toKeyValuePairs(dish));
                 totalCalories += dish.getCalories();
             }
-            AtomicReference<Object> initialCaloriesObject = new AtomicReference<>(new Object());
-            AtomicReference<Object> initialFoodCaloriesObject = new AtomicReference<>(new Object());
+            final double finalTotalCalories = totalCalories;
             dailyActivityRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    initialCaloriesObject.set(task.getResult().get("calories"));
-                    initialCaloriesObject.set(task.getResult().get("foodCalories"));
+                    Object caloriesObj = task.getResult().get("calories");
+                    Object foodCaloriesObj = task.getResult().get("foodCalories");
+                    double initialCalories = 0;
+                    double initialFoodCalories = 0;
+                    if (caloriesObj instanceof Long) {
+                        initialCalories = ((Long) caloriesObj).doubleValue();
+                    } else if (caloriesObj instanceof Double) {
+                        initialCalories = (Double) caloriesObj;
+                    }
+                    if (foodCaloriesObj instanceof Long) {
+                        initialFoodCalories = ((Long) foodCaloriesObj).doubleValue();
+                    } else if (foodCaloriesObj instanceof Double) {
+                        initialFoodCalories = (Double) foodCaloriesObj;
+                    }
 
+                    dailyActivityRef.update("dishes", newDishesKeyValuePairs)
+                            .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
+                            .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
+                    dailyActivityRef.update("foodCalories", finalTotalCalories);
+                    dailyActivityRef.update("calories", initialCalories + (finalTotalCalories - initialCalories));
+
+                } else {
+                    Log.d("ERROR", "updateDishes: " + task.getException());
                 }
             });
-            dailyActivityRef.update("dishes", newDishesKeyValuePairs)
-                    .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
-                    .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
-            dailyActivityRef.update("foodCalories", totalCalories);
-            dailyActivityRef.update("calories", (Double) initialCaloriesObject.get() + (Double) initialFoodCaloriesObject.get() - totalCalories);
-
         }
     }
+
+
 }

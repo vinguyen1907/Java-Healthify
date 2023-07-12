@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.javahealthify.R;
@@ -21,6 +22,7 @@ import com.example.javahealthify.databinding.FragmentMenuBinding;
 import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.util.concurrent.AtomicDouble;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -33,11 +35,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener, DishRecycleViewAdapter.MealOptionDialogListener,DateAdapter.OnDateClickListener {
+public class MenuFragment extends Fragment implements DishRecycleViewAdapter.MealOptionsClickListener, DishRecycleViewAdapter.AddIngredientClickListener, DishRecycleViewAdapter.MealOptionDialogListener, DateAdapter.OnDateClickListener {
 
     MenuVM menuVM;
     private FragmentMenuBinding binding;
-
     DishRecycleViewAdapter adapter;
     DateAdapter dateAdapter;
     List<Date> dates;
@@ -63,19 +64,20 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
         // Remove the observer before setting up a new one
         menuVM.getFirestoreDishes().removeObservers(this);
 
-        adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), this);
+        adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), true, this);
         binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.meals.setAdapter(adapter);
         Log.d("OBSERVING DISHES", "onCreateView: " + menuVM.getFirestoreDishes().getValue());
         // Update the RecyclerView adapter with new data
         dateAdapter = new DateAdapter(dates, this);
         dateAdapter.setSelectedPosition(2);
-        binding.dateSlider.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false) {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getContext(), 5) {
             @Override
             public boolean canScrollHorizontally() {
                 return false;
             }
-        });
+        };
+        binding.dateSlider.setLayoutManager(gridLayoutManager);
         binding.dateSlider.setAdapter(dateAdapter);
 
         updateDatesList(Calendar.getInstance().getTime());
@@ -99,13 +101,11 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
             public void onChanged(ArrayList<Dish> dishArrayList) {
                 adapter.setDishes(dishArrayList);
                 totalCalories = 0.0;
-                for (Dish dish: dishArrayList
+                for (Dish dish : dishArrayList
                 ) {
                     totalCalories += dish.getCalories();
                     binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
                 }
-
-
             }
         });
     }
@@ -169,17 +169,19 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
     @Override
     public void onDateClick(Date date) {
         updateDatesList(date);
-        int centerPosition =2;
+        int centerPosition = 2;
         dateAdapter.setSelectedPosition(centerPosition);
         dateAdapter.notifyDataSetChanged();
         binding.dateSlider.scrollToPosition(centerPosition);
-        if(GlobalMethods.isToday(date)) {
-            adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), this);
-            adapter.notifyDataSetChanged();
+        if (GlobalMethods.isToday(date)) {
+            Log.d("today", "onDateClick: today");
+            adapter = new DishRecycleViewAdapter(this.getContext(), menuVM.getFirestoreDishes().getValue(), true, this);
             binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+            adapter.notifyDataSetChanged();
             binding.meals.setAdapter(adapter);
             binding.meals.requestLayout();
-
+            binding.displayDate.setText("Today");
+            binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
         } else {
             fetchDishes(date);
         }
@@ -189,6 +191,7 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
     private void fetchDishes(Date date) {
         Log.d("Fetch old dishes", "fetchDishes: is called");
         ArrayList<Dish> dishes = new ArrayList<>();
+        AtomicDouble totalCalories = new AtomicDouble(0.0);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         DocumentReference userRef = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -200,52 +203,59 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if(document.exists()) {
-                        Log.d("fetch old dishes", "onComplete: document exists");
-                        List<Map<String, Object>> dishesMapLists = (List<Map<String,Object>>) document.get("dishes");
-                        for(Map<String,Object> dishMap : dishesMapLists) {
-                            Dish dish = new Dish();
-                            dish.setName((String) dishMap.get("name"));
-                            dish.setSession((String) dishMap.get("session"));
-                            List<Map<String, Object>> ingredientsMapList = (List<Map<String, Object>>) dishMap.get("ingredients");
-                            if (ingredientsMapList == null || ingredientsMapList.isEmpty()) {
-                                continue;
+                    if (document.exists()) {
+                        List<Map<String, Object>> dishesMapLists = (List<Map<String, Object>>) document.get("dishes");
+                        if (dishesMapLists != null) {
+                            for (Map<String, Object> dishMap : dishesMapLists) {
+                                Dish dish = new Dish();
+                                dish.setName((String) dishMap.get("name"));
+                                dish.setSession((String) dishMap.get("session"));
+                                List<Map<String, Object>> ingredientsMapList = (List<Map<String, Object>>) dishMap.get("ingredients");
+                                if (ingredientsMapList == null || ingredientsMapList.isEmpty()) {
+                                    continue;
+                                }
+                                List<Ingredient> ingredients = new ArrayList<>();
+                                double dishTotalCalories = 0;
+                                double dishTotalCarb = 0;
+                                double dishTotalLipid = 0;
+                                double dishTotalProtein = 0;
+                                for (Map<String, Object> ingredientMap : ingredientsMapList) {
+                                    Ingredient ingredient = new Ingredient();
+                                    ingredient.setName((String) ingredientMap.get("name"));
+                                    ingredient.setCalories(((Number) ingredientMap.get("calories")).doubleValue());
+                                    ingredient.setCarb(((Number) ingredientMap.get("carb")).doubleValue());
+                                    ingredient.setLipid(((Number) ingredientMap.get("lipid")).doubleValue());
+                                    ingredient.setProtein(((Number) ingredientMap.get("protein")).doubleValue());
+                                    ingredient.setWeight(((Number) ingredientMap.get("weight")).doubleValue());
+                                    dishTotalCalories += ingredient.getCalories();
+                                    dishTotalCarb += ingredient.getCarb();
+                                    dishTotalLipid += ingredient.getLipid();
+                                    dishTotalProtein += ingredient.getProtein();
+                                    ingredients.add(ingredient);
+                                }
+                                dish.setIngredients(ingredients);
+                                dish.setCalories(dishTotalCalories);
+                                dish.setCarb(dishTotalCarb);
+                                dish.setLipid(dishTotalLipid);
+                                dish.setProtein(dishTotalProtein);
+                                dishes.add(dish);
+                                totalCalories.addAndGet(dishTotalCalories);
                             }
-                            List<Ingredient> ingredients = new ArrayList<>();
-                            double dishTotalCalories = 0;
-                            double dishTotalCarb = 0;
-                            double dishTotalLipid = 0;
-                            double dishTotalProtein = 0;
-                            for (Map<String, Object> ingredientMap : ingredientsMapList) {
-                                Ingredient ingredient = new Ingredient();
-                                ingredient.setName((String) ingredientMap.get("name"));
-                                ingredient.setCalories(((Number) ingredientMap.get("calories")).doubleValue());
-                                ingredient.setCarb(((Number) ingredientMap.get("carb")).doubleValue());
-                                ingredient.setLipid(((Number) ingredientMap.get("lipid")).doubleValue());
-                                ingredient.setProtein(((Number) ingredientMap.get("protein")).doubleValue());
-                                ingredient.setWeight(((Number) ingredientMap.get("weight")).doubleValue());
-                                dishTotalCalories += ingredient.getCalories();
-                                dishTotalCarb += ingredient.getCarb();
-                                dishTotalLipid += ingredient.getLipid();
-                                dishTotalProtein += ingredient.getProtein();
-                                ingredients.add(ingredient);
-                            }
-                            dish.setIngredients(ingredients);
-                            dish.setCalories(dishTotalCalories);
-                            dish.setCarb(dishTotalCarb);
-                            dish.setLipid(dishTotalLipid);
-                            dish.setProtein(dishTotalProtein);
-                            dishes.add(dish);
-
                         }
                     }
                 }
 
-                adapter = new DishRecycleViewAdapter(menuFragment.getContext(), dishes, menuFragment);
+                adapter = new DishRecycleViewAdapter(menuFragment.getContext(), dishes, false, menuFragment);
                 adapter.notifyDataSetChanged();
                 binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
                 binding.meals.setAdapter(adapter);
                 binding.meals.requestLayout();
+                if (GlobalMethods.isToday(date)) {
+                    binding.displayDate.setText("Today");
+                } else {
+                    binding.displayDate.setText(GlobalMethods.convertDateToHyphenSplittingFormat(date));
+                }
+                binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories.doubleValue()));
             }
         });
 

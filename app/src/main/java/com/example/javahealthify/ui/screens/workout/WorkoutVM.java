@@ -38,8 +38,10 @@ public class WorkoutVM extends ViewModel {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     public WorkoutVM() {
-        loadSelectedExercises();
-        loadExercisesCalories();
+        if(auth.getCurrentUser() != null) {
+            loadSelectedExercises();
+            loadExercisesCalories();
+        }
     }
 
     // Methods handle data on database
@@ -194,6 +196,7 @@ public class WorkoutVM extends ViewModel {
                                 newDailyActivity.put("exerciseCalories", 0);
                                 newDailyActivity.put("calories", 0);
                                 newDailyActivity.put("steps", 0);
+                                newDailyActivity.put("weight", 0);
                                 snapshot.getReference().set(newDailyActivity)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

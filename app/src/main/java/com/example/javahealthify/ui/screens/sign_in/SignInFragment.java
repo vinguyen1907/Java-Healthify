@@ -2,6 +2,7 @@ package com.example.javahealthify.ui.screens.sign_in;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -20,8 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentSignInBinding;
+import com.example.javahealthify.ui.screens.MainActivity;
 import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -82,7 +89,7 @@ public class SignInFragment extends Fragment {
 
         // Build a GoogleSignInClient with the options specified by gso
         mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
-        
+
         navController = NavHostFragment.findNavController(this);
 
         setOnClick();
@@ -106,7 +113,10 @@ public class SignInFragment extends Fragment {
             @Override
             public void onChanged(Boolean signInSuccess) {
                 if (signInSuccess) {
-                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
+//                    NavHostFragment.findNavController(SignInFragment.this).navigate(R.id.homeFragment);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                 }
             }
         });
@@ -166,7 +176,7 @@ public class SignInFragment extends Fragment {
                                                     navController.navigate(R.id.action_signInFragment_to_homeFragment);
                                                 } else {
                                                     // not have information -> Navigate to fill in information screen
-                                                    navController.navigate(R.id.action_signUpFragment_to_fillInPersonalInformationFragment);
+                                                    navController.navigate(R.id.action_signInFragment_to_fillInPersonalInformationFragment);
                                                 }
                                             } else {
                                                 Toast.makeText(requireContext(), "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
