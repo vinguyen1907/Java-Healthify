@@ -72,6 +72,7 @@ import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     private HomeVM homeVM;
+    private MainVM mainVM;
     private MutableLiveData<NormalUser> user = new MutableLiveData<>();
     private FragmentHomeBinding binding;
     private WorkoutVM workoutVM;
@@ -105,7 +106,6 @@ public class HomeFragment extends Fragment {
     private long previousTimestamp = 0;
     Date previousDate;
 
-    private MainVM mainVM;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private int remaining;
@@ -118,17 +118,17 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
-        homeVM.getUserLiveData();
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
+        homeVM.setUser(mainVM.getUser());
         homeVM.loadDocument();
         homeVM.loadLineData();
 
         // Init today activity
-
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+        workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
         workoutVM.initDailyActivity();
-    }
+        Log.i("On create home frgment", "");
 
-    public HomeFragment() {
+
     }
 
     @Override
@@ -338,7 +338,7 @@ public class HomeFragment extends Fragment {
         binding.startWeight.setText(homeVM.getStartWeight().toString());
         binding.goalWeight.setText(homeVM.getGoalWeight().toString());
         binding.dailyCalories.setText(homeVM.getDailyCalories().toString());
-        if (homeVM.getUser().getValue().getImageUrl() == null) {
+        if (mainVM.getUserImageUrl() == null) {
             binding.userAvatar.setImageResource(R.drawable.default_profile_image);
         } else {
             Glide.with(requireContext()).load(homeVM.getUser().getValue().getImageUrl()).into(binding.userAvatar);

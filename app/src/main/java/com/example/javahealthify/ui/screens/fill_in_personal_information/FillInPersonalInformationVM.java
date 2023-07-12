@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class FillInPersonalInformationVM extends ViewModel {
     private MutableLiveData<String> name = new MutableLiveData<>();
-    private MutableLiveData<String> birthdate = new MutableLiveData<>();
+    private MutableLiveData<String> birthdate = new MutableLiveData<>("");
     private MutableLiveData<String> phone = new MutableLiveData<>();
     private MutableLiveData<String> address = new MutableLiveData<>();
     private MutableLiveData<String> currentWeight = new MutableLiveData<>("60");
@@ -80,13 +80,12 @@ public class FillInPersonalInformationVM extends ViewModel {
             firestore.collection("users").document(uid).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    isSuccess.setValue(true);
-                    message.setValue("Sign up success!");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
+                    if (task.isSuccessful()) {
+                        isSuccess.setValue(true);
+                        message.setValue("Sign up success!");
+                    } else {
+                        message.setValue("Sign up failed!");
+                    }
                 }
             });
 
@@ -124,6 +123,10 @@ public class FillInPersonalInformationVM extends ViewModel {
 
     public MutableLiveData<String> getBirthdate() {
         return birthdate;
+    }
+
+    public void setBirthdate(MutableLiveData<String> birthdate) {
+        this.birthdate = birthdate;
     }
 
     public void setBirthdate(String birthdate) {

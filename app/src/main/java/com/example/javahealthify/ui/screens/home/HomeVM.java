@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.javahealthify.data.models.NormalUser;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.ui.screens.home_update_weight.HomeUpdateWeightVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
 import com.example.javahealthify.utils.GlobalMethods;
@@ -32,12 +33,12 @@ import java.util.Locale;
 import java.util.Map;
 
 public class HomeVM extends ViewModel {
-    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(null);
+//    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(true);
     private MutableLiveData<Boolean> isLoadingDocument = new MutableLiveData<>(null);
     private MutableLiveData<Boolean> isLoadingLine = new MutableLiveData<>(null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private MutableLiveData<NormalUser> user = new MutableLiveData<>();
+    private MutableLiveData<User> user = new MutableLiveData<>();
     private Integer steps = new Integer(0);
     private Float exerciseCalories = new Float(0);
     private Float foodCalories = new Float(0);
@@ -182,11 +183,6 @@ public class HomeVM extends ViewModel {
         this.steps = steps;
     }
 
-
-    public MutableLiveData<Boolean> getIsLoadingData() {
-        return isLoadingData;
-    }
-
     public HomeVM() {
 //        this.loadDocument();
 //        this.loadLineData();
@@ -221,8 +217,12 @@ public class HomeVM extends ViewModel {
                 });
     }
 
-    public MutableLiveData<NormalUser> getUser() {
+    public MutableLiveData<User> getUser() {
         return user;
+    }
+
+    public void setUser(MutableLiveData<User> user) {
+        this.user = user;
     }
 
     public void loadDocument() {
@@ -266,6 +266,7 @@ public class HomeVM extends ViewModel {
                         }
                         loadGoal();
                     }
+                    Log.i("Loaded document", "success");
                 })
                 .addOnFailureListener(e -> {
                     Log.i("Lỗi", "abcdxyz");
@@ -279,7 +280,7 @@ public class HomeVM extends ViewModel {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         float goal = documentSnapshot.getLong("dailyCalories").floatValue();
-                        setGoal((float) this.getUser().getValue().getDailyCalories());
+                        setGoal((float) ((NormalUser) this.getUser().getValue()).getDailyCalories());
                         Log.i("goal", String.valueOf(goal));
                         setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
                         pieEntries = new ArrayList<>();
@@ -294,6 +295,8 @@ public class HomeVM extends ViewModel {
                         setGoalWeight(goalWeight);
                         isLoadingDocument.setValue(false);
                     }
+                    Log.i("Loaded goal", "success");
+
                 })
                 .addOnFailureListener(e -> {
                     Log.i("Lỗi", "abcdxyz");
@@ -353,30 +356,30 @@ public class HomeVM extends ViewModel {
 
     }
 
-    public void getUserLiveData() {
-        isLoadingData.setValue(true);
-        firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            user.setValue(task.getResult().getDocuments().get(0).toObject(NormalUser.class));
-                            isLoadingData.setValue(false);
-
-                        } else {
-                            Log.d("Get user data error", "Error getting user documents: ", task.getException());
-                            isLoadingData.setValue(false);
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("Error", e.getMessage());
-                    }
-                });
-//        if (userLiveData == null) {
-//            userLiveData = new MutableLiveData<>();
-//            loadUser();
-//        }
-    }
+//    public void getUserLiveData() {
+//        isLoadingData.setValue(true);
+//        firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            user.setValue(task.getResult().getDocuments().get(0).toObject(NormalUser.class));
+//                            isLoadingData.setValue(false);
+//
+//                        } else {
+//                            Log.d("Get user data error", "Error getting user documents: ", task.getException());
+//                            isLoadingData.setValue(false);
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.i("Error", e.getMessage());
+//                    }
+//                });
+////        if (userLiveData == null) {
+////            userLiveData = new MutableLiveData<>();
+////            loadUser();
+////        }
+//    }
 }
