@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentProfileCaloriesHistoryBinding;
 import com.example.javahealthify.ui.screens.home.CustomEntry;
+import com.example.javahealthify.ui.screens.home.CustomEntryLineChart;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.profile_personal_info.ProfilePersonalInfoFragment;
 import com.github.mikephil.charting.animation.Easing;
@@ -78,12 +79,12 @@ public class ProfileCaloriesHistoryFragment extends Fragment {
     }
 
     private void drawLine() {
-        ArrayList<CustomEntry> entries = new ArrayList<>();
-        entries = profileCaloriesHistoryVM.getLineEntries();
+        ArrayList<CustomEntryLineChart> entries = new ArrayList<>();
+        entries = profileCaloriesHistoryVM.getLineEntries1();
 
         List<Entry> entryList = new ArrayList<>();
-        for (CustomEntry customEntry : entries) {
-            entryList.add(customEntry);
+        for (CustomEntryLineChart customEntry : entries) {
+            entryList.add(new Entry(customEntry.getX(), customEntry.getSteps()));
         }
 
         LineDataSet dataSet = new LineDataSet(entryList, "Calories");
@@ -92,7 +93,7 @@ public class ProfileCaloriesHistoryFragment extends Fragment {
 
         String[] labels = new String[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
-            labels[i] = entries.get(i).getXLabel();
+            labels[i] = entries.get(i).getDate();
         }
 
         // cái này để hiển thị ngày ở cột có giá trị
@@ -119,7 +120,6 @@ public class ProfileCaloriesHistoryFragment extends Fragment {
         Legend legend = lineChart.getLegend();
         legend.setTextColor(Color.WHITE);
 
-        dataSet.setColor(Color.parseColor("#69E6A6"));
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setLineWidth(2f);
         lineChart.getAxisLeft().setTextColor(Color.WHITE);

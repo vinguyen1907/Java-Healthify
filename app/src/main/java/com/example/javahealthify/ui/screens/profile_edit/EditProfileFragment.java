@@ -40,6 +40,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -152,22 +153,29 @@ public class EditProfileFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                String dateStr = formatter.format(editProfileVM.getUser().getDateOfBirth());
-
-                if (!binding.editdateEdt.getText().toString().equals(dateStr)) {
-                    try {
-                        dateFormat.parse(binding.editdateEdt.getText().toString());
-                    } catch (ParseException e) {
+                String dateStr = binding.editdateEdt.getText().toString().trim();
+                String userDate = formatter.format(editProfileVM.getUser().getDateOfBirth()).toString();
+                if(!userDate.equals(dateStr)) {
+                    if (!isValidDateFormat(dateStr)) {
                         binding.tickIcon3.setVisibility(View.GONE);
                         isValidDay = false;
                         return;
                     }
+
+                    if (!isValidDate(dateStr)) {
+                        binding.tickIcon3.setVisibility(View.GONE);
+                        isValidDay = false;
+                        return;
+                    }
+
                     binding.tickIcon3.setVisibility(View.VISIBLE);
                     isValidDay = true;
-                } else {
-                    binding.tickIcon3.setVisibility(View.GONE);
-                    isValidDay = true;
                 }
+                else {
+                    binding.tickIcon3.setVisibility(View.GONE);
+                    isValidDay = false;
+                }
+
             }
         });
         binding.editphoneEdt.addTextChangedListener(new TextWatcher() {
@@ -373,5 +381,36 @@ public class EditProfileFragment extends Fragment {
                 });
     }
 
+    private boolean isValidDateFormat(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        format.setLenient(false);
 
+        try {
+            format.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    private boolean isValidDate(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        format.setLenient(false);
+
+        try {
+            Date currentDate = new Date();
+            Date inputDate = format.parse(dateStr);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(inputDate);
+            int year = calendar.get(Calendar.YEAR);
+            if (year < 1900) {
+                return false;
+            }
+
+            return !inputDate.after(currentDate);
+        } catch (ParseException e) {
+            return false;
+        }
+    }
 }
