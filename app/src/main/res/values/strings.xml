@@ -45,7 +45,7 @@
     <string name="Home_Hello">Hello</string>
     <string name="Home_Noti">Remember to update your weight today</string>
     <string name="Home_Weight">kg</string>
-    <string name="Home_Cal">Cal</string>
+    <string name="Home_Cal">cal</string>
     <string name="Home_Start">Start</string>
     <string name="Home_Target">Target</string>
     <string name="Home_Text_CaloDaily">Daily Calories</string>

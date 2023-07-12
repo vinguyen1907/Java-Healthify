@@ -31,7 +31,7 @@
         android:id="@+id/legendValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="45dp"
         android:textColor="#E5E5E5"
         android:textSize="16sp"
         android:textStyle="bold" />
