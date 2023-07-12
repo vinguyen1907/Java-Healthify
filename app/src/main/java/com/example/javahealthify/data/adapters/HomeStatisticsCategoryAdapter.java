@@ -47,6 +47,8 @@ public class HomeStatisticsCategoryAdapter extends BaseAdapter {
 
         ExerciseCategory category = categories.get(i);
         nameTv.setText(category.getName());
+        int textColor = context.getResources().getColor(R.color.primaryTextColor, null);
+        nameTv.setTextColor(textColor);
         int count = 0;
         for (int index = 0; index < exercises.size(); index ++) {
             if (exercises.get(index).getCategoryId().equals(category.getId())) {
@@ -54,6 +56,7 @@ public class HomeStatisticsCategoryAdapter extends BaseAdapter {
             }
         }
         caloriesTv.setText(String.valueOf(count));
+        caloriesTv.setTextColor(textColor);
         return view;
     }
 

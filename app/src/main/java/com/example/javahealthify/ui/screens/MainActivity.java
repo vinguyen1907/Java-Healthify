@@ -211,12 +211,12 @@ public class MainActivity extends AppCompatActivity {
 
     private int getNotificationWorkoutHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_workout_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_workout_hour", 17); // 17 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationWorkoutMinute() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_workout_minute", 9); // 0 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_workout_minute", 10); // 0 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationWorkoutSecond() {
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int getNotificationMealHour() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPreferences.getInt("notification_meal_hour", 14); // 17 là giá trị mặc định nếu không tìm thấy khóa
+        return sharedPreferences.getInt("notification_meal_hour", 7); // 17 là giá trị mặc định nếu không tìm thấy khóa
     }
 
     private int getNotificationMealMinute() {

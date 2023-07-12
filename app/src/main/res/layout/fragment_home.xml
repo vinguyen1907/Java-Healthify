@@ -171,11 +171,12 @@
                     android:id="@+id/textView27"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/primaryTextColor"
 
                     android:text="@string/Home_Weight"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/startWeight"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -198,11 +199,12 @@
                     android:id="@+id/textView26"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/Home_Weight"
-                    android:textColor="@color/primaryTextColor"
 
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/goalWeight"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -222,14 +224,15 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:textColor="@color/primaryTextColor"
-
                     android:id="@+id/textView25"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="11dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/Home_Cal"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@+id/dailyCalories"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -387,11 +390,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="@font/poppins_medium"
                         android:text="@string/Home_Steps_Text"
-                        android:textColor="@color/primaryTextColor"
 
+                        android:textColor="@color/primaryTextColor"
                         android:textSize="10sp"
                         app:layout_constraintStart_toEndOf="@+id/textView23"
                         app:layout_constraintTop_toBottomOf="@+id/imageView5"
@@ -441,6 +445,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="12dp"
                         android:fontFamily="@font/poppins_bold"
+                        android:textColor="@color/primaryTextColor"
                         android:text="@string/Home_Calo"
                         android:textSize="18sp"
                         app:layout_constraintStart_toEndOf="@+id/imageView6"

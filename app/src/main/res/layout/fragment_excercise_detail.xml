@@ -65,6 +65,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/home_total_excercise_text"
+                        android:textColor="@color/primaryTextColor"
                         android:layout_gravity="center_horizontal"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -95,6 +96,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/Home_TotalCalories_Text"
+                        android:textColor="@color/primaryTextColor"
                         android:layout_gravity="center_horizontal"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -225,6 +227,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:numColumns="2"
+                android:textColor="@color/primaryTextColor"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="20dp" />
         </LinearLayout>
