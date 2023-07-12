@@ -113,21 +113,11 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadData() {
-        profileVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData) {
-                    binding.profileEmailTv.setText(profileVM.getUser().getValue().getEmail());
-                    binding.profileNameTv.setText(profileVM.getUser().getValue().getName());
-                    if (profileVM.getUser().getValue().getImageUrl() == null) {
-                        binding.profileImage.setImageResource(R.drawable.default_profile_image);
-                    } else {
-                        Glide.with(requireContext()).load(profileVM.getUser().getValue().getImageUrl()).into(binding.profileImage);
-                    }
-                } else {
-                }
-            }
-        });
+        if (profileVM.getUser().getValue().getImageUrl() == null) {
+            binding.profileImage.setImageResource(R.drawable.default_profile_image);
+        } else {
+            Glide.with(requireContext()).load(profileVM.getUser().getValue().getImageUrl()).into(binding.profileImage);
+        }
     }
 
     private void uploadImageToFb(Uri uri) {
