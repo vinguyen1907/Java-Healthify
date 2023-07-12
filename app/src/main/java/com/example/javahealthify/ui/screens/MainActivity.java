@@ -138,11 +138,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("User state", "Loaded");
                         navController.navigate(R.id.homeFragment);
                         setUpNavbar();
+                        setUpInitialFragment();
                         break;
                     case loading:
                         Log.i("User state", "Loading");
                         navController.navigate(R.id.splashFragment);
 //                        hideNavBar();
+
                         break;
                     case notHaveInformation:
                         Log.i("User state", "Not have inf");

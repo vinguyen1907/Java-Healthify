@@ -1,10 +1,12 @@
 package com.example.javahealthify.ui.screens.menu;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +90,44 @@ public class MenuFragment extends Fragment implements DishRecycleViewAdapter.Mea
             @Override
             public void onClick(View v) {
                 onAddMealClick();
+            }
+        });
+        binding.calendarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        requireContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                                Date date = new GregorianCalendar(year, month, dayOfMonth).getTime();
+                                updateDatesList(date);
+                                int centerPosition = 2;
+                                dateAdapter.setSelectedPosition(centerPosition);
+                                dateAdapter.notifyDataSetChanged();
+                                binding.dateSlider.scrollToPosition(centerPosition);
+                                if (GlobalMethods.isToday(date)) {
+                                    Log.d("today", "onDateClick: today");
+                                    adapter = new DishRecycleViewAdapter(requireContext(), menuVM.getFirestoreDishes().getValue(), true, MenuFragment.this);
+                                    binding.meals.setLayoutManager(new LinearLayoutManager(requireContext()));
+                                    adapter.notifyDataSetChanged();
+                                    binding.meals.setAdapter(adapter);
+                                    binding.meals.requestLayout();
+                                    binding.displayDate.setText("Today");
+                                    binding.menuTodayCalories.setText(GlobalMethods.formatDoubleToString(totalCalories));
+                                } else {
+                                    fetchDishes(date);
+                                }
+                            }
+                        }, year, month, day
+                );
+
+                dialog.show();
             }
         });
 

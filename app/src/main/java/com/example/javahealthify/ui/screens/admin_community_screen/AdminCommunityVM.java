@@ -134,7 +134,11 @@ public class AdminCommunityVM extends ViewModel {
             public void onSuccess(Void unused) {
                 ArrayList<Report> temp = pendingReportList.getValue();
                 temp.remove(position);
-                pendingReportList.postValue(temp);
+                if(temp.isEmpty()) {
+                    pendingReportList.postValue(new ArrayList<>());
+                } else {
+                    pendingReportList.postValue(temp);
+                }
                 decreasePendingCountByOne();
             }
         });
