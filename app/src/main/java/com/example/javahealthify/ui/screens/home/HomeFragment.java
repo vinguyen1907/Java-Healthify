@@ -8,7 +8,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
-import com.example.javahealthify.data.adapters.WorkoutCategoriesAdapter;
 import com.example.javahealthify.data.models.NormalUser;
-import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
-import com.example.javahealthify.ui.screens.profile.ProfileFragment;
-import com.example.javahealthify.ui.screens.profile.ProfileVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
-import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -51,27 +42,19 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
+    public static final String PREF_FILE_NAME = "theme_pref";
+    public static final String THEME_KEY = "theme_mode";
     private HomeVM homeVM;
+    private MainVM mainVM;
     private MutableLiveData<NormalUser> user = new MutableLiveData<>();
     private FragmentHomeBinding binding;
     private WorkoutVM workoutVM;
@@ -105,7 +88,6 @@ public class HomeFragment extends Fragment {
     private long previousTimestamp = 0;
     Date previousDate;
 
-    private MainVM mainVM;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private int remaining;
@@ -118,17 +100,16 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
-        homeVM.getUserLiveData();
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
+        homeVM.setUser(mainVM.getUser());
         homeVM.loadDocument();
         homeVM.loadLineData();
 
         // Init today activity
-
-        workoutVM = new ViewModelProvider(this).get(WorkoutVM.class);
+        workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
         workoutVM.initDailyActivity();
-    }
 
-    public HomeFragment() {
+
     }
 
     @Override
@@ -210,6 +191,18 @@ public class HomeFragment extends Fragment {
 
         binding.stepCountTextView.setText(String.valueOf(stepCount));
 
+        // set theme
+        binding.setThemeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+                boolean isDarkTheme = !sharedPreferences1.getBoolean(THEME_KEY, true);
+                SharedPreferences.Editor editor = sharedPreferences1.edit();
+                editor.putBoolean(THEME_KEY, isDarkTheme);
+                editor.apply();
+                getActivity().recreate();
+            }
+        });
 
         return binding.getRoot();
     }
@@ -280,7 +273,6 @@ public class HomeFragment extends Fragment {
 
         for (int i = 0; i < entries.size(); i++) {
             if (entries.size() > 3) {
-                Log.i("if i", String.valueOf(i));
                 String legendEntry = legendEntries.get(2);
                 int legendValue = legendValues.get(2);
 
@@ -303,7 +295,6 @@ public class HomeFragment extends Fragment {
                 // Add legend item view to the legend layout
                 legendLayout.addView(legendItemView);
             } else {
-                Log.i("else i", String.valueOf(i));
                 String legendEntry = legendEntries.get(i);
                 int legendValue = legendValues.get(i);
 
@@ -341,7 +332,7 @@ public class HomeFragment extends Fragment {
         binding.startWeight.setText(homeVM.getStartWeight().toString());
         binding.goalWeight.setText(homeVM.getGoalWeight().toString());
         binding.dailyCalories.setText(homeVM.getDailyCalories().toString());
-        if (homeVM.getUser().getValue().getImageUrl() == null) {
+        if (mainVM.getUserImageUrl() == null) {
             binding.userAvatar.setImageResource(R.drawable.default_profile_image);
         } else {
             Glide.with(requireContext()).load(homeVM.getUser().getValue().getImageUrl()).into(binding.userAvatar);
@@ -419,7 +410,7 @@ public class HomeFragment extends Fragment {
             // Lưu ngày hiện tại vào SharedPreferences
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putLong("previousDate", currentDate.getTime());
-            editor.putInt("stepCount", stepCount); // lưu giá trị mới nhất của stepCount
+            editor.putInt("stepCount", stepCount);
             editor.apply();
         }
     }
@@ -468,16 +459,17 @@ public class HomeFragment extends Fragment {
 
     private void drawLine() {
 
-        ArrayList<CustomEntry> entries = new ArrayList<>();
-        entries = homeVM.getLineEntries();
-//        entries.add(new CustomEntry(0, 65f, "Ngày 1"));
-//        entries.add(new CustomEntry(1, 68f, "Ngày 2"));
-//        entries.add(new CustomEntry(2, 70f, "Ngày 3"));
+        ArrayList<CustomEntryLineChart> entries = new ArrayList<>();
+        entries = homeVM.getLineEntries1();
 
 
         List<Entry> entryList = new ArrayList<>();
-        for (CustomEntry customEntry : entries) {
-            entryList.add(customEntry);
+        for (CustomEntryLineChart customEntry : entries) {
+//            String a = String.valueOf(customEntry.getX());
+//            String b = String.valueOf(customEntry.getSteps());
+//            Log.i("entries", a);
+//            Log.i("steps", b);
+            entryList.add(new Entry(customEntry.getX(), customEntry.getSteps()));
         }
 
         LineDataSet dataSet = new LineDataSet(entryList, "Steps");
@@ -486,7 +478,7 @@ public class HomeFragment extends Fragment {
 
         String[] labels = new String[entries.size()];
         for (int i = 0; i < entries.size(); i++) {
-            labels[i] = entries.get(i).getXLabel();
+            labels[i] = entries.get(i).getDate();
         }
 
         // cái này để hiển thị ngày ở cột có giá trị

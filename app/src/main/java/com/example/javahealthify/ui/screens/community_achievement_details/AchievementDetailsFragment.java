@@ -1,22 +1,24 @@
 package com.example.javahealthify.ui.screens.community_achievement_details;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.adapters.AchievementExercisesAdapter;
 import com.example.javahealthify.data.adapters.AchievementFoodsAdapter;
+import com.example.javahealthify.data.models.Dish;
 import com.example.javahealthify.data.models.Exercise;
 import com.example.javahealthify.databinding.FragmentAchievementDetailsBinding;
+import com.example.javahealthify.ui.screens.menu.DishRecycleViewAdapter;
 import com.example.javahealthify.utils.GlobalMethods;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class AchievementDetailsFragment extends Fragment {
     private FragmentAchievementDetailsBinding binding;
     private AchievementDetailsVM viewModel;
     private AchievementFoodsAdapter foodsAdapter;
+    private DishRecycleViewAdapter dishRecycleViewAdapter;
     private AchievementExercisesAdapter exercisesAdapter;
 
     @Override
@@ -55,9 +58,17 @@ public class AchievementDetailsFragment extends Fragment {
     }
 
     private void setUpFoodList() {
-        foodsAdapter = new AchievementFoodsAdapter(requireContext(), new ArrayList<>());
-        binding.foodLst.setAdapter(foodsAdapter);
+        dishRecycleViewAdapter = new DishRecycleViewAdapter(requireContext(), viewModel.getDishes().getValue(), false, null);
+        binding.foodLst.setAdapter(dishRecycleViewAdapter);
         binding.foodLst.setLayoutManager(new LinearLayoutManager(requireContext()));
+        viewModel.getDishes().observe(getViewLifecycleOwner(), new Observer<ArrayList<Dish>>() {
+            @Override
+            public void onChanged(ArrayList<Dish> dishArrayList) {
+                Log.d("dishes", "onChanged: " + dishArrayList);
+                dishRecycleViewAdapter.setDishes(dishArrayList);
+
+            }
+        });
     }
 
     private void setUpExerciseList() {

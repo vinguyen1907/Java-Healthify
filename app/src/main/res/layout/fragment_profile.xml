@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.javahealthify.ui.screens.profile.ProfileVM" />
@@ -57,7 +58,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="148dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:orientation="vertical">
 
@@ -150,8 +151,8 @@
             android:paddingLeft="24dp"
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
-            android:textSize="18sp"
             android:text="Change Goals"
+            android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@+id/personal_info_btn"
             bind:layout_editor_absoluteX="21dp" />
 
@@ -178,8 +179,8 @@
             android:paddingLeft="24dp"
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
-            android:textSize="18sp"
             android:text="Calories History"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activities_settings_title" />
 
@@ -194,8 +195,8 @@
             android:paddingLeft="24dp"
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
-            android:textSize="18sp"
             android:text="Change Notification Time"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calories_history_btn" />
 
@@ -210,8 +211,8 @@
             android:paddingLeft="24dp"
             android:paddingTop="18dp"
             android:paddingBottom="8dp"
-            android:textSize="18sp"
             android:text="Settings"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/change_noti_time_btn" />
 

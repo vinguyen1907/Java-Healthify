@@ -1,10 +1,8 @@
 package com.example.javahealthify.ui.screens.home_update_weight;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,7 +10,6 @@ import com.example.javahealthify.data.models.NormalUser;
 import com.example.javahealthify.ui.screens.home.CustomEntry;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.utils.GlobalMethods;
-import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,11 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class HomeUpdateWeightVM extends ViewModel {
-    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>( null);
+    private MutableLiveData<Boolean> isLoadingData = new MutableLiveData<>(null);
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private NormalUser user = new NormalUser();
@@ -39,12 +35,14 @@ public class HomeUpdateWeightVM extends ViewModel {
     public NormalUser getUser() {
         return user;
     }
+
     private Integer x = 0;
     private MutableLiveData<Boolean> isAddingValue = null;
     private Integer weight = new Integer(0);
     private HomeVM homeVM;
 
     List<CustomEntry> barEntries;
+
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
@@ -78,9 +76,11 @@ public class HomeUpdateWeightVM extends ViewModel {
     public MutableLiveData<Boolean> getIsLoadingData() {
         return isLoadingData;
     }
+
     public void loadBarData() {
         isLoadingData.setValue(true);
         firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("daily_activities")
+                .limit(7)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -88,12 +88,19 @@ public class HomeUpdateWeightVM extends ViewModel {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             barEntries = new ArrayList<>();
+                            x = 0;
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                                 if (document.contains("weight")) {
                                     int steps = document.getLong("weight").intValue();
                                     String date = document.getId();
-                                    Log.i("weight bar", String.valueOf(steps));
-                                    Log.i("date bar", date);
+                                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                    SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM");
+                                    try {
+                                        Date parsedDate = inputFormat.parse(date);
+                                        date = outputFormat.format(parsedDate);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     barEntries.add(new CustomEntry(x, steps, date));
                                     x++;
                                 }
@@ -101,12 +108,13 @@ public class HomeUpdateWeightVM extends ViewModel {
                             isLoadingData.setValue(false);
                         } else {
                             Exception e = task.getException();
-                            Log.i("bugg","Lỗi khi lấy dữ liệu bar");
+                            Log.i("bugg", "Lỗi khi lấy dữ liệu bar");
                         }
                     }
                 });
 
     }
+
     public void loadDailyWeight() {
 
         firestore.collection("users")
@@ -121,10 +129,11 @@ public class HomeUpdateWeightVM extends ViewModel {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.i("Lỗi","abcdxyz");
+                    Log.i("Lỗi", "abcdxyz");
                     // Xử lý khi không thể tải dữ liệu từ Firestore
                 });
     }
+
     public void getUserLiveData() {
         isLoadingData.setValue(true);
         firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
@@ -150,27 +159,27 @@ public class HomeUpdateWeightVM extends ViewModel {
 
     public void saveDailyWeight(Integer weight, Integer steps, Float exerciseCalories, Float calories, Float foodCalories) {
         Map<String, Object> dailyActivities = new HashMap<>();
-        dailyActivities.put("steps", steps);
+//        dailyActivities.put("steps", steps);
         dailyActivities.put("weight", weight);
-        dailyActivities.put("exerciseCalories", exerciseCalories);
-        dailyActivities.put("calories", calories);
-        dailyActivities.put("foodCalories", foodCalories);
+//        dailyActivities.put("exerciseCalories", exerciseCalories);
+//        dailyActivities.put("calories", calories);
+//        dailyActivities.put("foodCalories", foodCalories);
 
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .collection("daily_activities").document(GlobalMethods.convertDateToHyphenSplittingFormat(new Date()))
-                .set(dailyActivities)
+                .update(dailyActivities)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("success","Lưu giá trị thành công");
+                        Log.i("success", "Lưu giá trị thành công");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("success","Lưu giá trị thất bại");
-                        Log.i("bug",e.toString());
+                        Log.i("success", "Lưu giá trị thất bại");
+                        Log.i("bug", e.toString());
                     }
                 });
     }

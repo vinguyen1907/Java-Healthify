@@ -27,6 +27,8 @@ import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.home.HomeVM;
 import com.example.javahealthify.ui.screens.profile_calories_history.ProfileCaloriesHistoryFragment;
 import com.example.javahealthify.ui.screens.profile_change_noti_time.ProfileChangeNotiTimeVM;
+import com.example.javahealthify.utils.FirebaseConstants;
+import com.example.javahealthify.utils.GlobalMethods;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -49,6 +51,7 @@ public class ProfileChangeGoalsFragment extends Fragment {
 
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
     private ProfileChangeGoalsVM profileChangeGoalsVM;
+    private MainVM mainVM;
 
     public ProfileChangeGoalsFragment() {
         // Required empty public constructor
@@ -59,10 +62,8 @@ public class ProfileChangeGoalsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         profileChangeGoalsVM = new ViewModelProvider(requireActivity()).get(ProfileChangeGoalsVM.class);
-        profileChangeGoalsVM.getUserLiveData();
-
-//        user = mainVM.getUser();
-
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
+        profileChangeGoalsVM.setUser(mainVM.getUser());
     }
 
     @Override
@@ -87,16 +88,29 @@ public class ProfileChangeGoalsFragment extends Fragment {
                 }
                 int goalWeight = Integer.parseInt(binding.weightEdt.getText().toString());
                 data.put("goalWeight", goalWeight);
-//                data.put("dailySteps", binding.stepEdt.getText().toString().trim());
+                data.put("dailySteps", Integer.parseInt(binding.stepEdt.getText().toString().trim()));
                 data.put("goalTime",  new Timestamp(date));
+                NormalUser cloneUser = (NormalUser) mainVM.getUser().getValue();
+                data.put("dailyCalories", GlobalMethods.calculateDailyCalories(cloneUser.getGender(), cloneUser.getStartWeight(), cloneUser.getHeight(), cloneUser.getAge(), goalWeight, cloneUser.getStartTime(), date));
 
-                db.collection("users")
-                        .document(profileChangeGoalsVM.getUser().getUid())
-                        .set(data, SetOptions.merge())
+                FirebaseConstants.usersRef
+                        .document(profileChangeGoalsVM.getUser().getValue().getUid())
+                        .update(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(), "User data updated successfully", Toast.LENGTH_SHORT).show();
+                                mainVM.loadUser(new MainVM.UserLoadCallback() {
+                                    @Override
+                                    public void onUserLoaded(User user) {
+
+                                    }
+
+                                    @Override
+                                    public void onUserNotHaveInformation() {
+
+                                    }
+                                });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -122,7 +136,6 @@ public class ProfileChangeGoalsFragment extends Fragment {
             public void onClick(View view) {
                 final Calendar c = Calendar.getInstance();
 
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         requireContext(),
                         new DatePickerDialog.OnDateSetListener() {
@@ -144,20 +157,11 @@ public class ProfileChangeGoalsFragment extends Fragment {
     }
 
     private void loadData() {
-        profileChangeGoalsVM.getIsLoadingData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isLoadingData) {
-                if (isLoadingData != null && !isLoadingData) {
-                    String goalWeight = String.valueOf((profileChangeGoalsVM.getUser().getGoalWeight()));
-                    binding.weightEdt.setText(goalWeight);
-                    binding.stepEdt.setText("Chưa có trong database");
-
-                    String dateStr = formatter.format(profileChangeGoalsVM.getUser().getGoalTime());
-                    binding.timeGoalEdt.setText(dateStr);
-
-                } else {
-                }
-            }
-        });
+        String goalWeight = String.valueOf(((NormalUser) profileChangeGoalsVM.getUser().getValue()).getGoalWeight());
+        binding.weightEdt.setText(goalWeight);
+        String dailySteps = String.valueOf(((NormalUser) profileChangeGoalsVM.getUser().getValue()).getDailySteps());
+        binding.stepEdt.setText(dailySteps);
+        String dateStr = formatter.format(((NormalUser) profileChangeGoalsVM.getUser().getValue()).getGoalTime());
+        binding.timeGoalEdt.setText(dateStr);
     }
 }

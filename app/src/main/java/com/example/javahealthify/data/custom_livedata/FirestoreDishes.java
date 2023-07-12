@@ -82,7 +82,6 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
         if (dailyActivityRef != null) {
             listenerRegistration = dailyActivityRef.addSnapshotListener((documentSnapshot, e) -> {
                 if (e != null) {
-                    Log.e("FIRESTOREDISHES", "Error in SnapshotListener", e);
                     return;
                 }
 
@@ -96,7 +95,6 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                         Dish dish = new Dish();
                         dish.setName((String) dishMap.get("name"));
                         dish.setSession((String) dishMap.get("session"));
-                        Log.d("DISHNAME", "onActive: " + dish.getName());
 
                         List<Map<String, Object>> ingredientsMapList = (List<Map<String, Object>>) dishMap.get("ingredients");
                         if (ingredientsMapList == null || ingredientsMapList.isEmpty()) {
@@ -217,7 +215,7 @@ public class FirestoreDishes extends LiveData<ArrayList<Dish>> {
                             .addOnSuccessListener(aVoid -> Log.d("FIRESTOREDISHES", "updateDishes: Dishes updated successfully"))
                             .addOnFailureListener(e -> Log.e("FIRESTOREDISHES", "updateDishes: Error updating dishes", e));
                     dailyActivityRef.update("foodCalories", finalTotalCalories);
-                    dailyActivityRef.update("calories", initialCalories + initialFoodCalories - finalTotalCalories);
+                    dailyActivityRef.update("calories", initialCalories + (finalTotalCalories - initialCalories));
 
                 } else {
                     Log.d("ERROR", "updateDishes: " + task.getException());

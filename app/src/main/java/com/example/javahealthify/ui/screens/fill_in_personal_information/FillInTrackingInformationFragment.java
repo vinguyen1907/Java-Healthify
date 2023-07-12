@@ -17,8 +17,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentFillInTrackingInformationBinding;
 import com.example.javahealthify.ui.screens.MainActivity;
+import com.example.javahealthify.ui.screens.MainVM;
 
 import java.util.Calendar;
 
@@ -29,6 +31,7 @@ public class FillInTrackingInformationFragment extends Fragment {
     private int day;
     private int month;
     private int year;
+    private MainVM mainVM;
 
     public FillInTrackingInformationFragment() {
         final Calendar c = Calendar.getInstance();
@@ -40,6 +43,7 @@ public class FillInTrackingInformationFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
     }
 
@@ -52,7 +56,7 @@ public class FillInTrackingInformationFragment extends Fragment {
         viewModel =  new ViewModelProvider(requireActivity()).get(FillInPersonalInformationVM.class);
 
         binding.setPersonalInformationVM(viewModel);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         setOnClick();
 
@@ -60,7 +64,7 @@ public class FillInTrackingInformationFragment extends Fragment {
             @Override
             public void onChanged(Boolean isSuccess) {
                 if (isSuccess == true) {
-//                    NavHostFragment.findNavController(FillInTrackingInformationFragment.this).navigate(R.id.homeFragment);
+                    NavHostFragment.findNavController(FillInTrackingInformationFragment.this).navigate(R.id.homeFragment);
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

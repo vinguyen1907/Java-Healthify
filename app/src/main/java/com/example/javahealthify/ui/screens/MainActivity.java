@@ -25,7 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -34,6 +36,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.ActivityMainBinding;
+import com.example.javahealthify.ui.screens.home.HomeFragment;
 import com.example.javahealthify.ui.screens.notification.mealNotificationReceiver;
 import com.example.javahealthify.ui.screens.notification.workoutNotificationReceiver;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
@@ -77,6 +80,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getSharedPreferences(HomeFragment.PREF_FILE_NAME, MODE_PRIVATE);
+        boolean isDarkTheme = sharedPreferences.getBoolean(HomeFragment.THEME_KEY, false);
+        if(isDarkTheme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            Log.d("mode", "onCreate: mode 1");
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            Log.d("mode", "onCreate: mode 2");
+
+        }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -95,20 +108,62 @@ public class MainActivity extends AppCompatActivity {
         scheduleWorkoutNotification(getNotificationWorkoutHour(), getNotificationWorkoutMinute(), getNotificationWorkoutSecond());
         scheduleMealNotification(getNotificationMealHour(), getNotificationMealMinute(), getNotificationMealSecond());
 
-        hideNavBar();
-        if (firebaseAuth.getCurrentUser() == null) {
-            navController.navigate(R.id.onboardingFragment);
-        } else {
-            navController.navigate(R.id.splashFragment);
+//        if (firebaseAuth.getCurrentUser() == null) {
+//            navController.navigate(R.id.signUpFragment);
+//        } else {
+//            navController.navigate(R.id.splashFragment);
+//            hideNavBar();
+//
+//            viewModel.loadUser(new MainVM.UserLoadCallback() {
+//                @Override
+//                public void onUserLoaded(User user) {
+//                    setUpNavbar();
+//                    navController.navigate(R.id.homeFragment);
+//                }
+//
+//                @Override
+//                public void onUserNotHaveInformation() {
+//                    navController.navigate(R.id.fillInPersonalInformationFragment);
+//                }
+//            });
+//        }
 
+        if (firebaseAuth.getCurrentUser() == null) {
+            navController.navigate(R.id.signUpFragment);
+        } else {
             viewModel.loadUser(new MainVM.UserLoadCallback() {
                 @Override
                 public void onUserLoaded(User user) {
-                    setUpInitialFragment();
-                    setUpNavbar();
+                }
+
+                @Override
+                public void onUserNotHaveInformation() {
                 }
             });
         }
+
+            viewModel.getState().observe(this, new Observer<UserState>() {
+            @Override
+            public void onChanged(UserState userState) {
+                switch (userState) {
+                    case loaded:
+                        navController.navigate(R.id.homeFragment);
+                        setUpNavbar();
+                        setUpInitialFragment();
+                        break;
+                    case loading:
+                        navController.navigate(R.id.splashFragment);
+//                        hideNavBar();
+
+                        break;
+                    case notHaveInformation:
+                        navController.navigate(R.id.fillInPersonalInformationFragment);
+                        break;
+                    default:
+                        navController.navigate(R.id.signUpFragment);
+                }
+            }
+        });
 
         if (!permission_post_notification) {
             requestPermissionNotification();
@@ -207,9 +262,7 @@ public class MainActivity extends AppCompatActivity {
             permission_post_notification = true;
         } else {
             if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                Log.d("Permission ", "inside else 1 time don't allow");
             } else {
-                Log.d("Permission ", "inside else 2 time don't allow");
             }
             requestPermissiongLauncherNotification.launch(permissions[0]);
         }
@@ -300,6 +353,10 @@ public class MainActivity extends AppCompatActivity {
                         setNavBarVisibility();
 
                         break;
+                    case R.id.adminSettingFragment:
+                        binding.adminNavBar.setItemSelected(R.id.nav_profile_admin,  true);
+                        setNavBarVisibility();
+                        break;
                     default:
                         binding.navBar.setVisibility(View.GONE);
                         binding.adminNavBar.setVisibility(View.GONE);
@@ -341,6 +398,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_workout_admin:
                         navController.navigate(R.id.adminWorkoutFragment);
+                        break;
+                    case R.id.nav_profile_admin:
+                        navController.navigate(R.id.adminSettingFragment);
                         break;
                 }
             }

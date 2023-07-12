@@ -78,7 +78,7 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     }
 
     private void setOnClick() {
-        binding.addMealToolbar.setOnClickListener(new View.OnClickListener() {
+        binding.appBar.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GlobalMethods.backToPreviousFragment(AddMealFragment.this);
@@ -142,9 +142,12 @@ public class AddMealFragment extends Fragment implements IngredientRowRecyclerVi
     @Override
     public void onWeightChanged(int position, double newValue) {
         if (position >= 0 && position < addMealVM.getIngredients().getValue().size()) {
-            Log.d("THe code is working", "onWeightChanged: ");
             // Get the updated ingredient and set the new weight
             Ingredient updatedIngredient = addMealVM.getIngredients().getValue().get(position);
+            if(newValue == 0) {
+                Toast.makeText(this.getContext(), "Weight cannot be 0", Toast.LENGTH_LONG).show();
+                return;
+            }
             updatedIngredient.updateWeight(newValue);
             totalCalories = 0;
 

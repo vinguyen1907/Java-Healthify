@@ -140,12 +140,8 @@ public class AdminIngredientVM extends ViewModel {
     }
 
     public void updateCount(int numIncreased) {
-        if(numIncreased > 0) {
-            ingredientCount.postValue(ingredientCount.getValue() + numIncreased);
-        }  else {
-            ingredientCount.postValue(ingredientCount.getValue() - numIncreased);
+        ingredientCount.postValue(ingredientCount.getValue() + numIncreased);
 
-        }
         db.collection("count").document("ingredients_count").update("count",ingredientCount.getValue());
     }
 

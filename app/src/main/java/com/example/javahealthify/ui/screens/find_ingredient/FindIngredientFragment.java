@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +32,8 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
     private AddMealVM addMealVM;
     private EditMealVM editMealVM;
     private FragmentFindIngredientBinding binding;
+    private IngredientNameRecyclerViewAdapter adapter;
+    private IngredientNameRecyclerViewAdapter personalIngredientAdapter;
 
     public FindIngredientFragment() {
         // Required empty public constructor
@@ -49,13 +53,33 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         binding.personalIngredientSearchResults.setVisibility(View.GONE);
         binding.personalIngredientTv.setVisibility(View.GONE);
 
-        IngredientNameRecyclerViewAdapter adapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.ingredientInfoArrayList.getValue(), this, this);
+        adapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.ingredientInfoArrayList.getValue(), this, this);
 
         binding.ingredientSearchResults.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.ingredientSearchResults.setAdapter(adapter);
-        IngredientNameRecyclerViewAdapter personalIngredientAdapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.personalIngredientInfoArrayList.getValue(), this, this);
+        personalIngredientAdapter = new IngredientNameRecyclerViewAdapter(this.getContext(), findIngredientVM.personalIngredientInfoArrayList.getValue(), this, this);
         binding.personalIngredientSearchResults.setLayoutManager(new LinearLayoutManager(this.getContext()));
         binding.personalIngredientSearchResults.setAdapter(personalIngredientAdapter);
+
+        binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
+            }
+        });
+        binding.addOwnIngredient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addPersonalIngredientFragment);
+            }
+        });
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        findIngredientVM.fetchFavoriteIngredients();
         binding.findIngredientSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -68,8 +92,11 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
             @Override
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
                 if (ingredientInfoArrayList.isEmpty()) {
+                    binding.searchResultsTv.setText("");
                     binding.ingredientSearchResults.setVisibility(View.GONE);
                 } else {
+                    binding.searchResultsTv.setText("Results");
+
                     binding.ingredientSearchResults.setVisibility(View.VISIBLE);
 
                     adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
@@ -91,21 +118,18 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
                 }
             }
         });
-        binding.findIngredientBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
-            }
-        });
-        binding.addOwnIngredient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(FindIngredientFragment.this).navigate(R.id.action_findIngredientFragment_to_addPersonalIngredientFragment);
-            }
-        });
-        return binding.getRoot();
-    }
 
+        findIngredientVM.favoriteIngredient.observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
+            @Override
+            public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
+                if(findIngredientVM.ingredientInfoArrayList.getValue() == null || findIngredientVM.ingredientInfoArrayList.getValue().isEmpty()) {
+                    binding.searchResultsTv.setText("Favorite Ingredients");
+                    binding.ingredientSearchResults.setVisibility(View.VISIBLE);
+                    adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
+                }
+            }
+        });
+    }
 
     private void showResult(String searchQuery) {
         findIngredientVM.search(searchQuery);
@@ -167,7 +191,11 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         if (recyclerViewId == binding.ingredientSearchResults.getId()) {
             Log.d("clickedId", String.valueOf(recyclerViewId));
 
-            selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+            if (findIngredientVM.ingredientInfoArrayList.getValue() == null || findIngredientVM.ingredientInfoArrayList.getValue().isEmpty()) {
+                selectedIngredientInfo = findIngredientVM.favoriteIngredient.getValue().get(position);
+            } else {
+                selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
+            }
         } else {
             Log.d("clickedId", String.valueOf(recyclerViewId));
 
@@ -177,14 +205,6 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
         addToIngredients(tempIngredient);
         findIngredientVM.ingredientInfoArrayList.setValue(new ArrayList<>());
         GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
-//        Log.d("global results?", "onIngredientInfoNameClick: " + recyclerViewId);
-//        IngredientInfo selectedIngredientInfo = findIngredientVM.ingredientInfoArrayList.getValue().get(position);
-//                    Log.d("position global", "onIngredientInfoNameClick: " +  position);
-//
-//        Ingredient tempIngredient = createTempIngredient(selectedIngredientInfo);
-//        addToIngredients(tempIngredient);
-//        findIngredientVM.ingredientInfoArrayList.setValue(new ArrayList<>());
-//        GlobalMethods.backToPreviousFragment(FindIngredientFragment.this);
     }
 
 }

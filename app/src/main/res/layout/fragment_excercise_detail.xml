@@ -9,15 +9,10 @@
             type="com.example.javahealthify.ui.screens.exercise_detail.ExerciseDetailVM" />
     </data>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:id="@+id/exerciseDetailBack"
@@ -43,7 +38,7 @@
             </LinearLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="370dp"
@@ -53,25 +48,24 @@
                     android:background="@drawable/onboarding_radius_panel"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    android:orientation="vertical"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="160dp"
-                        android:layout_marginTop="0dp"
                         android:fontFamily="@font/poppins_semi_bold"
-                        android:text="@string/Home_DetailExcercise_Total"
+                        android:text="@{String.valueOf(viewModel.workouts.size())}"
                         android:textColor="#59C9A5"
+                        android:layout_gravity="center_horizontal"
                         android:textSize="24sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-63dp"
-                        android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/home_total_excercise_text"
+                        android:layout_gravity="center_horizontal"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -83,156 +77,155 @@
                     android:layout_marginTop="25dp"
                     android:background="@drawable/onboarding_radius_panel"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:orientation="vertical"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="160dp"
-                        android:layout_marginTop="0dp"
                         android:fontFamily="@font/poppins_semi_bold"
-                        android:text="@string/Home_TotalCalories"
+                        android:text="@{String.valueOf(viewModel.todayActivity.exerciseCalories)}"
                         android:textColor="#59C9A5"
+                        android:layout_gravity="center_horizontal"
                         android:textSize="24sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-90dp"
-                        android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
                         android:text="@string/Home_TotalCalories_Text"
+                        android:layout_gravity="center_horizontal"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/absExercise"-->
+<!--                    android:layout_width="170dp"-->
+<!--                    android:layout_height="90dp"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:background="@drawable/onboarding_radius_panel"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:text="@string/home_detail_legexcercise"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="24sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:fontFamily="@font/poppins_regular"-->
+<!--                        android:text="@string/home_detail_legexcercise_text" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="170dp"-->
+<!--                    android:layout_height="90dp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:background="@drawable/onboarding_radius_panel"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:text="@string/home_detail_others"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="24sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_regular"-->
+<!--                        android:text="@string/home_detail_others_text"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="14sp" />-->
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout3"-->
+<!--                    android:layout_width="170dp"-->
+<!--                    android:layout_height="90dp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:background="@drawable/onboarding_radius_panel"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:text="@string/home_detail_shoulderexcercise"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="24sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:fontFamily="@font/poppins_regular"-->
+<!--                        android:text="@string/home_detail_shoulderexcercise_text"-->
+<!--                        android:textSize="14sp" />-->
+
+<!--                </LinearLayout>-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout2"-->
+<!--                    android:layout_width="170dp"-->
+<!--                    android:layout_height="90dp"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:background="@drawable/onboarding_radius_panel"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:text="@string/home_detail_abs"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="24sp" />-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_regular"-->
+<!--                        android:text="@string/home_detail_abs_text"-->
+<!--                        android:layout_gravity="center_horizontal"-->
+<!--                        android:textSize="14sp" />-->
+<!--                </LinearLayout>-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+            <GridView
+                android:id="@+id/exercise_categories_lst"
                 android:layout_width="match_parent"
-                android:layout_height="480dp">
-
-                <LinearLayout
-                    android:id="@+id/absExercise"
-                    android:layout_width="170dp"
-                    android:layout_height="90dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/onboarding_radius_panel"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="@string/home_detail_legexcercise"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-60dp"
-                        android:layout_marginTop="30dp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:text="@string/home_detail_legexcercise_text" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="170dp"
-                    android:layout_height="90dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/onboarding_radius_panel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="@string/home_detail_others"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-35dp"
-                        android:layout_marginTop="30dp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:text="@string/home_detail_others_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="170dp"
-                    android:layout_height="90dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/onboarding_radius_panel"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="@string/home_detail_shoulderexcercise"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-75dp"
-                        android:layout_marginTop="30dp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:text="@string/home_detail_shoulderexcercise_text"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="170dp"
-                    android:layout_height="90dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/onboarding_radius_panel"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
-                        android:layout_marginTop="0dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:text="@string/home_detail_abs"
-                        android:textSize="24sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="-60dp"
-                        android:layout_marginTop="30dp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:text="@string/home_detail_abs_text"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:numColumns="2"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="20dp" />
         </LinearLayout>
-    </ScrollView>
 </layout>

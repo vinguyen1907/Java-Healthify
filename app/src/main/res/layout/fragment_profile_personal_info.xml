@@ -153,13 +153,14 @@
 
         <TextView
             android:id="@+id/personalprofile_email_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
             android:layout_marginTop="29dp"
             android:fontFamily="@font/poppins_regular"
             android:text="@string/Profile_Email"
             android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/personalprofile_name_tv" />
 

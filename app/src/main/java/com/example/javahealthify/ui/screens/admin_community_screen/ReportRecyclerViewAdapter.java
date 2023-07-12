@@ -1,6 +1,7 @@
 package com.example.javahealthify.ui.screens.admin_community_screen;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,9 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ReportViewHolder reportViewHolder = (ReportViewHolder) holder;
         Report report = reportArrayList.get(position);
+        Log.d("reporter avatar", "onBindViewHolder: " + report.getReportUserImageUrl());
+        Log.d(" avatar", "onBindViewHolder: " + report.getAchievementUserImageUrl());
+
         reportViewHolder.tvReportTitle.setText(report.getTitle());
         reportViewHolder.tvReportedUsername.setText(report.getAchievementUserName());
 //        reportViewHolder.tvNumberOfViolations
@@ -61,15 +65,15 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
         reportViewHolder.tvExercisesCalories.setText(GlobalMethods.formatDoubleToString(report.getAchievementExerciseCalories()));
         reportViewHolder.tvReportDescription.setText(report.getDescription());
         reportViewHolder.tvReporterUsername.setText(report.getReportUserName());
-        if(report.getAchievementUserImageUrl() ==null) {
-            reportViewHolder.reportedUserImg.setImageResource(R.drawable.ic_profile);
+        if(report.getAchievementUserImageUrl() == null|| report.getAchievementUserImageUrl().equals("")) {
+            reportViewHolder.reportedUserImg.setImageResource(R.drawable.default_profile_image);
         } else {
             Glide.with(context).load(report.getAchievementUserImageUrl()).into(reportViewHolder.reportedUserImg);
         }
-        if(report.getAchievementUserImageUrl() ==null) {
-            reportViewHolder.reporterImg.setImageResource(R.drawable.ic_profile);
+        if(report.getReportUserImageUrl() == null || report.getReportUserImageUrl().equals("")) {
+            reportViewHolder.reporterImg.setImageResource(R.drawable.default_profile_image);
         } else {
-            Glide.with(context).load(report.getAchievementUserImageUrl()).into(reportViewHolder.reporterImg);
+            Glide.with(context).load(report.getReportUserImageUrl()).into(reportViewHolder.reporterImg);
         }
         reportViewHolder.approveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +133,6 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
             super(itemView);
             tvReportTitle = itemView.findViewById(R.id.pending_report_title);
             tvReportedUsername = itemView.findViewById(R.id.reported_user_name);
-            tvNumberOfViolations = itemView.findViewById(R.id.violations_count);
             tvDate = itemView.findViewById(R.id.violation_date);
             tvCalories = itemView.findViewById(R.id.reported_calories);
             tvSteps = itemView.findViewById(R.id.steps_number);

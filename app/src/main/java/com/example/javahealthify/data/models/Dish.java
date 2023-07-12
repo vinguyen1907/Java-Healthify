@@ -1,11 +1,17 @@
 package com.example.javahealthify.data.models;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.firestore.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Dish {
 
+    private String id;
     private String name;
+
     private double protein = 0;
     private double carb = 0;
     private  double lipid = 0;
@@ -15,6 +21,17 @@ public class Dish {
     public Dish() {
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+    public Dish withId(@NonNull final String id) {
+        this.id = id;
+        return this;
+    }
+    @Exclude
+    public String getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }
