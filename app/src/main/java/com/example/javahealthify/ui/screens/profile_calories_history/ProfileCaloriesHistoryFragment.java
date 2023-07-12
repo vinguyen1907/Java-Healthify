@@ -114,17 +114,17 @@ public class ProfileCaloriesHistoryFragment extends Fragment {
 
         Description description = new Description();
         description.setText("Calories per day");
-        description.setTextColor(Color.WHITE);
+        description.setTextColor(getResources().getColor(R.color.primaryColor, null));
         lineChart.setDescription(description);
 
         Legend legend = lineChart.getLegend();
-        legend.setTextColor(Color.WHITE);
+        legend.setTextColor(getResources().getColor(R.color.primaryColor, null));
 
-        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextColor(getResources().getColor(R.color.primaryColor, null));
         dataSet.setLineWidth(2f);
-        lineChart.getAxisLeft().setTextColor(Color.WHITE);
+        lineChart.getAxisLeft().setTextColor(getResources().getColor(R.color.primaryTextColor, null));
         lineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
-        lineChart.getXAxis().setTextColor(Color.WHITE);
+        lineChart.getXAxis().setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
         lineChart.invalidate();
     }

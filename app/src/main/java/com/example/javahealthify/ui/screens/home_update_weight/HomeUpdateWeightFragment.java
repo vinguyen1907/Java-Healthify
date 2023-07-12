@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.javahealthify.R;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.databinding.FragmentHomeWeightReportBinding;
 import com.example.javahealthify.ui.screens.home.CustomEntry;
@@ -105,13 +106,13 @@ public class HomeUpdateWeightFragment extends Fragment {
             }
 
             BarDataSet dataSet = new BarDataSet(barEntries, "Weight");
-            dataSet.setValueTextColor(Color.WHITE);
+            dataSet.setValueTextColor(getResources().getColor(R.color.primaryTextColor, null));
             BarData barData = new BarData(dataSet);
 
             barChart.setData(barData);
             barChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
             barChart.getDescription().setText("Weight by Date");
-            barChart.getDescription().setTextColor(Color.WHITE);
+            barChart.getDescription().setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
             // Set up X-axis
             XAxis xAxis = barChart.getXAxis();
@@ -119,7 +120,7 @@ public class HomeUpdateWeightFragment extends Fragment {
             xAxis.setDrawGridLines(false); // cái này để xóa grid
 
             Legend legend = barChart.getLegend();
-            legend.setTextColor(Color.WHITE);
+            legend.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
             xAxis.setValueFormatter(new IndexAxisValueFormatter() {
                 @Override
@@ -133,14 +134,14 @@ public class HomeUpdateWeightFragment extends Fragment {
                 }
             });
 
-            xAxis.setTextColor(Color.WHITE);
+            xAxis.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
             // Set up Y-axis
             YAxis leftAxis = barChart.getAxisLeft();
             YAxis rightAxis = barChart.getAxisRight();
 
-            leftAxis.setTextColor(Color.WHITE);
-            rightAxis.setTextColor(Color.WHITE);
+            leftAxis.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
+            rightAxis.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
             // Custom axis value formatter for displaying "kg" next to weight values
             ValueFormatter weightValueFormatter = new ValueFormatter() {
