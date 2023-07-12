@@ -264,8 +264,8 @@ public class HomeFragment extends Fragment {
         pieChart.setDrawCenterText(true);
         pieChart.setCenterText(goalMsg.concat(homeVM.getGoal().toString()));
         pieChart.setCenterTextSize(16f);
-        pieChart.setCenterTextColor(Color.WHITE);
-        pieChart.animateXY(1000, 1000, Easing.EaseInOutBounce); // 1000 milliseconds for both X and Y axes
+        pieChart.setCenterTextColor(getResources().getColor(R.color.primaryTextColor, null));
+        pieChart.animateXY(1000, 1000, Easing.EaseInOutBounce);
 
         Legend legend = pieChart.getLegend();
         legend.setEnabled(false);
@@ -292,7 +292,6 @@ public class HomeFragment extends Fragment {
                 itemParams.setMargins(10, 10, 0, 6);
                 legendItemView.setLayoutParams(itemParams);
 
-                // Add legend item view to the legend layout
                 legendLayout.addView(legendItemView);
             } else {
                 String legendEntry = legendEntries.get(i);
@@ -305,7 +304,9 @@ public class HomeFragment extends Fragment {
 
                 legendIconView.setImageResource(iconResources.get(i));
                 legendLabelTextView.setText(legendEntry);
+                legendLabelTextView.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
                 legendValueTextView.setText(String.valueOf(legendValue));
+                legendValueTextView.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
                 LinearLayout.LayoutParams itemParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -474,6 +475,7 @@ public class HomeFragment extends Fragment {
 
         LineDataSet dataSet = new LineDataSet(entryList, "Steps");
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        dataSet.setColors(getResources().getColor(R.color.primaryColor, null));
         LineData lineData = new LineData(dataSet);
 
         String[] labels = new String[entries.size()];
@@ -500,18 +502,17 @@ public class HomeFragment extends Fragment {
 
         Description description = new Description();
         description.setText("Steps per day");
-        description.setTextColor(Color.WHITE);
+        description.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
         lineChart.setDescription(description);
 
         Legend legend = lineChart.getLegend();
-        legend.setTextColor(Color.WHITE);
+        legend.setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
-        dataSet.setColor(Color.parseColor("#69E6A6"));
-        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setColor(getResources().getColor(R.color.primaryColor, null));
         dataSet.setLineWidth(2f);
-        lineChart.getAxisLeft().setTextColor(Color.WHITE);
+        lineChart.getAxisLeft().setTextColor(getResources().getColor(R.color.primaryTextColor, null));
         lineChart.getAxisRight().setTextColor(Color.TRANSPARENT);
-        lineChart.getXAxis().setTextColor(Color.WHITE);
+        lineChart.getXAxis().setTextColor(getResources().getColor(R.color.primaryTextColor, null));
 
         lineChart.invalidate();
     }

@@ -47,6 +47,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Change Goals"
+                android:textColor="@color/primaryTextColor"
                 android:textSize="18sp" />
 
 
@@ -59,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
             android:text="Your goal in the future (weight)"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
@@ -81,6 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Your goal in the future (step)"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weight_edt" />
 
@@ -103,6 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Time to achieve this goal"
+            android:textColor="@color/primaryTextColor"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/step_edt" />
 

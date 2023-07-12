@@ -28,6 +28,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins_medium"
             android:text="Settings"
+            android:textColor="@color/primaryTextColor"
             android:textSize="18sp" />
 
 
@@ -43,6 +44,7 @@
         android:drawablePadding="24dp"
         android:gravity="start"
         android:paddingLeft="24dp"
+        android:textColor="@color/primaryTextColor"
         android:paddingTop="18dp"
         android:paddingBottom="8dp"
         android:text="Change Password"
