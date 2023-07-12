@@ -8,6 +8,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
 import com.example.javahealthify.data.models.NormalUser;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
@@ -99,24 +101,36 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
-        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
-        homeVM.setUser(mainVM.getUser());
-        homeVM.loadDocument();
-        homeVM.loadLineData();
 
-        // Init today activity
-        workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
-        workoutVM.initDailyActivity();
-
-
+        Log.i("ON CREATE HOME FRAGMENT", "CREATING");
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        homeVM = new ViewModelProvider(requireActivity()).get(HomeVM.class);
         binding.setViewModel(homeVM);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
+        mainVM.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                if (user != null) {
+
+                    Log.i("User in main vm", mainVM.getUser().getValue().getEmail());
+                    homeVM.setUser(mainVM.getUser());
+                    homeVM.loadDocument();
+                    homeVM.loadLineData();
+                }
+            }
+        });
+
+
+        // Init today activity
+        workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
+        workoutVM.initDailyActivity();
+
 
         // ----------------------------------LINECHART----------------------------------------------
 

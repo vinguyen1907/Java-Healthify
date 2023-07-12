@@ -215,14 +215,6 @@ public class HomeVM extends ViewModel {
                 });
     }
 
-    public MutableLiveData<User> getUser() {
-        return user;
-    }
-
-    public void setUser(MutableLiveData<User> user) {
-        this.user = user;
-    }
-
     public void loadDocument() {
         isLoadingDocument.setValue(true);
         firestore.collection("users")
@@ -270,13 +262,15 @@ public class HomeVM extends ViewModel {
     }
 
     public void loadGoal() {
+        Log.i("User", user.getValue().getEmail().toString());
+
         firestore.collection("users")
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         float goal = documentSnapshot.getLong("dailyCalories").floatValue();
-                        setGoal((float) ((NormalUser) this.getUser().getValue()).getDailyCalories());
+                        setGoal((float) ((NormalUser) user.getValue()).getDailyCalories()); //
                         Log.i("goal", String.valueOf(goal));
                         setRemaining(this.getGoal() - this.getFoodCalories() + this.getExerciseCalories());
                         pieEntries = new ArrayList<>();
@@ -351,7 +345,15 @@ public class HomeVM extends ViewModel {
 
     }
 
-//    public void getUserLiveData() {
+    public MutableLiveData<User> getUser() {
+        return user;
+    }
+
+    public void setUser(MutableLiveData<User> user) {
+        this.user = user;
+    }
+
+    //    public void getUserLiveData() {
 //        isLoadingData.setValue(true);
 //        firestore.collection("users").whereEqualTo("email", firebaseAuth.getCurrentUser().getEmail()).get()
 //                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -20,7 +20,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.javahealthify.R;
+import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentSignUpBinding;
+import com.example.javahealthify.ui.screens.MainActivity;
+import com.example.javahealthify.ui.screens.MainVM;
+import com.example.javahealthify.ui.screens.fill_in_personal_information.FillInTrackingInformationFragment;
 import com.example.javahealthify.utils.FirebaseConstants;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -41,6 +45,7 @@ public class SignUpFragment extends Fragment {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private GoogleSignInClient mGoogleSignInClient;
     private NavController navController;
+    private MainVM mainVM;
     private ActivityResultLauncher<Intent> googleSignInLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -77,6 +82,8 @@ public class SignUpFragment extends Fragment {
         viewModel =  new ViewModelProvider(this).get(SignUpVM.class);
         binding.setSignUpVM(viewModel);
         binding.setLifecycleOwner(getViewLifecycleOwner());
+
+        mainVM = new ViewModelProvider(requireActivity()).get(MainVM.class);
 
         // Configure Google sign-in options
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -149,8 +156,6 @@ public class SignUpFragment extends Fragment {
                         if (user != null) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(requireContext(), "Sign up successful", Toast.LENGTH_SHORT).show();
-                            navController.navigate(R.id.action_signInFragment_to_fillInPersonalInformationFragment);
-
 
                             FirebaseConstants.usersRef.document(user.getUid()).get()
                                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -158,7 +163,22 @@ public class SignUpFragment extends Fragment {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 if (task.getResult().exists()) {
-                                                    navController.navigate(R.id.action_signInFragment_to_homeFragment);
+                                                    mainVM.loadUser(new MainVM.UserLoadCallback() {
+                                                        @Override
+                                                        public void onUserLoaded(User user) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onUserNotHaveInformation() {
+
+                                                        }
+                                                    });
+//                                                    navController.navigate(R.id.action_signUpFragment_to_homeFragment);
+//                                                    NavHostFragment.findNavController(SignUpFragment.this).navigate(R.id.homeFragment);
+//                                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+//                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                                    startActivity(intent);
                                                 } else {
                                                     // not have information -> Navigate to fill in information screen
                                                     navController.navigate(R.id.action_signUpFragment_to_fillInPersonalInformationFragment);
