@@ -39,12 +39,6 @@
                 android:text="@string/achievementdetail_detailstext"
                 android:textSize="18sp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="240dp"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_more" />
         </LinearLayout>
 
         <ScrollView

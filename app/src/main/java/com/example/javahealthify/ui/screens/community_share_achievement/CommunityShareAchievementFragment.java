@@ -83,6 +83,9 @@ public class CommunityShareAchievementFragment extends Fragment {
             }
         });
 
+        // hide detail button
+        binding.achievementLayout.detailsBtn.setVisibility(View.GONE);
+
         setOnClick();
 
         return binding.getRoot();
