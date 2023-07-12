@@ -58,7 +58,8 @@
                         android:hint="@string/dish_name_hint_text"
                         android:maxLines="1"
                         android:textColor="@color/primaryTextColor"
-                        android:textColorHint="@color/primaryHintColor"
+
+                        android:textColorHint="@color/primaryTextColor"
                         android:textSize="18sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -74,6 +75,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/meal_type"
+                            android:textColor="@color/primaryTextColor"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -84,6 +86,8 @@
                             android:layout_height="wrap_content"
                             android:background="@null"
                             android:spinnerMode="dropdown"
+                            android:textColor="@color/primaryTextColor"
+
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toLeftOf="@id/spinner_option_icon"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -108,6 +112,8 @@
                         app:layout_constraintTop_toBottomOf="@id/meal_type_selector">
 
                         <TextView
+                            android:textColor="@color/primaryTextColor"
+
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="@string/ingredients"
@@ -128,6 +134,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
+
                         android:id="@+id/ingredients_list_recyclerview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -152,6 +159,8 @@
                         app:layout_constraintTop_toBottomOf="@id/add_meal_separator">
 
                         <TextView
+                            android:textColor="@color/primaryTextColor"
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_semi_bold"

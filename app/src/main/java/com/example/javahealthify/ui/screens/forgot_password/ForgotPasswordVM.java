@@ -16,7 +16,6 @@ public class ForgotPasswordVM extends ViewModel {
     private MutableLiveData<Boolean> isSent = new MutableLiveData<>(false);
 
     public void sendResetPasswordEmail() {
-        Log.i("forgot password email", email.getValue());
         if (!email.getValue().isEmpty()) {
             firebaseAuth.sendPasswordResetEmail(email.getValue())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -25,7 +24,6 @@ public class ForgotPasswordVM extends ViewModel {
                             if (task.isSuccessful()) {
                                 isSent.setValue(true);
                             } else {
-                                Log.i("NOTI", "Fail");
                             }
                         }
                     });

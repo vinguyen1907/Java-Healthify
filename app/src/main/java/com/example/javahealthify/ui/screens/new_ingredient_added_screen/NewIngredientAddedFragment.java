@@ -24,7 +24,6 @@ public class NewIngredientAddedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("NEW INGREDIENT ADDED", "onCreateView: view is created");
         viewModel = new ViewModelProvider(requireActivity()).get(AddPersonalIngredientVM.class);
         binding = FragmentNewIngredientAddedBinding.inflate(inflater, container, false);
         binding.setLifecycleOwner(getViewLifecycleOwner());

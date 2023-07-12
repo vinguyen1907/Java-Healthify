@@ -8,7 +8,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,26 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.javahealthify.R;
-import com.example.javahealthify.data.adapters.WorkoutCategoriesAdapter;
 import com.example.javahealthify.data.models.NormalUser;
-import com.example.javahealthify.data.models.User;
 import com.example.javahealthify.databinding.FragmentHomeBinding;
 import com.example.javahealthify.ui.screens.MainVM;
-import com.example.javahealthify.ui.screens.profile.ProfileFragment;
-import com.example.javahealthify.ui.screens.profile.ProfileVM;
 import com.example.javahealthify.ui.screens.workout.WorkoutVM;
-import com.example.javahealthify.ui.screens.workout_categories.WorkoutCategoriesFragment;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -51,26 +42,17 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment {
+    public static final String PREF_FILE_NAME = "theme_pref";
+    public static final String THEME_KEY = "theme_mode";
     private HomeVM homeVM;
     private MainVM mainVM;
     private MutableLiveData<NormalUser> user = new MutableLiveData<>();
@@ -126,7 +108,6 @@ public class HomeFragment extends Fragment {
         // Init today activity
         workoutVM = new ViewModelProvider(requireActivity()).get(WorkoutVM.class);
         workoutVM.initDailyActivity();
-        Log.i("On create home frgment", "");
 
 
     }
@@ -209,6 +190,19 @@ public class HomeFragment extends Fragment {
         stepCount = sharedPreferences.getInt("stepCount", 0);
 
         binding.stepCountTextView.setText(String.valueOf(stepCount));
+
+        // set theme
+        binding.setThemeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+                boolean isDarkTheme = !sharedPreferences1.getBoolean(THEME_KEY, true);
+                SharedPreferences.Editor editor = sharedPreferences1.edit();
+                editor.putBoolean(THEME_KEY, isDarkTheme);
+                editor.apply();
+                getActivity().recreate();
+            }
+        });
 
         return binding.getRoot();
     }
