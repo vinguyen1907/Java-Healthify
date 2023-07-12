@@ -32,7 +32,7 @@
         app:cnb_backgroundColor="@color/primaryColor"
         app:cnb_iconColor="@color/primaryTextColor"
         app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="#FFFFFF" />
+        app:cnb_textColor="@color/primaryTextColor" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_profile"
