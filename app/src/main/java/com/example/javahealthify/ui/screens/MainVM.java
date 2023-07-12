@@ -14,17 +14,21 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+enum UserState { initial, loading, loaded, notHaveInformation, loadFailed }
 
 public class MainVM extends ViewModel {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<UserState> state = new MutableLiveData<>(UserState.initial);
 
     public interface UserLoadCallback {
         void onUserLoaded(User user);
+        void onUserNotHaveInformation();
     }
 
     public void loadUser(UserLoadCallback callback) {
-        Log.i("Loading user", "");
+        state.setValue(UserState.loading);
+
         FirebaseConstants.usersRef.document(firebaseAuth.getCurrentUser().getUid()).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -36,8 +40,13 @@ public class MainVM extends ViewModel {
                                 if (callback != null) {
                                     callback.onUserLoaded(user.getValue());
                                 }
+                                state.setValue(UserState.loaded);
+                            } else {
+                                state.setValue(UserState.notHaveInformation);
+//                                callback.onUserNotHaveInformation();
                             }
                         } else {
+                            state.setValue(UserState.loadFailed);
                             Log.e("Load user failed", "", task.getException());
                         }
                     }
@@ -61,5 +70,9 @@ public class MainVM extends ViewModel {
 
     public MutableLiveData<User> getUser() {
         return user;
+    }
+
+    public MutableLiveData<UserState> getState() {
+        return state;
     }
 }
