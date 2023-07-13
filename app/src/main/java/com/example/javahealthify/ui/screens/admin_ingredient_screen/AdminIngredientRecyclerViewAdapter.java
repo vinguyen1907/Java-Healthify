@@ -28,7 +28,7 @@ public class AdminIngredientRecyclerViewAdapter extends RecyclerView.Adapter {
     private OnItemDeleteListener onItemDeleteListener;
     private OnItemEditListener onItemEditListener;
 
-    private boolean isSearchResult;
+    private boolean isSearchResult = false;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 

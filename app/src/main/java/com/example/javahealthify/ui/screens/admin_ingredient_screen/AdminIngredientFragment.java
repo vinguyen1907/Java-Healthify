@@ -76,7 +76,8 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 String searchQuery = binding.adminFindIngredientSearch.getText().toString().trim();
                 if (searchQuery.length() == 0) {
-                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue(), true);
+                    ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue(), false);
+                    adminIngredientVM.searchResultList.postValue(new ArrayList<>());
                     enableLoadOnScroll = true;
                 } else {
                     showResult(searchQuery);
@@ -138,9 +139,10 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
         adminIngredientVM.searchResultList.observe(getViewLifecycleOwner(), new Observer<ArrayList<IngredientInfo>>() {
             @Override
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
-                if (ingredientInfoArrayList.isEmpty()) {
+                if (ingredientInfoArrayList == null || ingredientInfoArrayList.isEmpty()) {
                     enableLoadOnScroll = true;
                     ingredientRecyclerViewAdapter.setIngredientInfoArrayList(adminIngredientVM.databaseIngredientList.getValue(), true);
+
                 } else {
                     enableLoadOnScroll = false;
                     ingredientRecyclerViewAdapter.setIngredientInfoArrayList(ingredientInfoArrayList, true);
@@ -189,10 +191,10 @@ public class AdminIngredientFragment extends Fragment implements AdminIngredient
         Bundle bundle = new Bundle();
         bundle.putInt("position", position);
         bundle.putString("operation", "edit");
-        if (ingredientRecyclerViewAdapter.isSearchResult()) {
-            bundle.putBoolean("isSearchResult", true);
-        } else {
+        if (adminIngredientVM.searchResultList.getValue() == null || adminIngredientVM.searchResultList.getValue().isEmpty()) {
             bundle.putBoolean("isSearchResult", false);
+        } else {
+            bundle.putBoolean("isSearchResult", true);
         }
         NavHostFragment.findNavController(AdminIngredientFragment.this).navigate(R.id.action_adminIngredientFragment_to_adminEditIngredientFragment, bundle);
     }
