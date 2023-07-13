@@ -14,7 +14,31 @@
       },
       "oauth_client": [
         {
-          "client_id": "937919372196-bog3fb5960a9kg2rb1jr8uvbn2hgqi8s.apps.googleusercontent.com",
+          "client_id": "937919372196-00lb53p2p8gecluce23dr4cu6il8h3tb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.javahealthify",
+            "certificate_hash": "abae8918beda6a837d04dbff34c5b085bb9e1750"
+          }
+        },
+        {
+          "client_id": "937919372196-9sp349olkbug338cs0cn3cu1ulkr16k3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.javahealthify",
+            "certificate_hash": "637607e0ef22e75f707f492cd0830d03d74534ce"
+          }
+        },
+        {
+          "client_id": "937919372196-d820oogda08jrck18a41ndkkhqgju0kq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.javahealthify",
+            "certificate_hash": "bc51777670de0713424ebcacbefe1ead1e572809"
+          }
+        },
+        {
+          "client_id": "937919372196-8a1emo8ashdqu60qfgobuf7n55td2luj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +51,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "937919372196-bog3fb5960a9kg2rb1jr8uvbn2hgqi8s.apps.googleusercontent.com",
+              "client_id": "937919372196-8a1emo8ashdqu60qfgobuf7n55td2luj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

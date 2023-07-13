@@ -87,6 +87,14 @@ public class ReportRecyclerViewAdapter extends RecyclerView.Adapter {
                 deleteItem(position);
             }
         });
+        reportViewHolder.tvReportDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onItemDetailsListener!=null) {
+                    onItemDetailsListener.onItemDetailsClick(position);
+                }
+            }
+        });
     }
 
     public void approveItem(int position) {
