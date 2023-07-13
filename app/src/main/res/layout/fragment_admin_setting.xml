@@ -6,12 +6,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.appcompat.widget.AppCompatButton
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/switch_mode_btn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="32dp"
+        android:drawableStart="@drawable/ic_dinner"
+        android:drawablePadding="24dp"
+        android:gravity="start"
+        android:paddingLeft="24dp"
+        android:textColor="@color/primaryTextColor"
+        android:paddingTop="18dp"
+        android:paddingBottom="8dp"
+        android:text="Switch to Dark/Light Mode"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Log Out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logout_btn"
-        style="@style/PrimaryButtonStyle"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:drawableStart="@drawable/ic_danger"
+        android:drawableTint="?attr/colorError"
+        android:drawablePadding="28dp"
+        android:gravity="start"
+        android:paddingLeft="24dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="8dp"
+        android:text="Log Out"
+        android:textColor="?attr/colorError"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/switch_mode_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

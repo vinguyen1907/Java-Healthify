@@ -33,6 +33,7 @@
                 android:drawableStart="@drawable/ic_breakfast"
                 android:drawablePadding="4dp"
                 android:fontFamily="@font/poppins_semi_bold"
+                android:textColor="@color/primaryTextColor"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:text="hehe"

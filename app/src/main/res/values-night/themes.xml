@@ -19,6 +19,7 @@
     </style>
 
     <style name="TextViewDefaultPoppinsStyle">
+        <item name="android:textColor">@color/primaryTextColor</item>
         <item name="android:fontFamily">@font/poppins_regular</item>
         <item name="android:textColor">@color/primaryTextColor</item>
     </style>

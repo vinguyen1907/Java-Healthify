@@ -124,7 +124,12 @@ public class FindIngredientFragment extends Fragment implements IngredientNameRe
             public void onChanged(ArrayList<IngredientInfo> ingredientInfoArrayList) {
                 if(findIngredientVM.ingredientInfoArrayList.getValue() == null || findIngredientVM.ingredientInfoArrayList.getValue().isEmpty()) {
                     binding.searchResultsTv.setText("Favorite Ingredients");
-                    binding.ingredientSearchResults.setVisibility(View.VISIBLE);
+                    if(ingredientInfoArrayList.isEmpty()) {
+                        binding.ingredientSearchResults.setVisibility(View.GONE);
+                    } else {
+                        binding.ingredientSearchResults.setVisibility(View.VISIBLE);
+
+                    }
                     adapter.setIngredientInfoArrayList(ingredientInfoArrayList);
                 }
             }
