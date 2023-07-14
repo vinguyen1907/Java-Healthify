@@ -85,7 +85,7 @@ Việc xây dựng “Ứng dụng theo dõi ăn uống và tập luyện” s�
  * <strong>Bước 3: Tạo máy ảo Android sử dụng API <= 33.</strong>
 
  * <strong>Bước 4: Chọn build bằng máy ảo vừa tạo.</strong>
- * <strong>Bước 4: Chọn Run App.</strong> 
+ * <strong>Bước 5: Chọn Run App.</strong> 
 
 
 
