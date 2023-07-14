@@ -146,13 +146,13 @@ Việc xây dựng “Ứng dụng theo dõi ăn uống và tập luyện” s�
 
 ## 👊 III. Tác giả
 
-* [Nguyễn Tiến Vĩ]()
+* [Nguyễn Tiến Vĩ](https://github.com/vinguyen1907)
   * Vai trò: Team Leader
 * [Vũ Đức Minh](https://github.com/dvcminh)
   * Vai trò: Team Member
-* [Nguyễn Đình Khoa]()
+* [Nguyễn Đình Khoa](https://github.com/dkdeptrai)
   * Vai trò: Team Member
-* [Tô Thế Kiệt]()
+* [Tô Thế Kiệt](https://github.com/Kiethongngu)
   * Vai trò: Team Member
 <!-- NGƯỜI HƯỚNG DẪN -->
 <div id="Nguoihuongdan"></div>
@@ -168,11 +168,11 @@ Việc xây dựng “Ứng dụng theo dõi ăn uống và tập luyện” s�
 ## 🚩 V. Tổng kết
 
 * Ưu điểm của đồ án:
-  * Hoàn thành các chức năng của đồ án 
+  * Cung cấp các công cụ hữu ích để ghi lại thông tin, theo dõi tiến trình, chế độ ăn uống và tập luyện, cung cấp thông báo và nhắc nhở
+  * Kết nối với cộng đồng người dùng
   * Giao diện đẹp, thân thiện người dùng 
 
-* Nhược điểm của đồ án:
-  * Chưa tối ưu hiệu năng ứng dụng hoàn chỉnh. 
+
 
 * Hướng phát triển của đồ án:
   * Phát triển chức năng cho PT. 
