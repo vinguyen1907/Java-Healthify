@@ -74,14 +74,18 @@ Việc xây dựng “Ứng dụng theo dõi ăn uống và tập luyện” s�
 
 ### 💣 4. Hướng dẫn cài đặt
 
- * <strong>Bước 1: </strong> 
+ * <strong>Bước 1: Clone project https://github.com/vinguyen1907/Java-Healthify.git </strong> 
   
 
 
- * <strong>Bước 2: </strong> 
+ * <strong>Bước 2: Truy cập vào project bằng Android Studio.
+ </strong> 
  
  
- * <strong>Bước 3: </strong> 
+ * <strong>Bước 3: Tạo máy ảo Android sử dụng API <= 33.</strong>
+
+ * <strong>Bước 4: Chọn build bằng máy ảo vừa tạo.</strong>
+ * <strong>Bước 4: Chọn Run App.</strong> 
 
 
 
